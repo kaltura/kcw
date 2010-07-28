@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*
+This file is part of the Kaltura Collaborative Media Suite which allows users
+to do with audio, video, and animation what Wiki platfroms allow them to do with
+text.
+
+Copyright (C) 2006-2008  Kaltura Inc.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+@ignore
+*/
+-->
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	horizontalAlign="center" verticalAlign="middle"
+	clipContent="false">
+
+	<mx:Script>
+        <![CDATA[
+        	import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+        	import mx.resources.ResourceBundle;
+        	import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent;
+        	import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent;
+        	import mx.events.FlexEvent;
+        	import mx.controls.Alert;
+        	import mx.events.SliderEvent;
+        	import mx.controls.VSlider;
+        	import mx.core.Application;
+
+    		private var _maxSliderValue:Number = 0.01;
+    		private var _newRecordingFlag:Boolean = true;
+
+            public function init():void
+            {
+            	currentState = "record_state";
+            }
+
+
+            private function record():void
+            {
+            	this.visible = false;
+				dispatchEvent(new RecorderControlEvent(RecorderControlEvent.START_RECORD));
+            }
+
+            private function play():void
+            {
+                dispatchEvent(new RecorderControlEvent(RecorderControlEvent.PLAY_START, 85));
+            }
+
+			private function recordStateStop():void
+			{
+				this.visible = false;
+            	dispatchEvent(new RecorderControlEvent(RecorderControlEvent.STOP_RECORD));
+			}
+
+			private function playStateStop():void
+			{
+				dispatchEvent(new RecorderControlEvent(RecorderControlEvent.PLAY_STOP));
+			}
+
+            /* private function cancel():void
+            {
+            	initSlider();
+            	_newRecordingFlag = true;
+            	dispatchEvent(new RecorderControlEvent(RecorderControlEvent.CANCEL_RECORD));
+            } */
+
+            /* private function saveRecord():void
+            {
+            	dispatchEvent(new RecorderControlEvent(RecorderControlEvent.SAVE_RECORD,85,slider.values[0],slider.values[1]));
+            } */
+
+            private function canInitSlider():void
+            {
+            	if(_newRecordingFlag)
+            	{
+            		_newRecordingFlag = false;
+            	}
+            }
+
+            public function set maxSliderValue(maxTime:Number):void
+            {
+               _maxSliderValue = maxTime;
+            }
+
+            private function stopStateEnterHandler():void
+            {
+            	//Alert.show("Entering stop state (we're recording)");
+            }
+            private function recordStateEnterStateHandler():void
+            {
+            	//Alert.show("Entering recording state (we're ready to record)");
+            }
+
+            private function recordBtAddedHandler():void
+            {
+            }
+
+        ]]>
+	</mx:Script>
+
+    <mx:Metadata>
+       	  [Event(name="publishRecorderVideo", 	type="flash.events.Event")]
+       	  [Event(name="startRecord", 			type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+       	  [Event(name="stopRecord", 			type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+       	  [Event(name="playStop", 				type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+       	  [Event(name="playStart",				type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+       	  [Event(name="saveRecord", 			type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+       	  [Event(name="cancelRecord", 			type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+       	  [Event(name="qualtyChanged", 			type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+       	  [Event(name="seekTarget", 			type="com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent")]
+    </mx:Metadata>
+
+       <mx:states>
+          <mx:State name="record_state" enterState="recordStateEnterStateHandler()">
+
+                <mx:AddChild relativeTo="{controlBarHbox}" >
+                	<mx:Button id="record_bt" useHandCursor="true" addedToStage="recordBtAddedHandler()"
+                		styleName="webcamRecordButton"
+                		label="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'RECORD')}" click="record();" buttonMode="true" />
+                </mx:AddChild>
+           </mx:State>
+
+           <mx:State name="from_play_stop_state" enterState="stopStateEnterHandler()">
+
+                <mx:SetProperty target="{this}" name="visible" value="true" />
+
+                <mx:AddChild relativeTo="{controlBarHbox}" >
+                     <mx:Button id="stop_play_bt" useHandCursor="true"
+                     	label="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'STOP')}"
+                     	styleName="webcamStopButton"
+                     	click="playStateStop()"
+                     	buttonMode="true"/>
+                </mx:AddChild>
+
+           </mx:State>
+
+
+           <mx:State name="from_record_stop_state" enterState="stopStateEnterHandler()">
+
+                <mx:SetProperty target="{this}" name="visible" value="true" />
+
+                <mx:AddChild relativeTo="{controlBarHbox}" >
+                     <mx:Button id="stop_record_bt" useHandCursor="true"
+                     	label="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'STOP')}"
+                     	styleName="webcamStopButton"
+                     	click="recordStateStop()"
+                     	buttonMode="true"/>
+                </mx:AddChild>
+
+           </mx:State>
+
+
+           <mx:State id="playState" name="play_state">
+
+           		<mx:SetProperty target="{this}" name="visible" value="true" />
+
+                <mx:AddChild relativeTo="{controlBarHbox}" >
+                	<mx:Button id="play_bt" label="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'PLAY')}"  buttonMode="true"
+                		click="play();" styleName="webcamPlayButton" useHandCursor="true" />
+                </mx:AddChild>
+
+                <mx:AddChild relativeTo="{controlBarHbox}" >
+                    <mx:Button id="cancel_bt"
+                    	label="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'RECORD')}" click="record()" buttonMode="true"
+                    	styleName="webcamRecordButton" useHandCursor="true"/>
+                </mx:AddChild>
+           </mx:State>
+
+           <mx:State name="playing_state">
+
+           		<mx:SetProperty target="{this}" name="visible" value="true" />
+
+                <mx:AddChild relativeTo="{controlBarHbox}">
+                	<mx:Button id="stop_bt2" label="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'STOP')}" click="playStateStop()" styleName="webcamStopButton" />
+                </mx:AddChild>
+           </mx:State>
+
+        </mx:states>
+
+        <!--Visible components-->
+	    <mx:VBox id="controlBarVbox" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"  verticalGap="0">
+        	<mx:HBox id="controlBarHbox" width="100%" height="100%" horizontalAlign="center" verticalGap="0" />
+     	</mx:VBox>
+
+     	<!-- Effects -->
+        <mx:Glow id="buttonGlow" color="0xcc0000"
+      	  alphaFrom="1.0" alphaTo="0.3" strength="100"
+   	     duration="1000" repeatCount="0" />
+</mx:VBox>

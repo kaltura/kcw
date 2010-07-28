@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*
+This file is part of the Kaltura Collaborative Media Suite which allows users
+to do with audio, video, and animation what Wiki platfroms allow them to do with
+text.
+
+Copyright (C) 2006-2008  Kaltura Inc.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+@ignore
+*/
+-->
+<mx:Canvas
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:auth="com.kaltura.contributionWizard.view.importViews.search.*"
+	xmlns:util="com.kaltura.contributionWizard.util.*"
+	xmlns:ac="com.adobe.ac.*" xmlns:code="http://code.google.com/p/flexlib/">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.managers.FocusManager;
+			import com.arc90.modular.CairngormEventDispatcherFactory;
+			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+			import com.kaltura.contributionWizard.vo.providers.MediaProviderVO;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
+			import com.kaltura.contributionWizard.vo.PageSearchDirection;
+			import com.kaltura.contributionWizard.events.SearchMediaEvent;
+			import com.kaltura.contributionWizard.vo.SearchMediaRequestVO;
+
+
+			public function get activeMediaProvider():MediaProviderVO
+			{
+				return _activeMediaProvider;
+			}
+			public function set activeMediaProvider(value:MediaProviderVO):void
+			{
+				_activeMediaProvider = value;
+				if (value.customData)
+				{
+					_defaultText = value.customData["defaultText"];
+				}
+				else
+				{
+					_defaultText = "";
+				}
+			}
+
+			public function get searchEnabled():Boolean
+			{
+				return _searchEnabled;
+			}
+			public function set searchEnabled(value:Boolean):void
+			{
+				_searchEnabled = value;
+			}
+			private function searchMediaClickHandler():void
+			{
+				dispatchSetTerms();
+				dispatchEvent(new Event("search", true));
+			}
+
+			private function dispatchSetTerms():void
+			{
+				//TODO: create different event SearchTermsEvent
+				var terms:String = searchTerms.text;
+				var event:SearchMediaEvent = new SearchMediaEvent(SearchMediaEvent.SET_SEARCH_TERMS, -1, terms, this);
+				CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(event);
+			}
+			
+			private function getPromptText():String
+			{
+				var ret:String;
+				if(_activeMediaProvider)
+				{
+					ret = resourceManager.getString(ResourceBundleNames.MEDIA_PROVIDERS, _activeMediaProvider.providerName.toUpperCase() + '_PROMPT' )
+				}
+				return ret ? ret : "";
+			}
+			
+			[Bindable]
+			private var _activeMediaProvider:MediaProviderVO;
+
+			[Bindable]
+			private var _defaultText:String;
+
+			[Bindable]
+			private var _searchEnabled:Boolean;
+		]]>
+	</mx:Script>
+ 
+	<!-- Search button and input -->
+
+	<mx:HBox id="searchControlButtons" width="100%" height="100%" verticalAlign="middle">
+		<!-- mx:TextInput id="searchTerms"
+			text="{_defaultText}"
+			enter="searchMediaClickHandler()" minWidth="40" maxWidth="250" width="100%" /-->
+		<code:PromptingTextInput id="searchTerms"
+			prompt="{ ( resourceManager.getString(ResourceBundleNames.MEDIA_PROVIDERS, _activeMediaProvider.providerName.toUpperCase() + '_PROMPT' ) ) ? resourceManager.getString(ResourceBundleNames.MEDIA_PROVIDERS, _activeMediaProvider.providerName.toUpperCase() + '_PROMPT' ) : '' }" 
+			text="{_defaultText}"
+			enter="searchMediaClickHandler()" minWidth="40" maxWidth="250" width="100%"/>
+		<mx:Button
+			label="{resourceManager.getString(ResourceBundleNames.SEARCH_IMPORT_VIEW, 'SEARCH')}"
+			click="searchMediaClickHandler()" buttonMode="true" styleName="greenButtonThinPadding" />
+	</mx:HBox>
+
+</mx:Canvas>
