@@ -1,0 +1,12 @@
+host			the server code.
+debugMode		is the application running in debug mode? (whether to load plugins locally or remotely, print verbose traces...)
+uiConfId		the id of the uiConf to use.
+kshowId			the kshow id to load.
+entryId			the entry id to load.
+partnered		the id of the partner using the application.
+subpId			the id of the sub partner using the application.
+uid				the id of the (partner's) user using the application.
+ks				the session id for the uid, partnerId and subpId.
+autoPlay		should the player play automatically on load ?
+widgetId		the widget id to use.
+partnerData		extra arbitrary data of the partner to be passed on all requests.
