@@ -12,6 +12,7 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.kaltura.contributionWizard.view.importViews.search.PrivateAuthenticationScreen;
 			import com.kaltura.contributionWizard.vo.limitations.LimitationError;
 			import com.kaltura.contributionWizard.view.importViews.browser.NavigationButtonsMode;
 			import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;

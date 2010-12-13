@@ -78,7 +78,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			import com.kaltura.contributionWizard.model.ExternalFunctionIds;
 			import com.kaltura.contributionWizard.model.WizardModelLocator;
 			import com.kaltura.contributionWizard.model.limitations.Utils;
-			import com.kaltura.contributionWizard.view.importViews.upload.UploadView;
 			import com.kaltura.contributionWizard.vo.ErrorVO;
 			import com.kaltura.contributionWizard.vo.ImportScreenVO;
 			import com.kaltura.contributionWizard.vo.limitations.LimitationsVO;

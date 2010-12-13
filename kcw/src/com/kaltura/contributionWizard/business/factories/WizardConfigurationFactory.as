@@ -42,7 +42,6 @@ package com.kaltura.contributionWizard.business.factories
 
 	import mx.collections.XMLListCollection;
 	import flash.system.Capabilities;
-	import com.kaltura.contributionWizard.view.importViews.upload.UploadView;
 	import com.kaltura.contributionWizard.model.importTypesConfiguration.upload.UploadConfig;
 	import com.kaltura.contributionWizard.vo.limitations.*;
 	import flexlib.scheduling.Timeline;
