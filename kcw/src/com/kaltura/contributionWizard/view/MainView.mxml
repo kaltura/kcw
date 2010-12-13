@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*
+This file is part of the Kaltura Collaborative Media Suite which allows users
+to do with audio, video, and animation what Wiki platfroms allow them to do with
+text.
+
+Copyright (C) 2006-2008  Kaltura Inc.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+@ignore
+*/
+-->
+<mx:Canvas
+		currentState="{getCurrentState(_model.workflowState)}"
+		creationComplete="creationCompleteHandler()"
+		implements="com.kaltura.utils.IDisposable"
+		xmlns:mx="http://www.adobe.com/2006/mxml"
+		xmlns:view="com.kaltura.contributionWizard.view.*"
+		xmlns:introView="com.kaltura.contributionWizard.view.introView.*" 
+		xmlns:browser="com.kaltura.contributionWizard.view.importViews.browser.*" 
+		xmlns:ac="com.adobe.ac.*">
+
+	<mx:preinitialize>
+		<![CDATA[
+			addEventListener(KCWViewEvent.CLOSE_WIZARD, closeWizardHandler);
+		]]>
+	</mx:preinitialize>
+
+	<mx:Script>
+		<![CDATA[
+			import com.kaltura.contributionWizard.vo.limitations.LimitationError;
+			import com.kaltura.contributionWizard.enums.KCWWorkflowState;
+			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
+			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
+			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
+			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
+			import com.kaltura.contributionWizard.events.WorkflowEvent;
+			import com.kaltura.contributionWizard.events.CloseWizardEvent;
+			import com.kaltura.contributionWizard.command.CloseWizardCommand;
+			import com.kaltura.utils.IDisposable;
+			import mx.resources.ResourceBundle;
+			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
+			import com.kaltura.contributionWizard.model.PendingActions;
+			import mx.utils.URLUtil;
+			import mx.resources.ResourceBundle;
+
+			private static const PRELOADING:String 		= "preloading";
+			private static const LOADED_BASE:String 	= "loadedBase";
+
+			private static const INTRO_SCREEN:String 	= "introScreen";
+			private static const IMPORT_VIEWS:String 	= "importViews";
+
+			[Bindable]
+			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
+
+			private function creationCompleteHandler():void
+			{
+				_model.loadState.addEventListener(Event.COMPLETE, startupSequenceCompleteHandler);
+			}
+
+			//TODO: Use chain events instead.
+			private function startupSequenceCompleteHandler(evtComplet:Event):void
+			{
+				var changeWorkflowEvent:WorkflowEvent = new WorkflowEvent(WorkflowEvent.CHANGE_WORKFLOW, KCWWorkflowState.INTRO_SCREEN);
+				changeWorkflowEvent.dispatch();
+			}
+
+			public function dispose():void
+			{
+				if (importViews)
+				{
+					importViews.dispose();
+				}
+
+			}
+
+			private function quitButtonClickHandler():void
+			{
+				if (! _model.importData.importCart.isCartEmpty)
+				{
+					Alert.show(
+							resourceManager.getString(ResourceBundleNames.INTRO_SCREEN,
+							"ALERT_CLOSE_WIZARD"),resourceManager.getString(ResourceBundleNames.INTRO_SCREEN,
+								"ALERT_CLOSE_WIZARD_TITLE"), Alert.YES | Alert.NO, null, onCloseAlertClose);
+				}
+				else
+				{
+					closeWizardHandler();
+				}
+
+			}
+
+			private function onCloseAlertClose(evtClose:CloseEvent):void
+			{
+				if (evtClose.detail == Alert.YES)
+				{
+					closeWizardHandler();
+				}
+			}
+
+			private function closeWizardHandler(closeEvent:KCWViewEvent = null):void
+			{
+				//TODO: it's better to crreate a FinishWizardCommand rather then letting the view know such things
+				var event:CloseWizardEvent = new CloseWizardEvent(CloseWizardEvent.CLOSE_WIZARD);
+				event.dispatch();
+			}
+
+			private function getCurrentState(workflowState:String):String
+			{
+				switch (workflowState)
+				{
+					case KCWWorkflowState.PRELOADING:
+						return PRELOADING;
+					break;
+
+					case KCWWorkflowState.INTRO_SCREEN:
+						return INTRO_SCREEN;
+					break;
+
+					case KCWWorkflowState.IMPORT_MEDIA:
+						return IMPORT_VIEWS;
+					break;
+
+					default:
+						return currentState;
+					break;
+				}
+			}
+			
+			/*private function limitationError():void{
+				var error:LimitationError = _model.limitationError;
+				Alert.show(error ? error.message : "error");
+				//Alert.show(_model.limitationError.message);
+			}*/
+		]]>
+	</mx:Script>
+	
+	<!--ac:ObserveValue source="{_model.limitationIsValid}" value="{false}" handler="limitationError" /-->
+	
+	<mx:states>
+		<mx:State name="{PRELOADING}">
+			<mx:AddChild relativeTo="{this}" position="lastChild">
+				<introView:StartupPreloader width="100%" height="100%" preloaderUrl="{_model.externalUrls.startupPreloaderUrl}" />
+			</mx:AddChild>
+		</mx:State>
+
+		<mx:State name="{LOADED_BASE}">
+			<mx:AddChild>
+				<mx:HBox width="100%"
+					horizontalGap="0"
+					paddingTop="15" paddingRight="15"
+					verticalAlign="middle"
+					buttonMode="true">
+					<mx:Spacer width="100%" />
+					<mx:Button styleName="closeWizardButton"
+						click="quitButtonClickHandler()"
+						visible="{_model.startupDefaults.showCloseButton}"
+						label="{resourceManager.getString(ResourceBundleNames.INTRO_SCREEN, 'CLOSE_BUTTON')}" />
+					<!--<mx:LinkButton label="Close" styleName="closeLink" />-->
+				</mx:HBox>
+			</mx:AddChild>
+		</mx:State>
+
+		<mx:State name="{INTRO_SCREEN}" basedOn="{LOADED_BASE}">
+			<mx:AddChild>
+				<!--TODO:Refactor the gray screen so it'll only exist in one place-->
+				<view:IntroView width="100%" height="100%" />
+			</mx:AddChild>
+		</mx:State>
+
+		<mx:State name="{IMPORT_VIEWS}" basedOn="{LOADED_BASE}">
+			<mx:AddChild>
+				<browser:ImportViewsBrowser id="importViews"
+					styleName="importViews"
+					workflowState="{_model.workflowState}"
+					width="100%" height="100%"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+</mx:Canvas>

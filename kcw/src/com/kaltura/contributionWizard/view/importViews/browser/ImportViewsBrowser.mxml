@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*
+This file is part of the Kaltura Collaborative Media Suite which allows users
+to do with audio, video, and animation what Wiki platfroms allow them to do with
+text.
+
+Copyright (C) 2006-2008  Kaltura Inc.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+@ignore
+*/
+-->
+<mx:VBox
+	implements="com.kaltura.utils.IDisposable"
+	verticalScrollPolicy="off" width="100%" height="100%" verticalGap="0"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:importViews="com.kaltura.contributionWizard.view.importViews.*"
+	xmlns:checkout="com.kaltura.contributionWizard.view.importViews.checkout.*"
+	xmlns:tagging="com.kaltura.contributionWizard.view.tagging.*"
+	xmlns:util="com.kaltura.contributionWizard.util.*"
+	xmlns:finishScreen="com.kaltura.contributionWizard.view.importViews.finishScreen.*"
+	xmlns:pending="com.kaltura.contributionWizard.view.pending.*"
+	xmlns:ac="com.adobe.ac.*" xmlns:browser="com.kaltura.contributionWizard.view.importViews.browser.*">
+
+	<mx:creationComplete>
+		<![CDATA[
+			ExternalInterface.addCallback("goNextStep", goNextStep);
+			ExternalInterface.addCallback("goPrevStep", goPrevStep);
+			if (_model.context.reportNavigationMode)
+				watchNavigationMode();
+		]]>
+	</mx:creationComplete>
+
+	<mx:Script>
+		<![CDATA[
+			import com.kaltura.contributionWizard.events.ValidateLimitationsEvent;
+			import mx.binding.utils.BindingUtils;
+			import flash.utils.setInterval;
+			import flash.utils.setTimeout;
+			import com.kaltura.contributionWizard.enums.KCWWorkflowState;
+			import com.bjorn.event.ChainEvent;
+			import com.kaltura.contributionWizard.command.ChangeWorkflowCommand;
+			import mx.core.FlexVersion;
+			import com.kaltura.contributionWizard.vo.ImportScreenVO;
+			import com.kaltura.contributionWizard.model.MediaTypes;
+			import com.kaltura.contributionWizard.events.MediaTypeSelectionEvent;
+			import com.kaltura.contributionWizard.events.GotoScreenEvent;
+			import com.kaltura.contributionWizard.vo.providers.MediaProviderVO;
+			import com.kaltura.contributionWizard.view.events.MediaProviderViewEvent;
+			import com.kaltura.contributionWizard.events.MediaProviderEvent;
+			import com.adobe_cw.adobe.cairngorm.control.CairngormEvent;
+			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+			import com.kaltura.contributionWizard.view.events.TermsOfUseEvent;
+			import mx.core.IFlexDisplayObject;
+			import mx.core.Application;
+			import com.kaltura.contributionWizard.view.importViews.alerts.TermsOfUseScreen;
+			import mx.managers.PopUpManager;
+			import com.kaltura.contributionWizard.model.importData.UploadCartStatusTypes;
+			import mx.events.CloseEvent;
+			import com.kaltura.contributionWizard.events.ExternalInterfaceEvent;
+			import com.kaltura.contributionWizard.model.ImportTypes;
+			import com.kaltura.contributionWizard.events.ClearImportStateEvent;
+			import com.kaltura.contributionWizard.view.events.NavigationEvent;
+			import mx.controls.Alert;
+			import com.bjorn.event.EventChainFactory;
+			import com.kaltura.contributionWizard.model.importData.ImportData;
+			import com.kaltura.contributionWizard.vo.providers.MediaInfo;
+			import com.kaltura.contributionWizard.events.ImportEvent;
+			import com.kaltura.contributionWizard.events.WorkflowEvent;
+			import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
+
+			[Bindable]
+			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
+
+			[Bindable]
+			private var _navigationButtonsMode:NavigationButtonsMode;
+
+			private var _oldIsModal:Boolean;
+
+			public static const SELECTOR_NAME:String = ".htmlTextLink";
+
+			public function dispose():void
+			{
+				if (importTypesView)
+					importTypesView.dispose()
+			}
+
+			public function set workflowState(workflowState:String):void
+			{
+				_workflowState  = workflowState;
+				if (_workflowState == KCWWorkflowState.INTRO_SCREEN || _workflowState == KCWWorkflowState.IMPORT_MEDIA)
+				{
+					currentState = "";
+				}
+			}
+			public function get workflowState():String
+			{
+				return _workflowState;
+			}
+			[Bindable]
+			private var _workflowState:String;
+
+			private function validateTagging():void
+			{
+				//TODO: find a way to combine this step just using goNextStep to make it generic
+
+				//if (taggingView.validateForms())
+				//{
+				//	validateTermsOfUse();
+				//}
+			}
+
+
+			private function userCertifiedChangeHandler(userCertified:Boolean):void
+			{
+				_model.userCertified = userCertified;
+			}
+
+			private function goNextStep():void
+			{
+				//temp
+				//var validateEvent:ValidateLimitationsEvent = new ValidateLimitationsEvent(ValidateLimitationsEvent.VALIDATE);
+				//validateEvent.dispatch();
+				
+				importTypesView.goNextStep();
+			}
+
+			private function goPrevStep():void
+			{
+				importTypesView.goPrevStep();
+			}
+
+			private function backToIntoScreen():void
+			{
+				if (! _model.importData.importCart.isCartEmpty)
+				{
+					Alert.show(
+						resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'ALERT_BACK_TO_START'),
+						"", Alert.YES | Alert.NO, null, closeBackToIntroAlertHandler
+						);
+				}
+				else
+				{
+					forceBackToIntroScreen();
+				}
+			}
+
+			private function closeBackToIntroAlertHandler(evtClose:CloseEvent):void
+			{
+				if (evtClose.detail == Alert.YES)
+				{
+					forceBackToIntroScreen();
+				}
+			}
+
+			private function forceBackToIntroScreen():void
+			{
+				var gotoScreenEvent:GotoScreenEvent = new GotoScreenEvent(GotoScreenEvent.GOTO_SCREEN, null);
+				gotoScreenEvent.dispatch();
+			}
+
+			private function cancelButtonClickHandler():void
+			{
+				backToIntoScreen();
+			}
+
+			private function backToImportSelection():void
+			{
+				currentState = "";
+			}
+
+			private function onMediaProviderChange(activeMediaProvider:MediaProviderVO):void
+			{
+				currentState = "";
+			}
+
+			private function onEntriesAdded(hasEntriesAddedPerSession:Boolean):void
+			{
+				gotoFinishScreen();
+			}
+			private function gotoFinishScreen():void
+			{
+				//TODO: this can be refactored and this if can be removed, for example using view controller...
+				if (_model.importData.hasEntriesAddedPerSession)
+				{
+					currentState = "finishScreen";
+				}
+
+			}
+
+			private function changeMediaProviderHandler(changeMediaProviderEvent:MediaProviderViewEvent):void
+			{
+				var mediaProviderVo:MediaProviderVO = changeMediaProviderEvent.mediaProviderVo;
+
+				if (_model.importData.importCart.isCartEmpty)
+				{
+					changeMediaProvider(mediaProviderVo);
+				}
+				else
+				{
+					var messageBody:String 	= resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, "ALERT_SWITCH_MEDIA_PROVIDER_BODY");
+					var messageTitle:String	= resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, "ALERT_SWITCH_MEDIA_PROVIDER_TITLE");
+					var a : Alert = Alert.show(messageBody, messageTitle, Alert.YES | Alert.NO, null,
+						function(closeEvent:CloseEvent):void
+						{
+							if (closeEvent.detail == Alert.YES)
+							{
+								changeMediaProvider(mediaProviderVo);
+							}
+						});
+						PopUpManager.centerPopUp(a);
+				}
+			}
+
+			private function selectMediaTypeHandler(mediaType:String):void
+			{
+				if (_model.importData.importCart.isCartEmpty)
+				{
+					changeMediaType(mediaType);
+				}
+				else
+				{
+					var messageBody:String 	= resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, "ALERT_SWITCH_MEDIA_PROVIDER_BODY");
+					var messageTitle:String = resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, "ALERT_SWITCH_MEDIA_PROVIDER_TITLE");
+
+
+					var a:Alert = Alert.show(messageBody, messageTitle, Alert.YES | Alert.NO, null,
+		
+						function(closeEvent:CloseEvent):void
+						{
+							if (closeEvent.detail == Alert.YES)
+							{
+								changeMediaType(mediaType);
+							}
+						});
+						PopUpManager.centerPopUp(a);
+				}
+
+			}
+
+			private function changeMediaType(mediaType:String):void
+			{
+				var evtMediaTypeSelected:MediaTypeSelectionEvent = new MediaTypeSelectionEvent(MediaTypeSelectionEvent.MEDIA_TYPE_SELECT);
+				evtMediaTypeSelected.mediaType = mediaType;
+				evtMediaTypeSelected.dispatch();
+			}
+
+			private function changeMediaProvider(mediaProviderVo:MediaProviderVO):void
+			{
+				currentState = "";
+
+				var event:MediaProviderEvent = new MediaProviderEvent(MediaProviderEvent.MEDIA_PROVIDER_CHANGE, mediaProviderVo)
+				event.dispatch();
+			}
+
+			private function getLinkColor():String
+			{
+
+				var selector:CSSStyleDeclaration = StyleManager.getStyleDeclaration(SELECTOR_NAME);
+				var color:uint = selector.getStyle("color");
+				var colorString:String = '#' + color.toString(16);
+				return colorString;
+			}
+
+			private function watchNavigationMode():void
+			{
+				var timer:Timer = new Timer(200, 0);
+				addEventListener(Event.ENTER_FRAME,
+					function(e:Event):void
+					{
+						var isModal:Boolean = systemManager.numModalWindows > 0;
+						if (isModal != _oldIsModal)
+						{
+							_oldIsModal = isModal
+							nextChangedHandler = null;
+							prevChangedHandler = null;
+						}
+					}
+				)
+				timer.start();
+
+/* 				BindingUtils.bindProperty(this, "nextChangedHandler", _navigationButtonsMode, "nextEnabled")
+				BindingUtils.bindProperty(this, "nextChangedHandler", _navigationButtonsMode, "nextText")
+
+				BindingUtils.bindProperty(this, "prevChangedHandler", _navigationButtonsMode, "prevEnabled")
+				BindingUtils.bindProperty(this, "prevChangedHandler", _navigationButtonsMode, "prevText")
+ */			}
+
+		]]>
+	</mx:Script>
+
+	<mx:Binding source="{_navigationButtonsMode.nextEnabled}" 	destination="nextChangedHandler" />
+	<mx:Binding source="{_navigationButtonsMode.nextText}" 		destination="nextChangedHandler" />
+
+	<mx:Binding source="{_navigationButtonsMode.prevEnabled}" 	destination="prevChangedHandler" />
+	<mx:Binding source="{_navigationButtonsMode.prevText}"		destination="prevChangedHandler" />
+
+	<mx:Script>
+		<![CDATA[
+
+			public function set nextChangedHandler(value:*):void
+			{
+				var isEnabled:Boolean = _navigationButtonsMode.nextEnabled && !_oldIsModal;
+				ExternalInterface.call("nextButtonChanged", nextButton.label, isEnabled, _navigationButtonsMode.nextExists);
+			}
+			public function get nextChangedHandler():*
+			{
+				return _navigationButtonsMode.nextEnabled;
+			}
+
+			public function set prevChangedHandler(value:*):void
+			{
+				var isEnabled:Boolean = _navigationButtonsMode.prevEnabled && !_oldIsModal;
+				ExternalInterface.call("prevButtonChanged", prevButton.label, isEnabled, _navigationButtonsMode.prevExists);
+			}
+			public function get prevChangedHandler():*
+			{
+				return _navigationButtonsMode.prevEnabled;
+			}
+			
+			/*public function set navigationButtonsMode(value:NavigationButtonsMode):void{
+				value.nextEnabled = value.nextEnabled; 
+				_navigationButtonsMode = value;
+				
+			}
+			public function get navigationButtonsMode():NavigationButtonsMode{
+				return _navigationButtonsMode;
+			}*/
+		]]>
+	</mx:Script>
+
+	<mx:Binding
+		destination="_navigationButtonsMode"
+		source="importTypesView.navigationButtonsMode" />
+
+	<!--Visible components -->
+
+	<mx:Canvas width="100%" height="100%">
+
+		<browser:ImportStepsStack id="importTypesView"
+			width="100%" height="100%"
+			styleName="importViewsBlock"
+			horizontalGap="0"
+			workflowState="{_workflowState}" />
+
+		<browser:MediaProvidersTabs id="mediaProvidersTabs" styleName="mediaProvidersTabs"
+			changeMediaProvider="changeMediaProviderHandler(event)" />
+
+		<browser:MediaTypeTabs id="mediaTypeSelection" 
+			styleName="mediaTypeSelection"
+			selectMediaType="{selectMediaTypeHandler(event.mediaType)}"
+			allMediaTypes="{_model.mediaProviders.mediaTypes}"
+			currentMediaType="{_model.mediaProviders.activeMediaProvider.mediaInfo.mediaType}" />
+	</mx:Canvas>
+	
+	<mx:HBox id="confirmButtons" width="100%" verticalAlign="middle" 
+		includeInLayout="{_model.startupDefaults.showConfirmButtons}" styleName="confirmButtons"
+		visible="{_model.startupDefaults.showConfirmButtons}" >
+		<mx:VBox>
+		<mx:Canvas styleName="logoImage" width="32" height="21" visible="{_model.startupDefaults.showLogoImage}" includeInLayout="{_model.startupDefaults.showLogoImage}" />
+		</mx:VBox>
+		<mx:VBox styleName="confirmMessageVBox">
+		<mx:Text id="confirmMessage" selectable="true"
+ 			visible="{(_model.startupDefaults.autoTOUConfirmation)&amp;&amp;(_model.startupDefaults.enableTOU)}"
+			styleName="bottomCertificationMessage"
+			htmlText="{resourceManager.getString(
+												ResourceBundleNames.TERMS_OF_USE_SCREEN,
+												'CONFIRM_MESSAGE',
+												[
+													_model.mediaProviders.activeMediaProvider.mediaInfo.mediaType,
+													_model.externalUrls.termsOfUseUrl,
+													getLinkColor()
+												])
+												}"
+			 />
+		</mx:VBox>
+
+		<!--browser:PermissionLevelSelection
+			permissionLevel="{_model.context.permissions}"
+			visible="true || {_model.startupDefaults.alwaysShowPermission}"
+			includeInLayout="{_model.startupDefaults.alwaysShowPermission}" />
+
+		<mx:Button id="cancelButton"
+			visible="true || {_model.startupDefaults.enableIntroScreen &amp;&amp; _workflowState != KCWWorkflowState.FINISH_SCREEN}"
+			includeInLayout="{_model.startupDefaults.enableIntroScreen}"
+			label="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'CANCEL')}"
+			buttonMode="true"
+			click="cancelButtonClickHandler()" /-->
+
+		<mx:Spacer id="navigationButtonsSpacer" width="100%" />
+
+		<!--TODO: Refactory - build messaging mechanism that allows concrete import views to change labels -->
+
+		<mx:Button id="prevButton"
+			styleName="backCancel"
+			buttonMode="{_navigationButtonsMode.prevEnabled}"
+			enabled="{_navigationButtonsMode.prevEnabled}"
+			visible="{_navigationButtonsMode.prevExists}"
+			label="{_navigationButtonsMode.prevText}"
+			click="goPrevStep()" />
+
+		<mx:Button id="nextButton"
+			styleName="nextButtonWithIcon"
+			buttonMode="{_navigationButtonsMode.nextEnabled}"
+			enabled="{_navigationButtonsMode.nextEnabled &amp;&amp; _model.limitationIsValid}"
+			visible="{_navigationButtonsMode.nextExists}"
+			label="{_navigationButtonsMode.nextText}"
+			click="goNextStep()"
+			labelPlacement="left"  />
+
+<!--	<mx:Button id="backButton"
+			label="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'BACK')}" buttonMode="true"
+			click="goPrevStep()" />
+		<mx:Button id="nextButton"
+			label="{_model.importData.importCart.uploadStatus == UploadCartStatusTypes.READY_TO_UPLOAD
+				?
+				resourceManager.getString(ResourceBundleNames.UPLOAD_IMPORT_VIEW, 'UPLOAD')
+				:
+				resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'NEXT')}"
+
+			styleName="greenButton" buttonMode="{nextButton.enabled}"
+			click="goNextStep()" enabled="{!_model.importData.importCart.isCartEmpty}" />-->
+	</mx:HBox>
+</mx:VBox>

@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*
+This file is part of the Kaltura Collaborative Media Suite which allows users
+to do with audio, video, and animation what Wiki platfroms allow them to do with
+text.
+
+Copyright (C) 2006-2008  Kaltura Inc.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+@ignore
+*/
+-->
+<core:KApplication
+	backgroundColor="0x000000"
+	preloader="com.kaltura.preloaders.KPreloader"
+	layout="absolute" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" frameRate="40"
+	implements="com.kaltura.contributionWizard.IContributionWizard"
+	creationComplete="onCreationComplete()"
+	click="onClick(event)"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:core="com.kaltura.core.*"
+	xmlns:views="views.*"
+	xmlns:net="flash.net.*"
+	xmlns:view="com.kaltura.contributionWizard.view.*"
+	xmlns:control="com.kaltura.contributionWizard.control.*"
+	xmlns:business="com.kaltura.contributionWizard.business.*"
+	xmlns:introView="com.kaltura.contributionWizard.view.*"
+	xmlns:pending="com.kaltura.contributionWizard.view.pending.*"
+	xmlns:upload="com.kaltura.contributionWizard.view.importViews.upload.*">
+
+	<mx:Metadata>
+		[ResourceBundle("Errors")] 
+		[ResourceBundle("FinishScreen")]
+		[ResourceBundle("ImportBrowser")]
+		[ResourceBundle("ImportModuleLoader")]
+		[ResourceBundle("IntroScreen")]
+		[ResourceBundle("MediaProviders")] 
+		[ResourceBundle("MediaTypes")]
+		[ResourceBundle("PendingMessages")]
+		[ResourceBundle("PermissionLevels")] 
+		[ResourceBundle("SearchAuthenticationScreen")]
+		[ResourceBundle("SearchImportView")]
+		[ResourceBundle("Tagging")]
+		[ResourceBundle("TermsOfUseScreen")]
+		[ResourceBundle("UploadImportView")]
+		[ResourceBundle("WebcamView")]
+		//[ResourceBundle("SoundRecorderView")]
+	</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import com.bjorn.event.ChainEvent;
+			import com.bjorn.event.EventChainFactory;
+			import com.kaltura.KalturaClient;
+			import com.kaltura.config.KalturaConfig;
+			import com.kaltura.contributionWizard.IContributionWizard;
+			import com.kaltura.contributionWizard.events.GotoScreenEvent;
+			import com.kaltura.contributionWizard.events.LoadUIEvent;
+			import com.kaltura.contributionWizard.events.NotifyShellEvent;
+			import com.kaltura.contributionWizard.events.ReportErrorEvent;
+			import com.kaltura.contributionWizard.events.SaveInjectedDataEvent;
+			import com.kaltura.contributionWizard.events.SetDefaultScreenEvent;
+			import com.kaltura.contributionWizard.events.ValidateLimitationsEvent;
+			import com.kaltura.contributionWizard.events.WizardConfigEvent;
+			import com.kaltura.contributionWizard.model.Context;
+			import com.kaltura.contributionWizard.model.ExternalFunctionIds;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
+			import com.kaltura.contributionWizard.model.limitations.Utils;
+			import com.kaltura.contributionWizard.view.importViews.upload.UploadView;
+			import com.kaltura.contributionWizard.vo.ErrorVO;
+			import com.kaltura.contributionWizard.vo.ImportScreenVO;
+			import com.kaltura.contributionWizard.vo.limitations.LimitationsVO;
+			import com.kaltura.utils.KUtils;
+			import com.kaltura.utils.ObjectHelpers;
+			
+			import flash.utils.setTimeout;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.core.Container;
+			import mx.core.UIComponent;
+			import mx.events.PropertyChangeEvent;
+			import mx.events.StyleEvent;
+			import mx.managers.BrowserManager;
+			import mx.managers.SystemManager;
+			import mx.messaging.config.ConfigMap;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.URLUtil;
+
+			public static var myVersion:String = "2.1.6.3" ; 
+			public static var CLIENT_TAG:String = "kcw";
+
+			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
+
+			private var _mediaType:String;
+			private var _mediaProviderName:String;
+			private var _cachedScreenVo:ImportScreenVO
+			private var _started : Boolean = false;
+			private var _params:Object;
+			
+			/**
+			 * A set of parameters that defines the essential environmental information for the contribution wizard to work with kaltura services
+			 *
+			 * defaultMediaType - 	An optional parameter, that indicates the default media type screen to show at startup.
+			 * 						The media type is given as a string (e.g. "image", "video", "audio").
+			 *
+			 * defaultMediaProviderName - An optional parameter, that indicates the default selected media provider.
+			 * 							The provider is given as the provider name, e.g "kaltura".
+			 * userId - Deprecated in PS3 (KCW 2.0 and above)
+			 * isAnonymous
+			 * sessionId
+			 * partnerId
+			 * kshow_id - Deprecated in PS3 (KCW 2.0 and above)
+			 * host - A uint code that indicates the host URL (see HostURLFactory for the enumeration)
+			 * terms_of_use
+			 * quick_edit - If false, entries are automatically added to the roughcut end, otherwise, entries will not be automatically added to the roughcut
+			 *
+			 **/
+
+			public function setParameters(parameters:Object):void
+			{
+				parameters.protocol = _params.protocol;
+				addUrl(parameters);
+				var params:Object = ObjectHelpers.lowerNoUnderscore( parameters );
+				setConfiguration(params);
+				dispatchStartupSequence(parameters);
+			}
+			
+			public function setPartnerData(value:*):void
+			{
+				_model.context.partnerData = value;
+			}
+
+			public function gotoScreen(mediaType:String, mediaProviderName:String):void
+			{
+				var screenVo:ImportScreenVO = new ImportScreenVO();
+				screenVo.mediaType = mediaType;
+				screenVo.mediaProviderName = mediaProviderName;
+
+				if (_model.loadState.loadingComplete)
+				{
+					var gotoScreenEvent:GotoScreenEvent = new GotoScreenEvent(GotoScreenEvent.GOTO_SCREEN, screenVo);
+					gotoScreenEvent.dispatch();
+				}
+				else
+				{
+					_cachedScreenVo = screenVo;
+				}
+			}
+
+			//TODO: refactor, this is just for style unloading test
+			private static var _loaded:Boolean = false;
+			private var _styleDispatcher:IEventDispatcher;
+
+			public function activate():void
+			{
+				if (_loaded)
+				{
+					_styleDispatcher = StyleManager.loadStyleDeclarations(_model.uiConfigVo.styleUrl, true);
+					_styleDispatcher.addEventListener(StyleEvent.COMPLETE, styleCompleteHandler);
+				}
+			}
+
+			private function styleCompleteHandler(styleEvent:StyleEvent):void
+			{
+				var notifyShellEvent:NotifyShellEvent = new NotifyShellEvent(NotifyShellEvent.WIZARD_READY_NOTIFICATION);
+				notifyShellEvent.dispatch();
+			}
+			public function deactivate():void
+			{
+				StyleManager.unloadStyleDeclarations(_model.uiConfigVo.styleUrl, true);
+			}
+
+			private function onCreationComplete():void
+			{
+				
+				var protocol : String;
+				if(Application.application.parameters.protocol)
+					protocol = Application.application.parameters.protocol;
+				else
+					protocol = URLUtil.isHttpsURL(this.url) ? "https" : "http";
+				
+				protocol += "://";
+				
+				//trace("protocol: " + protocol);
+				
+				var customContextMenu:ContextMenu = new ContextMenu();
+				customContextMenu.hideBuiltInItems();
+				var menuItem:ContextMenuItem = new ContextMenuItem( "kcw version: "+myVersion);
+				
+				//hide the Flash menu
+				var credits:ContextMenuItem = new ContextMenuItem("About Kaltura's Open Source Media Uploader");
+				credits.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,onCreditClick);
+				
+				customContextMenu.customItems.push(credits);
+				customContextMenu.customItems.push(menuItem);
+				contextMenu = customContextMenu;
+		 		Security.allowDomain("*");
+				
+				_params = Application.application.parameters;
+				_params["protocol"] = protocol;
+				
+				
+				addUrl(_params);
+				addCallbacks();
+				/*
+				CairngormEventDispatcher.getInstance().dispatchEvent(new ContextEvent(ContextEvent.GET_CONTEXT, params));
+				StyleManager.loadStyleDeclarations("ContributionWizardStyles.swf");
+				 */
+				saveRootReference();
+				_model.loadState.addEventListener(Event.COMPLETE, startupSequenceCompleteHandler);
+		
+				if(this.stage)
+					onAddedToStage();
+				else
+					this.addEventListener(Event.ADDED_TO_STAGE , onAddedToStage);
+
+				//setTimeout( gotoScreen, 0 , "video", "youtube");
+				//setTimeout(gotoScreen, 1000, "audio", null);
+				//setTimeout(gotoScreen, 4000, null, null);
+				//WizardModelLocator.getInstance().mediaProviders.mediaProvidersList
+				//UIComponent.mx_internal::dispatchEventHook = myDispatchEventHook;
+				
+				var objParam : Object = Application.application.parameters;
+				objParam  = ObjectHelpers.lowerNoUnderscore( objParam );
+				setConfiguration(objParam);
+
+			}
+			
+			private function setConfiguration(params:Object):void {
+				var configuration : KalturaConfig = new KalturaConfig();
+				configuration.partnerId = params.partnerid;
+				configuration.clientTag = CLIENT_TAG;
+				configuration.domain = "http://" + KUtils.hostFromCode( params.host ); //"http://kaldev.kaltura.com";
+				if (params.srvurl)
+					configuration.srvUrl =params.srvurl;
+				else 
+					configuration.srvUrl = "api_v3/index.php";
+				
+				_model.categoriesRootId = params.categoriesrootid;
+				_model.additionalField = params.additionalfield;
+				_model.context.kc = new KalturaClient(configuration);
+				if (params.ks)
+					_model.context.kc.ks = params.ks;
+				else
+					_model.context.kc.ks = params.sessionid
+			}
+			
+			private function onAddedToStage( event : Event = null ) : void
+			{
+				this.removeEventListener(Event.ADDED_TO_STAGE , onAddedToStage);
+
+				//UGLY HACK ALERT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				//TODO: change the wapper to call some init() 
+				//function and every application should implement 
+				//an interface that will indecated that it can 
+				//be loaded via wrapper
+				///////////////////////////////////////////////
+				if( (this.parent && 
+					this.parent.parent &&
+					this.parent.parent.parent &&
+					this.parent.parent.parent.hasOwnProperty("NAME") &&
+					this.parent.parent.parent["NAME"] == "flexWrapper" &&
+					this.parent.parent.parent.root.parent == this.stage ) ||
+					this.root.parent == this.stage )
+				{
+					//if this is root application or it loads using a wrapper
+					dispatchStartupSequence(_params);
+				}
+				///////////////////////////////////////////////
+			}
+			
+			private function onCreditClick(evt:ContextMenuEvent):void
+		 	{
+		 		var urlRequest:URLRequest = new URLRequest("http://corp.kaltura.com/technology/content_ingestion");
+				try
+			  	{
+			  		navigateToURL(urlRequest, "_blank");
+			  	}
+			  	catch(e:Error)
+			  	{
+			  		trace("failed navigating to "+url+"/n"+e.message);
+			  	}
+		 	}
+
+			private function startupSequenceCompleteHandler(evtComplete:Event):void
+			{
+				_loaded = true;
+				
+				var screenVo:ImportScreenVO = _cachedScreenVo || _model.startupDefaults.defaultScreenVo;
+				var gotoScreenEvent:GotoScreenEvent = new GotoScreenEvent(GotoScreenEvent.GOTO_SCREEN, screenVo);
+				var notifyShellEvent:NotifyShellEvent = new NotifyShellEvent(NotifyShellEvent.WIZARD_READY_NOTIFICATION);
+				var postStartupSequence:ChainEvent = EventChainFactory.chainEvents([gotoScreenEvent, notifyShellEvent]);
+				postStartupSequence.dispatch();
+			}
+
+			public function dispose():void
+			{
+				view.dispose();
+			}
+
+			private function onClick(event:MouseEvent):void
+			{
+				trace("Click target: ", event.target);
+			}
+
+			private static function myDispatchEventHook(event:Event, uic:UIComponent):Boolean
+			{
+				return true;
+			}
+
+			/*
+			Adds a wizard url to the params object.
+			This is essential, because only display objects linked to the root (systemManager) can acquire the real url.
+			None display object might be able to use Applciation.application.url. This might work, however, when the wizard is loaded into another
+			ApplciationDomain that has a different url, the static Application.application will refer to the shell app.
+			*/
+			private function addUrl(paramsObject:Object):void
+			{
+				var url:String = this.url;
+				paramsObject["url"] = url;
+			}
+			private function saveRootReference():void
+			{
+				/*
+				We use the model SystemManager reference because of hack that we use:The contribution wizard is being loaded into a swf ApplicationDomain.currentDomain instead of child or
+				In that case, the  SystemManager.getSWFRoot(this) returns a random SystemManager (either the expected SystemManager which ius the root of the contribution wizard or the loading swf SystemManager object)
+				*/
+				_model.systemManager = systemManager as SystemManager;
+			}
+
+			private function dispatchStartupSequence(parameters:Object):void
+			{
+				if(_started) return;
+				_started = true;
+				
+				//trace("printing params");
+				//trace(ObjectUtil.toString(parameters));
+				var getContext:SaveInjectedDataEvent 	= new SaveInjectedDataEvent(SaveInjectedDataEvent.SAVE_INJECTED_DATA, parameters)
+				var getConfig:WizardConfigEvent	 		= new WizardConfigEvent(WizardConfigEvent.GET_WIZARD_CONFIG);
+				var loadStyles:LoadUIEvent 				= new LoadUIEvent(LoadUIEvent.LOAD_STYLE, 	_model.uiConfigVo);
+				var loadLocale:LoadUIEvent 				= new LoadUIEvent(LoadUIEvent.LOAD_LOCALE, 	_model.uiConfigVo);
+				var eventList:Array = [getContext, getConfig, loadStyles, loadLocale];
+
+				var chainEvent:ChainEvent = EventChainFactory.chainEvents(eventList);
+				chainEvent.dispatch();
+			}
+			
+/* 			private function setParamsTest():void
+			{
+				var o:Object =
+					{
+						defaultMediaType: "video",
+						defaultMediaProviderName: "2",
+						userId: "2",
+						isAnonymous: "false",
+						sessionId: "MzQxYWViZmE3M2YyYzdiMGFhNDIxMTJjZTRhM2VkY2U1NTVmYWQyY3w1MTk7NTE5OzEyMTEwMjAyMzY7MDsxMjEwOTMzODM2LjQ2MTg7MjtlZGl0Oio",
+						partnerId: "0",
+						subPartnerId: "100",
+						kshow_id: "10030",
+						host: "0",
+						terms_of_use: "http://www.kaltura.com/index.php/static/tandc",
+						afterAddentry: "addentry",
+						close: "wizardCloseCallback",
+						wizardReadyHandler: "onWizardReady",
+						quick_edit: "1",
+						permissions: "public",
+						uiConfId: "1001"
+					} 
+				setParameters(o);
+			} */
+			
+			/*private function setTabHeight():void
+			{
+				var a:Array = StyleManager.selectors;
+				var css:CSSStyleDeclaration = StyleManager.getStyleDeclaration(".roundTabBar");
+				if(css)
+				{
+					var o:* = css.getStyle("tabHeight"); //somehow it returns an undefined
+					css.setStyle("tabHeight", 20);
+					css.setStyle("tabWidth", 40);
+				}
+			}*/
+			
+			public function setParam(key:String, value:*):Boolean
+			{
+				var ret:Boolean = Utils.setLimitationKey(key, value); 
+				if(ret)
+				{
+					var validateEvent:ValidateLimitationsEvent = new ValidateLimitationsEvent(ValidateLimitationsEvent.VALIDATE);
+					validateEvent.dispatch();
+				}
+				return ret;
+			} 
+			
+			private function addCallbacks():void
+			{
+				ExternalInterface.addCallback("setPartnerData", setPartnerData);
+				ExternalInterface.addCallback("setParam", setParam);
+				//ExternalInterface.addCallback("deactivate", deactivate);
+				//ExternalInterface.addCallback("gotoScreen", gotoScreen);
+			}
+
+
+		]]>
+	</mx:Script>
+	<!-- the ServiceLocator where we specify the remote services -->
+	<business:Services />
+	<!-- the FrontController, containing Commands specific to this appliation -->
+	<control:WizardController />
+	<introView:MainView horizontalScrollPolicy="off" verticalScrollPolicy="off" id="view" styleName="mainView" width="100%" height="100%" />
+
+	<pending:PendingManager />
+</core:KApplication>

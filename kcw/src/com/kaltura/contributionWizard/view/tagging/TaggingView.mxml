@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*
+This file is part of the Kaltura Collaborative Media Suite which allows users
+to do with audio, video, and animation what Wiki platfroms allow them to do with
+text.
+
+Copyright (C) 2006-2008  Kaltura Inc.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+@ignore
+*/
+-->
+<mx:VBox
+	implements="com.kaltura.contributionWizard.view.importViews.IImportStep"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	clipContent="true"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:tagging="com.kaltura.contributionWizard.view.tagging.*"
+	xmlns:text="com.kaltura.text.*"
+	xmlns:code="http://code.google.com/p/flexlib/"
+	xmlns:browser="com.kaltura.contributionWizard.view.importViews.browser.*" xmlns:controls="com.kaltura.controls.*" xmlns:ac="com.adobe.ac.*">
+	<mx:Script>
+		<![CDATA[
+			import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;
+		]]>
+	</mx:Script>
+
+	<!--
+	<mx:Metadata>
+		[Event(name="importViewComplete", type="com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent")]
+	</mx:Metadata>
+	-->
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import mx.collections.ItemResponder;
+			import com.kaltura.vo.KalturaCategory;
+			import com.kaltura.contributionWizard.vo.CategoryVO;
+			import com.kaltura.contributionWizard.events.ValidateAllMetaDataEvent;
+			import mx.core.Application;
+			import com.kaltura.contributionWizard.view.events.TermsOfUseEvent;
+			import mx.managers.PopUpManager;
+			import com.kaltura.contributionWizard.view.importViews.alerts.TermsOfUseScreen;
+			import com.kaltura.contributionWizard.view.importViews.browser.NavigationButtonsMode;
+			import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;
+			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
+			import com.kaltura.contributionWizard.enums.KCWWorkflowState;
+			import mx.controls.Alert;
+			import mx.binding.utils.BindingUtils;
+			import com.kaltura.contributionWizard.model.importTypesConfiguration.tagging.TaggingConfig;
+			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+			import com.kaltura.contributionWizard.events.BatchMetaDataEvent;
+			import mx.collections.IList;
+			import mx.events.MetadataEvent;
+			import com.kaltura.vo.importees.BaseImportVO;
+			import mx.utils.StringUtil;
+			import com.kaltura.contributionWizard.events.TaggingEvent;
+			import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
+
+			[Bindable]
+			public var taggingConfig:TaggingConfig;
+
+			[Bindable]
+			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
+
+			[Bindable]
+			private var _mediaType:String;
+			//the previous item that was selected from thumbsList
+			private var previousSelected:TagImageRenderer;
+
+			public function set isMetaDataValid(value:Boolean):void
+			{
+				if (!value)
+				{
+					errorBox.show();
+				}
+				else
+				{
+					errorBox.hide();
+				}
+			}
+
+			public function goNextStep():void
+			{
+				taggingRenderer.validateMetaData();
+
+				if (_model.importData.importCart.isMetaDataValid)
+				{
+					//TODO: this doesn't belong here, it has nothing to do with the tagging
+					if (_model.userCertified || !_model.startupDefaults.enableTOU)
+					{
+						dispatchImportViewComplete();
+					}
+					else
+					{
+						askUserConfirmation();
+					}
+				}
+				//jumps to the invalid entry in the list
+				else
+				{
+					var firstInvalidRenderer:BaseImportVO = _model.importData.importCart.invalidItemVoList[0];
+					thumbsList.scrollToIndex(_model.importData.importCart.importItemsArray.getItemIndex(firstInvalidRenderer));
+					thumbsList.selectedIndex = _model.importData.importCart.importItemsArray.getItemIndex(firstInvalidRenderer);
+					taggingRenderer.data = _model.importData.importCart.importItemsArray.getItemAt(thumbsList.selectedIndex);
+				}
+
+			}
+
+			private function askUserConfirmation():void
+			{
+				var certificationScreen:TermsOfUseScreen = new TermsOfUseScreen();
+				certificationScreen.isAnonUser = _model.context.isAnonymous;
+				PopUpManager.addPopUp(certificationScreen, Application.application as DisplayObject, true);
+				PopUpManager.centerPopUp(certificationScreen);
+				certificationScreen.setFocus(); //avoids any user interaction through keys with the disabled background
+				certificationScreen.addEventListener(TermsOfUseEvent.USER_CERTIFIED, onUserCertified);
+			}
+			private function onUserCertified(evtUserCertified:TermsOfUseEvent):void
+			{
+				dispatchImportViewComplete();
+			}
+
+			public function goPrevStep():void
+			{
+				var event:ImportViewCompleteEvent = new ImportViewCompleteEvent(ImportViewCompleteEvent.IMPORT_VIEW_COMPLETE, true);
+				dispatchEvent(event);
+			}
+
+			public function get navigationButtonsMode():NavigationButtonsMode
+			{
+				return navButtonsMode;
+			}
+			
+			private function addBatchTag():void
+			{
+				var tags:String = StringUtil.trim(batchTagInput.text);
+				if (!tags) return;
+				var importItemVoList:IList = _model.importData.importCart.importItemsArray as IList;
+				var evtAddBatchTag:BatchMetaDataEvent = new BatchMetaDataEvent(BatchMetaDataEvent.ADD_BATCH_TAG, importItemVoList, tags);
+				CairngormEventDispatcher.getInstance().dispatchEvent(evtAddBatchTag);
+				batchTagInput.text = "";
+			}
+
+			private function dispatchImportViewComplete():void
+			{
+				var event:ImportViewCompleteEvent = new ImportViewCompleteEvent(ImportViewCompleteEvent.IMPORT_VIEW_COMPLETE);
+				dispatchEvent(event);
+			}
+			
+			/**
+			 * this function called when an entry has been selected from thumbsList.
+			 * sets the displayed data according to the selected thumbnail
+			 * @event 
+			 * */
+			private function entrySelected(event:ListEvent) :void {
+				if (thumbsList.selectedItem) {
+					var curSelectedData:BaseImportVO = BaseImportVO(_model.importData.importCart.importItemsArray.getItemAt(thumbsList.selectedIndex));
+					taggingRenderer.data = curSelectedData;
+					
+					var currentSelect:TagImageRenderer = TagImageRenderer(event.itemRenderer);
+					currentSelect.selectable = false;
+					if (previousSelected && previousSelected!=currentSelect)
+						previousSelected.selectable = true;
+						
+					previousSelected = currentSelect;	
+				}
+			}
+			
+			/**
+			 * returns the category object that suites to the given name. if no such category- null will be returned.
+			 * */
+			private function getCategoryByName(name:String): KalturaCategory {
+				for each (var cat:KalturaCategory in _model.categoriesFromRoot) {
+					if (cat.name == name)
+						return cat;
+				}
+				
+				return null;
+			}
+			
+			/*public function set traceHeights(o:*):void
+			{
+				trace("listContainer.height: " + listContainer.height);
+				trace("errorBox.height: " + errorBox.height);
+				trace("taggingList.height: " + taggingList.height);	
+			}*/
+		]]>
+	</mx:Script>
+
+	<mx:Binding
+		source="{_model.mediaProviders.activeMediaProvider.mediaInfo.mediaType}"
+		destination="_mediaType" />
+
+	<mx:Binding
+		source="_model.importData.importCart.isMetaDataValid"
+		destination="isMetaDataValid" />
+		
+		
+	<browser:NavigationButtonsMode id="navButtonsMode"
+		nextEnabled="true"
+		nextExists="true"
+		nextText="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'NEXT')}"
+		prevEnabled="true"
+		prevExists="true"
+		prevText="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'BACK')}" />
+	
+	<mx:VBox styleName="importView" width="100%" height="100%" >
+		<mx:HBox>
+			<!--The PromptingTextInput clearing when removed from the stage is hacky, that should have been done better by implementing the IImportModule and clearing it on the deactivat() )-->
+			<code:PromptingTextInput id="batchTagInput"
+				prompt="{resourceManager.getString(ResourceBundleNames.TAGGING, 'BATCH_TIP',
+															[resourceManager.getString(ResourceBundleNames.MEDIA_TYPES, _mediaType.toUpperCase() + '_INLINE_PLURAL')])}"
+				enter="addBatchTag()" visible="false" includeInLayout="false"/>
+	
+			<mx:Button id="addTagButton"
+				label="{resourceManager.getString(ResourceBundleNames.TAGGING, 'ADD_BUTTON')}"
+				click="addBatchTag()" enabled="{batchTagInput.text != ''}" buttonMode="{addTagButton.enabled}" visible="false"
+				includeInLayout="false"/>
+		</mx:HBox>
+	
+		<!--mx:Spacer height="4" />
+	
+		<mx:HRule width="100%" /-->
+	
+		<!--16 is the form right padding-->
+		<controls:ErrorBox id="errorBox" width="100%" maxHeight="44" styleName="errorBox" verticalScrollPolicy="off" horizontalScrollPolicy="off"/>
+	
+		<mx:HBox id="listContainer" width="100%" height="100%">
+			<mx:VBox>		
+				<mx:List id="thumbsList" styleName="thumbsList" dataProvider="{_model.importData.importCart.importItemsArray}" explicitMaxHeight="{listContainer.height - 2}" width="130"
+					columnWidth="90" rowHeight="90" useRollOver="false" visible="{!(_model.importData.importCart.importItemsArray.length&lt;=1)}" selectedIndex="0" itemRenderer="com.kaltura.contributionWizard.view.tagging.TagImageRenderer" 
+				    verticalScrollPolicy="on" includeInLayout="{!(_model.importData.importCart.importItemsArray.length&lt;=1)}"  change="entrySelected(event)" alpha="1.0" allowMultipleSelection="false" />
+			</mx:VBox>
+			
+			<tagging:TagImageRenderer paddingTop="30" height="130" width="130" data="{_model.importData.importCart.importItemsArray.getItemAt(0)}" visible="{(_model.importData.importCart.importItemsArray.length&lt;=1)}"
+				 verticalAlign="middle" horizontalAlign="center" includeInLayout="{(_model.importData.importCart.importItemsArray.length&lt;=1)}" selectable="false"/>
+			
+			<tagging:TaggingRenderer
+				id="taggingRenderer"
+				taggingConfig="{taggingConfig}"
+				data="{_model.importData.importCart.importItemsArray.getItemAt(0)}"
+				width="100%"
+				paddingLeft="0"
+				backgroundAlpha="0"
+				borderStyle="none"  />
+		</mx:HBox>
+	</mx:VBox>
+	
+	<!--mx:Binding source="listContainer.height" destination="traceHeights" /-->
+</mx:VBox>
