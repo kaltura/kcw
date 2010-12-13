@@ -1,7 +1,0 @@
-<project default="copyToRoot" basedir=".">
-	<target name="copyToRoot">
-		<copy file="bin-debug\com\kaltura\contributionWizard\view\importViews\search\SearchView.swf" todir="bin-debug" />
-		<copy file="bin-debug\com\kaltura\contributionWizard\view\importViews\upload\UploadView.swf" todir="bin-debug" />
-		<copy file="bin-debug\com\kaltura\contributionWizard\view\importViews\webcam\WebcamView.swf" todir="bin-debug" />
-	</target>
-</project>
