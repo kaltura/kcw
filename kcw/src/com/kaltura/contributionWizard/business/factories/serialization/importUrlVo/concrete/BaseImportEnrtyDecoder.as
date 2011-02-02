@@ -30,7 +30,7 @@ package com.kaltura.contributionWizard.business.factories.serialization.importUr
 			//The dispalyed name on the show, it doesn't have to be unique
 			urlVars[index + ":entry:name"] 		= baseImportVO.metaData.title;
 			//Eitan add the description and the category
-			urlVars[index + ":entry:category"] 		= baseImportVO.metaData.category;
+			urlVars[index + ":entry:categories"] 		= baseImportVO.metaData.category;
 			urlVars[index + ":entry:description"] 		= baseImportVO.metaData.description;
 			
 		}
