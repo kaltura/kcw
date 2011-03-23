@@ -102,7 +102,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			import mx.utils.ObjectUtil;
 			import mx.utils.URLUtil;
 
-			public static var myVersion:String = "2.1.6.5" ; 
+			public static var myVersion:String = "2.1.6.6" ; 
 			public static var CLIENT_TAG:String = "kcw";
 
 			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
@@ -246,7 +246,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				var configuration : KalturaConfig = new KalturaConfig();
 				configuration.partnerId = params.partnerid;
 				configuration.clientTag = CLIENT_TAG;
-				configuration.domain = "http://" + KUtils.hostFromCode( params.host ); //"http://kaldev.kaltura.com";
+				configuration.domain = params.protocol + KUtils.hostFromCode( params.host ); //"http://kaldev.kaltura.com";
 				if (params.srvurl)
 					configuration.srvUrl =params.srvurl;
 				else 

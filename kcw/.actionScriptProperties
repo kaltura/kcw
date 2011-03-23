@@ -17,10 +17,10 @@
     <application path="ContributionWizard.mxml"/>
   </applications>
   <modules>
-    <module application="src/ContributionWizard.mxml" destPath="com/kaltura/contributionWizard/view/importViews/search/SearchView.swf" optimize="false" sourcePath="src/com/kaltura/contributionWizard/view/importViews/search/SearchView.mxml"/>
-    <module application="src/ContributionWizard.mxml" destPath="com/kaltura/contributionWizard/view/importViews/webcam/WebcamView.swf" optimize="false" sourcePath="src/com/kaltura/contributionWizard/view/importViews/webcam/WebcamView.mxml"/>
-    <module application="src/ContributionWizard.mxml" destPath="com/kaltura/contributionWizard/view/importViews/soundRecorder/SoundRecorder.swf" optimize="false" sourcePath="src/com/kaltura/contributionWizard/view/importViews/soundRecorder/SoundRecorder.mxml"/>
-    <module application="src/ContributionWizard.mxml" destPath="com/kaltura/contributionWizard/view/importViews/upload/UploadView.swf" optimize="false" sourcePath="src/com/kaltura/contributionWizard/view/importViews/upload/UploadView.mxml"/>
+    <module application="src/ContributionWizard.mxml" destPath="SearchView.swf" optimize="true" sourcePath="src/SearchView.mxml"/>
+    <module application="src/ContributionWizard.mxml" destPath="SoundRecorder.swf" optimize="true" sourcePath="src/SoundRecorder.mxml"/>
+    <module application="src/ContributionWizard.mxml" destPath="WebcamView.swf" optimize="true" sourcePath="src/WebcamView.mxml"/>
+    <module application="src/ContributionWizard.mxml" destPath="UploadView.swf" optimize="true" sourcePath="src/UploadView.mxml"/>
   </modules>
   <buildCSSFiles>
     <buildCSSFileEntry destPath="bin-debug" sourcePath="css/ContributionWizard.css"/>
