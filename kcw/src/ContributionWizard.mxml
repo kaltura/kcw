@@ -102,8 +102,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			import mx.utils.ObjectUtil;
 			import mx.utils.URLUtil;
 
-			public static var myVersion:String = "2.1.6.6" ; 
+			public static var myVersion:String = "2.1.6.7" ; 
 			public static var CLIENT_TAG:String = "kcw";
+			public static const DEFAULT_PROTOCOL:String = "http";
 
 			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
 
@@ -134,7 +135,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			public function setParameters(parameters:Object):void
 			{
-				parameters.protocol = _params.protocol;
+				if (_params.protocol)
+					parameters.protocol = _params.protocol;
+				else
+					parameters.protocol = DEFAULT_PROTOCOL;
+				parameters.protocol = parameters.protocol + "://";
+				
 				addUrl(parameters);
 				var params:Object = ObjectHelpers.lowerNoUnderscore( parameters );
 				setConfiguration(params);
@@ -248,7 +254,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				configuration.clientTag = CLIENT_TAG;
 				configuration.domain = params.protocol + KUtils.hostFromCode( params.host ); //"http://kaldev.kaltura.com";
 				if (params.srvurl)
-					configuration.srvUrl =params.srvurl;
+					configuration.srvUrl = params.srvurl;
 				else 
 					configuration.srvUrl = "api_v3/index.php";
 				
