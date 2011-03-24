@@ -59,7 +59,7 @@ package com.kaltura.contributionWizard.command
 			//the first locale, assuming that locale cannot be changed after it's set
 			//This might be buggy if associative array keys order isn't consistent.
 			var localesList:Array = ResourceManager.getInstance().getLocales();
-			var orderedLocales:Array = [];
+			var orderedLocales:Array = ["en_US"];
 			localesList.forEach
 			(
 				function(element:String, index:int, list:Array):void
