@@ -242,9 +242,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				//WizardModelLocator.getInstance().mediaProviders.mediaProvidersList
 				//UIComponent.mx_internal::dispatchEventHook = myDispatchEventHook;
 				
-				var objParam : Object = Application.application.parameters;
-				objParam  = ObjectHelpers.lowerNoUnderscore( objParam );
-				setConfiguration(objParam);
+				//var objParam : Object = Application.application.parameters;
+				_params  = ObjectHelpers.lowerNoUnderscore( _params );
+				setConfiguration(_params);
 
 			}
 			
@@ -252,7 +252,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				var configuration : KalturaConfig = new KalturaConfig();
 				configuration.partnerId = params.partnerid;
 				configuration.clientTag = CLIENT_TAG;
-				configuration.domain = params.protocol + KUtils.hostFromCode( params.host ); //"http://kaldev.kaltura.com";
+				var protocol:String = (params.protocol) ? params.protocol : (DEFAULT_PROTOCOL + "://");
+				configuration.domain = protocol + KUtils.hostFromCode( params.host ); //"http://kaldev.kaltura.com";
 				if (params.srvurl)
 					configuration.srvUrl = params.srvurl;
 				else 
