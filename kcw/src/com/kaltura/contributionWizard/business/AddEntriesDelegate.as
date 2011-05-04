@@ -30,6 +30,7 @@ package com.kaltura.contributionWizard.business
 	import com.kaltura.contributionWizard.vo.PartnerNotificationVO;
 	import com.kaltura.net.TemplateURLVariables;
 	import com.kaltura.utils.PathUtil;
+	import com.kaltura.vo.importees.ImportFileVO;
 	
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
@@ -56,6 +57,7 @@ package com.kaltura.contributionWizard.business
 
 		private var _model:WizardModelLocator = WizardModelLocator.getInstance();
 		private var _entriesURLVars:TemplateURLVariables = new TemplateURLVariables(_model.context.defaultUrlVars);
+		private var _entriesToAdd:ArrayCollection = new ArrayCollection();
 
 		/**
 		 * Constructs a new AddEntriesDelegate 
@@ -81,9 +83,11 @@ package com.kaltura.contributionWizard.business
 		 */	
 		public function addEntries( entriesToAdd:ArrayCollection, context:Context, creditsVo:CreditsVO) : ServiceCanceller
 		{
+			_entriesToAdd = entriesToAdd;
 	   	 	var entriesURLVars:URLVariables = getEntriesURLVariables( entriesToAdd, context, creditsVo );
 	   		/*if (context.addToRoughCut)
 	   			entriesURLVars["quick_edit"] = context.addToRoughCut;*/
+		
 			var call : AsyncToken = service.send( entriesURLVars );
 			call.addResponder( this );
 			return new ServiceCanceller(this.service);
@@ -109,10 +113,16 @@ package com.kaltura.contributionWizard.business
 		   		{
 		   			//trace(item.mediaType[0].toString());
 		   			var item:XML = entriesXmlList[i] as XML;
+					var uploadedFile:ImportFileVO;
+					if (_entriesToAdd.getItemAt(i) is ImportFileVO)
+						uploadedFile = _entriesToAdd.getItemAt(i) as ImportFileVO;
+					
 		   			entryIdListArray.push(
 		   									{
 		   										entryId: (item.id && item.id[0]) ? item.id[0].toString() : "", 
-		   										mediaType: (item.mediaType && item.mediaType[0]) ? item.mediaType[0].toString() : ""
+		   										mediaType: (item.mediaType && item.mediaType[0]) ? item.mediaType[0].toString() : "",
+												fileSize: uploadedFile ? uploadedFile.polledfileReference.fileReference.size : "",
+												fileName: uploadedFile ? uploadedFile.polledfileReference.fileReference.name : ""
 		   									}
 		   								 );
 		   		
