@@ -1,0 +1,895 @@
+/* CSS file */
+
+
+Application
+{
+	font-family: ArialEmbedded; 
+	color: #333333;
+}
+
+/* IntroScreen */
+
+
+VBox.mainView /* window background */
+{
+	fontFamily: ArialEmbedded;
+	border-color:#c0c0c0;
+	border-thickness:1;
+	border-style:solid;
+	background-image:Embed(skinClass="bg_gradient");
+	background-size:"100%";
+}
+
+
+Button.backCancel{
+   color: #009acc;
+   textRollOverColor: #009acc;
+   textSelectedColor: #009acc;
+   disabled-color:#99ccdc;
+   fontFamily: Arial;
+   fontSize: 11;
+   fontWeight: normal;
+   textDecoration: underline;
+   skin: ClassReference(null);
+}
+
+
+LinkButton.link {
+	
+   color: #009acc;
+   textRollOverColor: #009acc;
+   textSelectedColor: #009acc;
+   fontFamily: Arial;
+   fontSize: 11;
+   fontWeight: normal;
+   textDecoration: underline;
+	skin: ClassReference(null);
+/* 	selectionColor: #FFFFFF;
+	textRollOverColor: #C6C6C6;
+	fontWeight: bold;
+	textDecoration: underline;
+	font-size: 12; */
+}
+
+LinkButton.closeLink {
+	skin: Embed(skinClass="Button_closeWizardButton_icon");
+}
+
+
+
+/* Tabs styles */
+
+TabBar.roundTabBar 
+{
+	tab-height:0;
+	selectedTabTextStyleName: "mySelectedTabStyle";
+	horizontal-gap: 4;
+	text-selected-color: #afafaf;
+	tabStyleName: 		"roundTabBarTab";
+	firstTabStyleName: 	"roundTabBarTab";
+	lastTabStyleName: 	"roundTabBarTab";
+}
+
+TabBar.shaysen 
+{
+	tab-height: 0;
+	tab-width:0;
+}
+
+.roundTabBarTab
+	{
+		font-size: 16;
+		color: #333333;
+		text-selected-color: #333333;
+		text-roll-over-color: #000000;
+		skin: Embed(skinClass="tabBar1$tab_skin");
+	}
+
+TabBar
+
+{
+	selectedTabTextStyleName: "mySelectedTabStyle";
+	vertical-gap: 2;
+	tabStyleName: "tabBarTab";
+	firstTabStyleName: "tabBarTab";
+	lastTabStyleName: "tabBarTab";
+	font-size:11;	
+}
+
+	.tabBarTab
+	{
+		color: #333333;
+		font-size:11;	
+		font-weight:bold;	
+		border-style: solid;
+		text-selected-color: #333333;
+		skin: Embed(skinClass="TabBar$tab_skin");
+		text-roll-over-color: #000000;
+		textAlign: left;
+		padding-left:8;
+       headerColors: #ffffff, #f0f0f0;
+       borderColor: #939393;		
+
+	}
+
+
+.mySelectedTabStyle
+{
+    color: #333333;
+    textRollOverColor: #000000;
+}
+/* End of Tabs styles */
+
+/*Search panel*/
+
+.searchFieldsTitleLabelsBox{
+	horizontal-gap: 4;
+}
+
+
+HRule {
+   strokeColor: #ededed;
+   strokeWidth: 1;
+}
+VRule{
+	strokeColor: #ededed;
+	strokeWidth: 1;
+}
+
+
+Button{
+	
+	paddingTop: 4;
+	paddingBottom: 1;
+	paddingLeft: 2;
+	paddingRight: 2;
+	color: #333333;
+	skin: Embed(skinClass="Button_skin");
+	text-roll-over-color: #000000;
+	disabled-color: #ffffff;
+	textSelectedColor: #333333;
+    fontSize: 11;
+    color: #333333;
+    font-style:normal;	
+}
+
+
+Button.greenButton {
+	
+	color: #333333;
+	font-size:11;
+	disabled-color: #ffffff;
+	label-placement:right;
+	text-roll-over-color: #000000;
+	textSelectedColor: #333333;
+}
+
+
+Button.greenButtonThinPadding
+{
+	paddingTop: 4;
+	paddingBottom: 1;
+	paddingLeft: 2;
+	paddingRight: 2;
+	skin: Embed(skinClass="Button_button1_skin");
+}
+
+
+CheckBox {
+   highlightAlphas: 0, 0;
+   fillAlphas: 0, 0, 0, 0;
+   fillColors: #ffffff, #ffffff, #ffffff, #eeeeee;
+   borderColor: #bfbfbf;
+   iconColor: #e23a38;
+   disabledIconColor: #bfbfbf;
+   color: #333333;
+   textSelectedColor: #333333;
+   textRollOverColor: #333333;
+   themeColor: #bfbfbf;
+   fontFamily: Arial;
+   fontSize: 11;
+}
+/*Upload view*/
+
+.uploadHeadline {
+	font-size: 14;
+	font-weight: bold;
+}
+
+.uploadSubHeadline {
+	font-size: 12;
+}
+
+.selectMediaTypeLabel {
+	font-size: 24;
+}
+
+.importStepScreen{/* content outer Frame */
+	padding-left: 10;
+	padding-top: 10;
+	padding-bottom: 10;
+	padding-right: 10;
+}
+
+/*
+Tagging view:
+*/
+
+.taggingScreen{
+
+   padding-left:20;
+   padding-top:20;
+   padding-right:20;
+   padding-bottom:20;
+	border-color:#939393;
+	border-style:solid;
+	border-thickness:1;
+	background-color: #fdfdfd;
+}
+
+.taggingDescribeMediaLabel{
+	font-size: 12;
+	font-weight: normal;
+	color:#333333;
+}
+
+/*The outer frame*/
+Box.tabsAndViewsContainerBlock
+{
+	border-style:solid;
+	borderColor: #dedede;
+	border-thickness:1;
+	paddingBottom: 4;
+	paddingLeft: 4;
+	paddingRight: 4;
+	paddingTop: 4;
+}
+
+/*The inner frame*/
+
+.importViewsBlock /*The outer contentframe*/
+{
+	left:0;
+	right:0;
+	top:0;
+
+}
+
+.importView{ /*The inner content background*/
+   
+    padding-left:30;
+    padding-top:20;
+    padding-right:30;
+    padding-bottom:0;
+	horizontal-align:right;
+
+}
+
+
+
+Canvas.introScreenMainView{
+	
+	border-color: #ededed;
+	border-style:solid;
+	background-color: #ededed;
+	
+}
+
+.logosTile {
+	border-style: solid;
+	
+}
+
+.mediaTypeSelection
+{
+  	padding-left: 0; 
+  	padding-top: 0; 
+
+}
+
+.mediaProvidersTabs{
+	top: 0;
+	left: 28;
+	tab-width:0;
+}
+
+
+.addMediaTypeLabel{
+	font-size: 24;
+	padding-left: 10;
+}
+
+.imageBox{ 
+	horizontal-align: center;	
+	vertical-align: middle;
+	padding-left: 0;
+	padding-right: 5;
+}
+
+.thumbsList
+
+{
+	padding-left:3;
+	padding-top:3;
+	padding-Bottom:3;
+	padding-right:3;	
+	selection-color: #666666;
+    background-color:#e6e6e6;
+    cornerRadius: 6;
+    border-color:#e6e6e6;
+    borderThickness: 3;
+   
+	
+}
+
+
+.invalidTextInput{
+   borderStyle: solid;
+   borderColor: #ff0000;
+   color: #333333;
+   paddingLeft: 4;
+   paddingRight: 4;
+   paddingTop: 2;
+   paddingBottom: 2;
+   fontFamily: Arial;
+   fontSize: 11;
+}
+
+/* Finish screen*/
+
+.finishScreen
+{
+   background-color:#ff0000;
+	border-color:#ff0000;
+	border-style:solid;
+	border-thickness:6;
+}
+
+.finishScreenButtons
+{
+     horizontal-align:left;
+	 padding-left:-900;
+}
+
+.finishScreen{
+   padding-left:20;
+   padding-top:20;
+   padding-right:20;
+   padding-bottom:20;
+	border-color:#939393;
+	border-style:solid;
+	border-thickness:1;
+	background-color: #fdfdfd;
+}
+
+.finishScreenDoneLabel{
+	font-size: 40;
+	color:#333333;
+}
+
+.finishScreenHeadline{
+	font-size: 11;
+}
+
+
+/*
+BottomButtons
+*/
+
+
+Button.nextButtonWithIcon
+{
+	color: #333333;
+	font-size:11;
+	disabled-color: #b1b1b1;
+	skin: Embed(skinClass="Button_skin");
+	text-roll-over-color: #000000;
+	textSelectedColor: #333333;
+}
+
+.confirmButtons
+{
+    padding-right:40;
+    padding-left:30;   
+    padding-bottom:28;
+  
+ }
+
+/*
+ImportViewBrowser
+*/
+
+.mainSearchViewNotFoundText{
+	
+	font-weight:normal;
+	font-size: 12;
+}
+
+
+/*
+Certification screen
+*/
+
+.termsOfUseScreen
+{
+}
+
+
+
+bottomCertificationMessage
+{
+	    horizontal-align:right;
+
+        
+}
+
+
+.certificationMessageLabel
+{
+	font-size: 12;
+	font-weight: bold;
+
+
+}
+
+.certificationCreditsFields
+{
+	fontSize: 11;
+	text-indent:22;
+
+}
+
+
+.certificationCreditsNotes
+{
+	font-weight: bold;
+}
+
+.playerControlPanel
+{
+	background-color: #000000;
+	background-alpha: 0.5;
+
+
+}
+
+.videoPreviewTitle
+{
+	border-alpha: 0.9;
+	font-size: 16;
+	color:#333333;
+	padding-top:30;
+	text-indent:6;
+}
+
+
+.videoPreview
+{
+	border-alpha: 0.95;
+	
+}
+
+
+/*.bannerHomeMovieDepot
+{
+	skin: Embed("../assets/banner_home_movie_depot.png");
+}*/
+
+/*.logo
+{
+	skin: Embed("../assets/logo.png");
+}*/
+
+.logoImage
+{
+
+	background-image: Embed("../assets/logo.png");
+	    horizontal-align:right;
+        padding-left:100;
+	/*source: ClassReference("Image_Logo");*/
+}
+
+.searchRendererFrameUp
+{
+	borderStyle: solid;
+	borderColor: #939393;
+	borderThickness: 2;
+}
+
+.searchRendererFrameDown
+{
+	borderStyle: solid;
+	borderColor: #333333;
+	borderThickness: 2;
+}
+
+
+
+.htmlTextLink
+{
+    font-size:11;
+	color: #009acc;
+}
+
+@font-face {
+            src: url("../assets/fonts/TAHOMA.TTF");
+            fontFamily: "ArialEmbedded";
+            unicode-range:
+               	U+0020-U+0040,  /*Punctuation, Numbers and Symbols */
+                U+0041-U+005A,  /*Upper-Case A-Z */
+                U+005B-U+0060,  /*Punctuation and Symbols */
+                U+0061-U+007A,  /*Lower-Case a-z */
+                U+007B-U+007E  /*Punctuation and Symbols */
+        }
+
+@font-face {
+            src: url("../assets/fonts/tahomabd.TTF");
+            fontFamily: "ArialEmbedded";
+            font-weight:bold;
+            unicode-range:
+               	U+0020-U+0040,  /*Punctuation, Numbers and Symbols */
+                U+0041-U+005A,  /*Upper-Case A-Z */
+                U+005B-U+0060,  /*Punctuation and Symbols */
+                U+0061-U+007A,  /*Lower-Case a-z */
+                U+007B-U+007E  /*Punctuation and Symbols */
+        }
+
+/* Webcam styles */
+
+
+
+.webcamRecordTime
+{
+	color: #FFFFFF;
+}
+
+.webcamPlayButton
+{
+	 icon: Embed(skinClass="Button_webcamPlayButton_icon");
+}
+
+.webcamPauseButton
+{
+	 icon: Embed(skinClass="Button_webcamPauseButton_icon");
+}
+
+Button.webcamRecordButton
+{
+	 icon: Embed(skinClass="Button_webcamRecordButton_icon");
+}
+
+.webcamStopButton
+{
+	 icon: Embed(skinClass="Button_webcamStopButton_icon");
+}
+
+
+.webcamElapsedTimeBoxRecord
+{
+	background-alpha: 0.4;
+	background-color: #FF0000;
+}
+
+.webcamElapsedTimeBoxPlay
+{
+	background-alpha: 0.4;
+	background-color: #00A000;
+}
+
+.webcamRecordTime
+{
+	color: #FFFFFF;
+}
+
+Canvas.videoRecorderCanvas
+
+{
+padding-bottom:0;
+
+}
+
+/*Wizard FLA skins*/
+Button.closeWizardButton
+{
+	padding-right:0;
+	skin: ClassReference(null);
+	icon: Embed(skinClass="Button_closeWizardButton_icon");
+}
+
+
+Button.finishScreenVIcon
+{
+	skin: Embed(skinClass="Button_finishScreenVIcon_skin");
+}
+
+Button.pagerNextArrow
+{
+	skin: Embed("../assets/empty_pixel.png");
+	icon: Embed(skinClass="Button_pagerNextArrow_skin");
+}
+Button.pagerPrevArrow
+{
+	skin: Embed("../assets/empty_pixel.png");
+	icon: Embed(skinClass="Button_pagerPrevArrow_skin");
+}
+
+Button.selectionIndicator
+{
+	skin: Embed(skinClass="Button_selectionIndicator_skin");
+}
+
+Button.soundPreviewButton
+{
+	skin: Embed(skinClass="Button_soundPreviewButton_skin");
+}
+
+Button.trashButtonSkin
+{
+	skin: Embed(skinClass="Button_trashButtonSkin_skin");
+}
+
+Button.uploadCompleteIcon
+{
+	skin: Embed(skinClass="Button_uploadCompleteIcon_skin");
+}
+Button.uploadFailedIcon
+{
+	skin: Embed(skinClass="Button_uploadFailedIcon_skin");
+}
+Button.searchResultsThumbsPlayButton
+{
+	skin: Embed(skinClass="Button_searchResultsThumbsPlayButton_skin");
+}
+
+
+
+/*Flex FLA skins*/
+
+
+ComboBox {
+   cornerRadius: 0;
+   color: #333333;
+   borderColor: #bbbbbb;
+   iconColor: #333333;
+   textRollOverColor: #000000;
+   fontWeight: normal;  
+   themeColor: #009acc;
+   openDuration: 213;
+   fillAlphas: 0.09, 0, 0.75, 0.65;
+   dropdownStyleName: "myComboBoxDropDowns";
+}
+
+.myComboBoxDropDowns {
+   fontWeight: normal;
+   fontStyle: normal;
+   textDecoration: none;
+}
+
+
+CursorManager
+{
+	busyCursor: Embed(skinClass="CursorManager_busyCursor");
+}
+
+DataGrid {
+   /*backgroundColor: #ededed;
+   alternatingItemColors: #ededed, #ededed;
+   headerColors: #ffffff, #ffffff;
+   horizontalGridLines: true;
+   horizontalGridLineColor: #bbbbbb;
+   verticalGridLineColor: #bbbbbb;
+   rollOverColor: #ffffff;
+   textRollOverColor: #0b333c;
+   selectionColor: #ffffff;
+   color: #333333;
+   textSelectedColor: #000000;
+   fontFamily: Arial;
+  
+   headerStyleName: "mydataGridHeaderStyle";*/
+    fontSize: 11;
+   }
+
+
+.mydataGridHeaderStyle {
+   fontSize: 11;
+   color: #333333;
+   textAlign: left;
+   text-indent:10;
+}
+
+
+.mydataGridHeaderStyle {
+   fontWeight: bold;
+   fontSize:12;
+   fontStyle: normal;
+   textDecoration: none;
+}
+
+ProgressBar {
+   barColor: #55a3f1;
+   trackColors: #e6eeee, #e6eeee;
+   color: #333333;
+   fontFamily: Arial;
+}
+
+
+
+FormItem
+{
+	font-size: 11;
+	font-weight:bold;
+	fontFamily: ArialEmbedded;
+	padding-right:0;
+	indicatorSkin: Embed(skinClass="FormItem_indicatorSkin");
+}
+
+Form {
+	padding-right:0;
+
+}
+
+
+HScrollBar
+{
+	/*downArrowSkin: Embed(skinClass="HScrollBar_downArrowSkin");
+	thumbIcon: Embed(skinClass="HScrollBar_thumbIcon");
+	thumbSkin: Embed(skinClass="HScrollBar_thumbSkin");
+	trackSkin: Embed(skinClass="HScrollBar_trackSkin");
+	upArrowSkin: Embed(skinClass="HScrollBar_upArrowSkin");*/
+   themeColor: #009acc;	
+}
+
+
+Panel {
+   borderStyle: solid;
+   borderColor: #e4e4e4;
+   borderAlpha: 1;
+   roundedBottomCorners: true;
+   headerHeight: 50;
+   cornerRadius: 6;
+   footerColors: #f3f3f3, #f3f3f3;
+   backgroundColor: #f3f3f3;
+   dropShadowEnabled: true;
+   titleStyleName: "mypanelTitle";
+}
+
+.mypanelTitle {
+   color: #333333;
+   fontSize: 11;
+   fontWeight: bold;
+}
+
+
+TitleWindow
+{
+   borderColor: #c0c0c0;
+   borderAlpha: 1;
+   borderThickness: 1;
+   roundedBottomCorners: true;
+   headerHeight: 30;
+   backgroundAlpha: 1;
+   headerColors: #e7e7e7, #d9d9d9;
+   backgroundColor: #ffffff;
+   titleStyleName: "mypanelTitle";
+   color:#333333;
+   font-size:12;
+   close-button-skin: Embed(skinClass="Button_closeWizardButton_icon");
+   
+}
+
+
+Alert
+{
+   borderColor: #c0c0c0;
+   borderAlpha: 1;
+   borderThickness: 1;
+   roundedBottomCorners: true;
+   headerHeight: 30;
+   backgroundAlpha: 1;
+   headerColors: #e7e7e7, #d9d9d9;
+   backgroundColor: #ffffff;
+   titleStyleName: "mypanelTitle";
+   color:#333333;
+   font-size:12;
+}
+
+.mypanelTitle {
+   color: #333333;
+   fontSize: 14;
+   fontWeight: bold;
+}
+
+
+
+
+.searchFieldsSearchMediaTypeTitle{
+	font-size: 14;
+	font-weight:bold;
+}
+
+.uploadErrorText{
+	color: #AA0000;
+	font-weight:bold;
+	font-size: 12;
+}
+
+.errorText{
+	color: #AA00FF;	
+}
+
+TextInput.errorTip
+{
+	backgroundColor: #FF0000;
+	color: black;
+}
+
+.errorBox
+{
+	border-color: #dd3c10;
+	background-color: #ffebe8;
+	border-style:solid;
+	padding-top:4;
+	padding-right:4;
+	padding-bottom:4;
+	padding-left:4;
+	font-size:11;
+    
+}
+
+RadioButton
+{
+   borderColor: #bbbbbb;
+   themeColor: #009acc;
+}
+
+SWFLoader
+{
+	brokenImageSkin: Embed(skinClass="SWFLoader_brokenImageSkin");
+}
+
+TextInput{
+   borderStyle: solid;
+   borderColor: #bbbbbb;
+   color: #333333;
+   paddingLeft: 4;
+   paddingRight: 4;
+   paddingTop: 2;
+   paddingBottom: 2;
+   fontFamily: Arial;
+   fontSize: 11;
+   font-weight:normal;
+   focus-alpha: 0; 
+   font-style:normal;
+   /*borderSkin: Embed(skinClass="TextInput_borderSkin");
+   focusSkin: Embed(skinClass="TextInput_focusSkin");*/
+}
+
+TextArea {
+ focus-alpha: 0; 
+ fontSize: 11;
+ font-weight:normal;
+ color: #333333;
+ padding-left:6;
+ padding-right:6;
+ font-style:normal;
+}
+
+
+ToolTip
+{
+	paddingLeft: 10;
+	paddingRight: 10;
+	textAlign: left;
+	backgroundnotexported: Embed(skinClass="ToolTip_backgroundnotexported");
+	borderSkin: Embed(skinClass="ToolTip_borderSkin");
+}
+
+VScrollBar
+{
+	   themeColor: #009acc;
+	/*downArrowSkin: Embed(skinClass="VScrollBar_downArrowSkin");
+	thumbIcon: Embed(skinClass="VScrollBar_thumbIcon");
+	thumbSkin: Embed(skinClass="VScrollBar_thumbSkin");
+	trackSkin: Embed(skinClass="VScrollBar_trackSkin");
+	upArrowSkin: Embed(skinClass="VScrollBar_upArrowSkin");*/
+}
