@@ -78,7 +78,6 @@ package com.kaltura.contributionWizard.command
 			setUploadUrl();
 
 			//_model.startupDefaults.showCloseButton = KConfigUtil.getDefaultValue2(_parameters["showclosebutton"], _model.startupDefaults, "showCloseButton")
-
 			
 			if (_parameters["showclosebutton"])
 			{
@@ -99,6 +98,10 @@ package com.kaltura.contributionWizard.command
 			{
 				_model.startupDefaults.showTags = _parameters["showtags"] == "true";
 				_model.startupDefaults.showTagsFlashvar = true;
+			}
+			if (_parameters["loadthumbnailwithks"])
+			{
+				_model.loadThumbsWithKS = _parameters["loadthumbnailwithks"] == "true";
 			}
 
 			//Default media type to show at startup

@@ -72,6 +72,9 @@ package com.kaltura.contributionWizard.command
 			var result:Object = (data as ResultEvent).result;
 			//builds the thumbURL, temporary solution to display thumb after "upload"
 			result.thumbURL = _model.context.protocol + _model.context.hostName + "/p/"+_model.context.partnerId+"/sp/"+ _model.context.subPartnerId+ "/thumbnail/upload_token_id/"+result.importFileVO.token;		
+			if (_model.loadThumbsWithKS) {
+				result.thumbURL += "/ks/"+_model.context.kc.ks;
+			}
 			var targetImportFileVO:ImportFileVO = result.importFileVO as ImportFileVO;
 			targetImportFileVO.token = result.importFileVO.token;
 			//add a thumbnail url to the importFileVo
