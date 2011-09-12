@@ -28,14 +28,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	xmlns:mx="http://www.adobe.com/2006/mxml">
 	<mx:Script>
 		<![CDATA[
-			import mx.controls.SWFLoader;
 			import mx.controls.Alert;
+			import mx.controls.SWFLoader;
 
 			private static const VIDEO_SCALE_X:int = 3;
 			private static const VIDEO_SCALE_Y:int = 2;
 
 			[Bindable]
 			public var viewTimer:Timer;
+			
+			private var _date:Date;
 
 			public static const PLAYING:String 		= "playing";
 			public static const RECORDING:String 	= "recording";
@@ -101,7 +103,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			private function thisEnterFrameHandler(evtEnterFrame:Event):void
 			{
 				var elapsedTime:uint = viewTimer.currentCount * 1000 || 100;
-				var timeText:String = timeFormatter.format(new Date(elapsedTime));
+				if (! date){
+					var date:Date = new Date(0,0,0,0,0,0,elapsedTime);
+				} else {
+					date.milliseconds = elapsedTime;
+				}
+				var timeText:String = timeFormatter.format(date);
 				if (elapsedTimeLabel) elapsedTimeLabel.text = timeText;
 			}
 
@@ -109,12 +116,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		]]>
 	</mx:Script>
 
-	<mx:DateFormatter id="timeFormatter" formatString="NN:SS" />
+	<mx:DateFormatter id="timeFormatter" formatString="JJ:NN:SS" />
 
 
 	<mx:states>
 		<mx:State name="timeDisplayState">
 			<mx:AddChild position="lastChild">
+				
 				<mx:HBox id="elapsedTimeContainer">
 					<mx:Label id="elapsedTimeLabel" styleName="webcamRecordTime" />
 				</mx:HBox>
