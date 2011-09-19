@@ -858,6 +858,7 @@ TextArea {
  padding-left:6;
  padding-right:6;
  font-style:normal;
+ fontFamily: Arial;
 }
 
 
