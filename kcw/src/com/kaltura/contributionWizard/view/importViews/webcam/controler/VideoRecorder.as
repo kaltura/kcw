@@ -551,6 +551,12 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 							(event.target).bufferTime = 2 * EXPANDED_BUFFER_LENGTH;
 						else
 							(event.target).bufferTime = EXPANDED_BUFFER_LENGTH;
+					
+						
+					startViewTimer();	
+					dispatchEvent(new RecorderEvent(RecorderEvent.STREAMED_PLAYBACK_BUFFER_FULL));
+						
+						
 					/*if(_checkBufferFullToStartPlay)
 					{
 						_checkBufferFullToStartPlay = false;
@@ -567,6 +573,9 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 
 				case "NetStream.Buffer.Empty":
 					(event.target).bufferTime = START_BUFFER_LENGTH;
+					
+					pauseViewTimer();
+					dispatchEvent(new RecorderEvent(RecorderEvent.STREAMED_PLAYBACK_BUFFER_EMPTY));
 				break;
 
 				case "NetStream.Play.Start":
@@ -578,6 +587,7 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 				break;
 
 				case "NetStream.Play.Stop":
+					dispatchEvent(new RecorderEvent(RecorderEvent.STREAMED_PLAYBACK_BUFFER_FULL));
 					//stopViewTimer();
 				break;
 			}
@@ -622,7 +632,6 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 
 		private function updateViewOnPlayStart():void
 		{
-			startViewTimer();
 			_videoContainer.videoStatus = VideoContainer.PLAYING;
 			//startSampleTime(in_stream);
 		}
@@ -660,6 +669,10 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 		private function stopViewTimer():void
 		{
 			_viewTimer.reset();
+		}
+		
+		private function pauseViewTimer():void{
+			_viewTimer.stop();
 		}
 
 		private function startViewTimer():void

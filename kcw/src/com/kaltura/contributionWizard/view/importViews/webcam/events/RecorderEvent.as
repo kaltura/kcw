@@ -38,6 +38,7 @@ package com.kaltura.contributionWizard.view.importViews.webcam.events
 		public static const PLAYBACK_END:String = "playbackEnd";
 		public static const STREAMED_BUFFER_EMPTY:String = "streamedBufferEmpty";
 		public static const STREAMED_PLAYBACK_BUFFER_FULL:String = "streamedPlaybackBufferFull";
+		public static const STREAMED_PLAYBACK_BUFFER_EMPTY:String = "streamedPlaybackBufferEmpty";
 		public static const RECORD_FINISH:String = "recordFinish";
 		public static const PUBLISH_START:String = "publishStart";
 

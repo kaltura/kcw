@@ -40,28 +40,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<mx:Script>
 
         <![CDATA[
-        	import mx.controls.Spacer;
-        	import com.grakl.spinner.Spinner;
-        	import com.kaltura.preloaders.KmcPreloader;
-        	import mx.utils.UIDUtil;
-        	import mx.events.ListEvent;
-        	import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
-        	import com.arc90.modular.CairngormEventDispatcherFactory;
-        	import com.kaltura.contributionWizard.events.webcam.WebcamEvent;
-        	import com.kaltura.contributionWizard.command.webcam.PickStreamNameCommand;
-        	import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;
-        	import com.kaltura.contributionWizard.events.ImportEvent;
         	import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
-        	import com.kaltura.vo.importees.ImportFileVO;
+        	import com.arc90.modular.CairngormEventDispatcherFactory;
+        	import com.grakl.spinner.Spinner;
+        	import com.kaltura.contributionWizard.command.webcam.PickStreamNameCommand;
+        	import com.kaltura.contributionWizard.events.ImportEvent;
+        	import com.kaltura.contributionWizard.events.webcam.WebcamEvent;
         	import com.kaltura.contributionWizard.model.WebcamModelLocator;
         	import com.kaltura.contributionWizard.model.WizardModelLocator;
+        	import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;
         	import com.kaltura.contributionWizard.view.importViews.webcam.controler.VideoRecorder;
-        	import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderEvent;
         	import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent;
+        	import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderEvent;
+        	import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+        	import com.kaltura.preloaders.KmcPreloader;
+        	import com.kaltura.vo.importees.ImportFileVO;
+        	
+        	import mx.controls.Alert;
+        	import mx.controls.Spacer;
+        	import mx.core.Application;
+        	import mx.events.ListEvent;
         	import mx.managers.PopUpManager;
         	import mx.rpc.events.ResultEvent;
-        	import mx.controls.Alert;
-        	import mx.core.Application;
+        	import mx.utils.UIDUtil;
 
 			private static const WEB_CAM_NAME:String = "webCamName";
 
@@ -74,6 +75,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			[Bindable]
 			private var _publishing:Boolean = false;
+			
+			[Bindable]
+			private var _buffering:Boolean = false;
 
     		public function init():void
     		{
@@ -81,15 +85,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				//var red5Path:String = "rtmp://kaldev.kaltura.com/oflaDemo";//"rtmp://" + GlobalData.stripDomain + GlobalData.RED5_APP_PATH;
 				//vr = new VideoRecorder(red5Path, "100");
 
-				vr.addEventListener(RecorderEvent.RECORD_START,				startRecordHandler);
-				vr.addEventListener(RecorderEvent.PLAYBACK_START,			startPlayPlayback);
-				vr.addEventListener(RecorderEvent.PLAYBACK_STOP,			stopPlayHandler);
-				vr.addEventListener(RecorderEvent.STREAM_END,				streamEndHandler);
-				vr.addEventListener(RecorderEvent.RECORDER_READY,			recorderReadyHandler);
-				vr.addEventListener(RecorderEvent.STREAMED_BUFFER_EMPTY,	outStreamBufferEmptyHandler);
-				vr.addEventListener(RecorderEvent.CAMERA_STATUS,			cameraStatusHandler);
-				vr.addEventListener(RecorderEvent.CAMERA_READY,				cameraReadyHandler);
-				vr.addEventListener(RecorderEvent.RECORD_FINISH,			recordFinishHandler);
+				vr.addEventListener(RecorderEvent.RECORD_START,						startRecordHandler);
+				vr.addEventListener(RecorderEvent.PLAYBACK_START,					startPlayPlayback);
+				vr.addEventListener(RecorderEvent.PLAYBACK_STOP,					stopPlayHandler);
+				vr.addEventListener(RecorderEvent.STREAM_END,						streamEndHandler);
+				vr.addEventListener(RecorderEvent.RECORDER_READY,					recorderReadyHandler);
+				vr.addEventListener(RecorderEvent.STREAMED_BUFFER_EMPTY,			outStreamBufferEmptyHandler);
+				vr.addEventListener(RecorderEvent.STREAMED_PLAYBACK_BUFFER_EMPTY,	inStreamBufferEmptyHandler);
+				vr.addEventListener(RecorderEvent.STREAMED_PLAYBACK_BUFFER_FULL,	inStreamBufferFullHandler);
+				vr.addEventListener(RecorderEvent.CAMERA_STATUS,					cameraStatusHandler);
+				vr.addEventListener(RecorderEvent.CAMERA_READY,						cameraReadyHandler);
+				vr.addEventListener(RecorderEvent.RECORD_FINISH,					recordFinishHandler);
                 vr.init(); 
                 tips.init();
                 recorder_control.init();
@@ -194,6 +200,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     		public function startPlayPlayback(event:RecorderEvent):void
     		{
     			// trace("startPlayPlayback");
+				_buffering = true;
 				tips.setState(5);
     		}
 
@@ -343,6 +350,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 
 
+			private function inStreamBufferEmptyHandler(event:RecorderEvent):void
+			{
+				_buffering = true;
+			}
+			
+			private function inStreamBufferFullHandler(event:RecorderEvent):void
+			{
+				_buffering = false;
+			}
+			
 		]]>
 	</mx:Script>
 
@@ -366,7 +383,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			    	streamName="{_webcamModel.streamName}"
 			    	width="100%" height="100%"/>
 			    	
-			    <spinner:Spinner visible="{_publishing}" x="{vr.contentMouseX}" y="{vr.contentMouseY}" />
+			    <spinner:Spinner visible="{_publishing || _buffering}" x="{vr.contentMouseX}" y="{vr.contentMouseY}" />
 			</mx:Canvas>
 
 			<view:RecorderEditorControl id="recorder_control" width="100%" verticalAlign="middle"
