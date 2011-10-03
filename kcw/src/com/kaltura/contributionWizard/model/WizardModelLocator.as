@@ -86,6 +86,7 @@ package com.kaltura.contributionWizard.model
 		public var categoriesRootId : int = 0;
 		public var categoriesPrefix:String = "";
 		public var loadingFlag : Boolean = false;
+		public var flashvars : Object;
 		public var additionalField:String = "";
 		//indicates whether the "list categories" action was sent to server at least once already
 		public var categoriesUploaded:Boolean = false;

@@ -24,6 +24,7 @@ package com.kaltura.contributionWizard.business.factories.serialization.importUr
 {
 	import com.adobe.cairngorm.vo.IValueObject;
 	import com.kaltura.contributionWizard.business.Services;
+	import com.kaltura.contributionWizard.model.WizardModelLocator;
 	import com.kaltura.vo.importees.ImportFileVO;
 	
 	import flash.net.URLVariables;
@@ -56,6 +57,7 @@ package com.kaltura.contributionWizard.business.factories.serialization.importUr
 			}
 			else
 			{
+				//asume this is a pdf/swf
 				BaseImportEnrtyDecoder.addUrlVars(valueObject, index, urlVars);
 				urlVars[index + ":service"] = Services.SERVICE_BASE_ENTRY;
 				
@@ -71,6 +73,7 @@ package com.kaltura.contributionWizard.business.factories.serialization.importUr
 						urlVars[newKey] = value;
 					}
 				} 
+				
 				
 				for(var i:int = 0; i < deleteKeys.length; i++)
 				{
@@ -91,6 +94,40 @@ package com.kaltura.contributionWizard.business.factories.serialization.importUr
 				urlVars[index + ":webcamTokenId"]			= importFileVO.fileName;
 			}
 			
+			var wizardModleLocator:WizardModelLocator = WizardModelLocator.getInstance();
+			var conversionProfileId:Number = -1;
+			if(wizardModleLocator.uiConfigVo.globalConversionProfile != -1)
+				conversionProfileId = wizardModleLocator.uiConfigVo.globalConversionProfile;
+			
+			
+			if(importFileVO.mediaTypeCode == 2 && wizardModleLocator.uiConfigVo.imageConversionProfile != -1) 
+			{ 
+				conversionProfileId = wizardModleLocator.uiConfigVo.imageConversionProfile;
+			} else if(importFileVO.mediaTypeCode == 5 && wizardModleLocator.uiConfigVo.audioConversionProfile != -1)
+			{
+				conversionProfileId = wizardModleLocator.uiConfigVo.audioConversionProfile;
+				
+			}else if(importFileVO.mediaTypeCode == 1 && wizardModleLocator.uiConfigVo.videoConversionProfile != -1 )
+			{
+				conversionProfileId = wizardModleLocator.uiConfigVo.videoConversionProfile;
+			} else if (wizardModleLocator.uiConfigVo.swfConversionProfile != -1)
+			{
+				//asume this is a swf/doc 
+				conversionProfileId = wizardModleLocator.uiConfigVo.swfConversionProfile;
+			}
+			//only if there is a conversionProfileId not equale to -1 set it 
+			if (conversionProfileId != -1) 
+			{
+				urlVars[index + ":mediaEntry:conversionQuality"] = conversionProfileId;
+			}
+			
+			
 		}
+		
+		private function getConversionProfile():Number
+		{
+			return NaN;
+		}
+		
 	}
 }

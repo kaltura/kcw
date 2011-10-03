@@ -119,7 +119,7 @@ package com.kaltura.contributionWizard.command
 			{
 				Utils.setLimitationKey(key, flashVars[key]);
 			}
-			
+			_model.flashvars = flashVars;
 			_webcamModel.webcamParameters = data.webcamParametersVo;
 			
 			_model.loadState.loaded();
@@ -137,7 +137,7 @@ package com.kaltura.contributionWizard.command
 			//I used copying values instead of setting the VO directly, because it is referenced at the wizard creation complete when chaining the startup events;
 			//TODO: implement UIConfigVO.overrideProperties() method
 			_model.uiConfigVo.localeUrl = uiConfigVo.localeUrl;
-			_model.uiConfigVo.styleUrl = uiConfigVo.styleUrl;
+			_model.uiConfigVo.styleUrl = uiConfigVo.styleUrl;			
 		}
 	}
 }

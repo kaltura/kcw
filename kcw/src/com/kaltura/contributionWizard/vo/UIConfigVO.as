@@ -28,5 +28,12 @@ package com.kaltura.contributionWizard.vo
 		{
 			public var styleUrl:String;
 			public var localeUrl:String;
+			public var uiconfXml:XML;
+			//conversion profiles
+			public var globalConversionProfile:Number = -1;
+			public var swfConversionProfile:Number = -1;
+			public var videoConversionProfile:Number = -1;
+			public var imageConversionProfile:Number = -1;
+			public var audioConversionProfile:Number = -1;
 		}
 }

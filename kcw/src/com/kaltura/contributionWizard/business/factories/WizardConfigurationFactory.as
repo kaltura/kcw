@@ -360,6 +360,8 @@ package com.kaltura.contributionWizard.business.factories
 			var txtContributionWizard:String = unescape(xmlConfig.text()[0]);
 			txtContributionWizard = replaceEnvironmentalVars(txtContributionWizard);
 			var xmlContributionWizard:XML = new XML(txtContributionWizard);
+			
+			
 			return xmlContributionWizard;
 		}
 
@@ -401,11 +403,43 @@ package com.kaltura.contributionWizard.business.factories
 				var mediaType:String = xmlProvider.parent().@type;
 				var mediaProviderVo:MediaProviderVO = createMediaProvider(xmlProvider, mediaType, uiConfMap);
 				mediaProviders.addMediaProvider(mediaProviderVo);
+				//handle the 4 types conversion profile if it exist
+				if(xmlProvider.attribute('conversionProfileId').length())
+					setConversionProfileId(xmlProvider,mediaType);
 			}
-
+			//handle global if exist
+			if(xmlContributionWizard.mediaTypes.attribute('defaultConversionProfileId').length())
+			{
+				setConversionProfileId(xmlContributionWizard.mediaTypes[0] , 'global');
+			}
 			return mediaProviders;
 		}
 
+		private static function setConversionProfileId(xmlProvider:XML , mediaType:String):void
+		{
+			var wizardModleLocator:WizardModelLocator = WizardModelLocator.getInstance();
+			switch (mediaType)
+			{
+				case 'video':
+					wizardModleLocator.uiConfigVo.videoConversionProfile = xmlProvider.attribute('conversionProfileId')[0] ;
+				break;
+				case 'audio':
+					wizardModleLocator.uiConfigVo.audioConversionProfile = xmlProvider.attribute('conversionProfileId')[0] ;
+				break;
+				case 'swf':
+					wizardModleLocator.uiConfigVo.swfConversionProfile = xmlProvider.attribute('conversionProfileId')[0] ;
+				break;
+				case 'image':
+					wizardModleLocator.uiConfigVo.imageConversionProfile = xmlProvider.attribute('conversionProfileId')[0] ;
+				break;
+				case 'global':
+					wizardModleLocator.uiConfigVo.globalConversionProfile = xmlProvider.attribute('defaultConversionProfileId')[0] ;
+				break;
+			}
+		}
+		
+		
+		
 		private static function getUiConfMap(xmlUiConfigList:XML):Dictionary
 		{
 			var rootUrl:String = WizardModelLocator.getInstance().context.sourceUrl;
