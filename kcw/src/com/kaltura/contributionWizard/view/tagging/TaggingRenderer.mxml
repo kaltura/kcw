@@ -25,35 +25,45 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <mx:HBox
 	verticalAlign="middle"
 	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:mx="http://www.adobe.com/2006/mxml" show="onShow(event)"
 	xmlns:vo="com.kaltura.vo.*" creationComplete="setCategory()">
 	<mx:Metadata>
 	</mx:Metadata>
 
 	<mx:Script>
 		<![CDATA[
-			import com.kaltura.contributionWizard.events.ValidateAllMetaDataEvent;
-			import com.kaltura.contributionWizard.events.TaggingEvent;
-			import com.kaltura.types.KalturaSourceType;
-			import mx.binding.utils.BindingUtils;
-			import com.kaltura.vo.KalturaCategory;
-			import mx.collections.ArrayCollection;
-			import com.kaltura.contributionWizard.view.events.TaggingViewEvent;
-			import com.kaltura.vo.MediaMetaDataVO;
-			import com.kaltura.vo.importees.ImportURLVO;
-			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
-			import com.kaltura.contributionWizard.model.WizardModelLocator;
-			import mx.controls.Alert;
-			import com.kaltura.vo.importees.ImportFileVO;
-			import com.kaltura.vo.importees.BaseImportVO;
 			import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.google.analytics.core.ga_internal;
+			import com.kaltura.contributionWizard.events.TaggingEvent;
+			import com.kaltura.contributionWizard.events.ValidateAllMetaDataEvent;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
 			import com.kaltura.contributionWizard.model.importTypesConfiguration.tagging.TaggingConfig;
+			import com.kaltura.contributionWizard.view.events.TaggingViewEvent;
+			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+			import com.kaltura.types.KalturaSourceType;
+			import com.kaltura.vo.KalturaCategory;
+			import com.kaltura.vo.MediaMetaDataVO;
+			import com.kaltura.vo.importees.BaseImportVO;
+			import com.kaltura.vo.importees.ImportFileVO;
+			import com.kaltura.vo.importees.ImportURLVO;
+			
+			import flash.utils.setTimeout;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
 			
 			[Bindable]
 			public var taggingConfig:TaggingConfig;
 			
+			private var _comboIndex:Number = 0;
 			[Bindable]
 			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
+			[Bindable]
+			private var _categories:ArrayCollection;
+			private var _initialCategory:String = '';
+			private var _categoryIndex:Number;
 
 			[Bindable]
 			private var _metaDataVo:MediaMetaDataVO;
@@ -70,11 +80,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		
  			public override function set data(value:Object):void
 			{
+				_comboIndex = 0;
 				_importItemVo = BaseImportVO(value);
 				if (_importItemVo) {
 					_metaDataVo = _importItemVo.metaData;
 				}
-				
 				super.data = value;		
 			}
 			
@@ -82,11 +92,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			 * if user provided categoriesRootId then the category of every content should be set to be
 			 * under the given root Id. even if no categories were selected.
 			 * */
-			private function setCategory():void {
+			private function setCategory():void 
+			{
 				if( _model.categoriesPrefix) 
 					_categoryName = _model.categoriesPrefix.substr(0, _model.categoriesPrefix.length-1);
 				else
 					BindingUtils.bindSetter( getCategoriesPrefix , _model , "categoriesPrefix");
+				
+				//setting the dataprovider 
+				BindingUtils.bindSetter( loadedCategories , _model , "categoriesFromRoot");
+					
+				//if there is a flashvar called disableCategories with true - disable the categories combo
+				if(_model.flashvars && _model.flashvars.disableCategories == 'true')
+					categoryCB.enabled = false;
+				
+				if(_model.flashvars && _model.flashvars.enforceCategory)
+					_initialCategory = _model.flashvars.enforceCategory;
+				
+				categoryCB.selectedIndex = -1;
+				categoryCB.prompt = resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_NO_CATEGORY');
+			
+				
+			}
+			private function loadedCategories( ac : ArrayCollection) : void
+			{
+				_categories = ac;
 			}
 			
 			private function getCategoriesPrefix( categoriesPrefix : String) : void
@@ -131,6 +161,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			}
 			
 			private function dataChangedHandler() :void {
+				if(_categoryIndex)
+				{
+					_metaDataVo.categoryIndex = _categoryIndex; 
+					inputMetaData.categoryIndex = _categoryIndex;
+					inputMetaData.category = _metaDataVo.category;
+					
+				}
 				dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
 			}
 			
@@ -145,6 +182,58 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				validateAllEvent.dispatch();
 			}
 
+			
+			private function setSelectedToCombo():void
+			{
+				_comboIndex ++;
+				if (_initialCategory=='')
+					return;
+				if(_model.flashvars && _model.flashvars.enforceCategory)
+				{
+					
+					var sDataValueCur:String;
+					var arr:Array = (categoryCB.dataProvider as ArrayCollection).source;
+					if(arr.length<1)
+						return;
+					for ( var i:Number=0; i< arr.length; i++ )  
+					{  
+						if(!arr[i] || !arr[i].hasOwnProperty("name"))
+							{
+								break;
+								continue;
+							} 
+						var sss:Object = (categoryCB.dataProvider as ArrayCollection).getItemAt(i);
+						sDataValueCur = '';
+						
+						if(sss.hasOwnProperty("name"))
+							sDataValueCur = sss.name;  //get the current item value
+						if ( sDataValueCur == _initialCategory )  
+						{  
+							_comboIndex = 200;
+							categoryCB.selectedIndex = i;  //set the seletedIndex of the combo box
+							_categoryName = _model.categoriesPrefix +  sDataValueCur;	
+							_metaDataVo.categoryIndex = categoryCB.selectedIndex;
+							_categoryIndex = i;
+							dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
+							return;
+						}
+					}
+					
+				}
+			}
+			
+			protected function onUpdateComplete(event:FlexEvent):void
+			{
+ 				if(_comboIndex<200)
+					callLater(setSelectedToCombo); 
+			}
+			
+			protected function onShow(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				setSelectedToCombo();
+			}
+			
 		]]>
 	</mx:Script>
 
@@ -178,11 +267,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_CATEGORY')}" width="100%"
 			visible="{_model.startupDefaults.showCategories}" includeInLayout="{_model.startupDefaults.showCategories}">
 			<mx:ComboBox id="categoryCB"
-				dataProvider="{_model.categoriesFromRoot}"
-				selectedIndex="{_metaDataVo.categoryIndex}"
+				dataProvider="{_categories}"
 				labelField="name"
+				updateComplete="onUpdateComplete(event)"
 				change="categoryChangeHandler()"
-				prompt="{resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_NO_CATEGORY')}"
 				width="100%"
 				/>
 		</mx:FormItem>

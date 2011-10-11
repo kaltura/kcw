@@ -117,14 +117,20 @@ package com.kaltura.contributionWizard.business
 					if (_entriesToAdd.getItemAt(i) is ImportFileVO)
 						uploadedFile = _entriesToAdd.getItemAt(i) as ImportFileVO;
 					
-		   			entryIdListArray.push(
-		   									{
-		   										entryId: (item.id && item.id[0]) ? item.id[0].toString() : "", 
-		   										mediaType: (item.mediaType && item.mediaType[0]) ? item.mediaType[0].toString() : "",
-												fileSize: uploadedFile ? uploadedFile.polledfileReference.fileReference.size : "",
-												fileName: uploadedFile ? uploadedFile.polledfileReference.fileReference.name : ""
-		   									}
-		   								 );
+					
+					var object:Object = {		   										
+											entryId: (item.id && item.id[0]) ? item.id[0].toString() : "", 
+											mediaType: (item.mediaType && item.mediaType[0]) ? item.mediaType[0].toString() : "" }
+					if (uploadedFile && uploadedFile.polledfileReference && uploadedFile.polledfileReference.fileReference && uploadedFile.polledfileReference.fileReference.size )
+						object.fileSize = uploadedFile ? uploadedFile.polledfileReference.fileReference.size : "";
+					else
+						object.fileSize = "";
+					if (uploadedFile && uploadedFile.polledfileReference && uploadedFile.polledfileReference.fileReference && uploadedFile.polledfileReference.fileReference.name )
+						object.fileName = uploadedFile ? uploadedFile.polledfileReference.fileReference.name : "";
+					else
+						object.fileName = "";
+		   			entryIdListArray.push(object)
+		   							
 		   		
 		   			var notItem:XML = entriesXmlList[len + i];
 		   			if(notItem && notItem.url[0] && notItem.url.indexOf("http") > -1 )
