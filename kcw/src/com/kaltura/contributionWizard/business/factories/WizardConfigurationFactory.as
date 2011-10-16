@@ -339,6 +339,9 @@ package com.kaltura.contributionWizard.business.factories
 																null;
 			uiConfVo.localeUrl	= xmlUiConf.localeUrl[0] 	? 	PathUtil.getAbsoluteUrl(rootUrl, xmlUiConf.localeUrl) :
 																null;
+			if(xmlUiConf && !uiConfVo.uiconfXml)
+				uiConfVo.uiconfXml = xmlUiConf; 
+			
 			return uiConfVo;
 
 		}
