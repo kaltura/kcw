@@ -40,29 +40,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	<mx:Script>
 
         <![CDATA[
-        	import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
-        	import com.arc90.modular.CairngormEventDispatcherFactory;
-        	import com.grakl.spinner.Spinner;
-        	import com.kaltura.contributionWizard.command.webcam.PickStreamNameCommand;
-        	import com.kaltura.contributionWizard.events.ImportEvent;
-        	import com.kaltura.contributionWizard.events.webcam.WebcamEvent;
-        	import com.kaltura.contributionWizard.model.WebcamModelLocator;
-        	import com.kaltura.contributionWizard.model.WizardModelLocator;
-        	import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;
-        	import com.kaltura.contributionWizard.view.importViews.webcam.controler.VideoRecorder;
-        	import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent;
-        	import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderEvent;
-        	import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
-        	import com.kaltura.preloaders.KmcPreloader;
-        	import com.kaltura.vo.importees.ImportFileVO;
-        	
-        	import mx.controls.Alert;
-        	import mx.controls.Spacer;
-        	import mx.core.Application;
-        	import mx.events.ListEvent;
-        	import mx.managers.PopUpManager;
-        	import mx.rpc.events.ResultEvent;
-        	import mx.utils.UIDUtil;
+			import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.arc90.modular.CairngormEventDispatcherFactory;
+			import com.grakl.spinner.Spinner;
+			import com.kaltura.contributionWizard.command.webcam.PickStreamNameCommand;
+			import com.kaltura.contributionWizard.events.ImportEvent;
+			import com.kaltura.contributionWizard.events.webcam.WebcamEvent;
+			import com.kaltura.contributionWizard.model.WebcamModelLocator;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
+			import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;
+			import com.kaltura.contributionWizard.view.importViews.webcam.controler.VideoRecorder;
+			import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent;
+			import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderEvent;
+			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+			import com.kaltura.preloaders.KmcPreloader;
+			import com.kaltura.vo.importees.ImportFileVO;
+			
+			import mx.controls.Alert;
+			import mx.controls.Spacer;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.utils.UIDUtil;
 
 			private static const WEB_CAM_NAME:String = "webCamName";
 
@@ -287,7 +288,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			private var _names:Array;
 
 			private var _selectedCamera:Camera;
-
+			[Bindable]
+			private var _webcamlimit:Number = 0;
 			private var _muted:Boolean = true;
 			private var _firstTimeSelecting:Boolean = true;
 
@@ -300,8 +302,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				comboChangeHandler();
 				
 				videoCanvas.visible = true;
+				vr.addEventListener(VideoRecorder.UPDATE_PLAYHEAD_WEBCAM , onUpdatePlayHead);
+				
+				if (_wizardModel.flashvars.webcamlimit)
+					_webcamlimit = _wizardModel.flashvars.webcamlimit;
+				if (_wizardModel.flashvars.flashvars && _wizardModel.flashvars.flashvars.webcamlimit)
+					_webcamlimit = _wizardModel.flashvars.flashvars.webcamlimit;
+				 
+				//take the number from the uiconf if it exist there
+				if(_wizardModel.mediaProviders.activeMediaProvider && _wizardModel.mediaProviders.activeMediaProvider.customData
+					&&  _wizardModel.mediaProviders.activeMediaProvider.customData.hasOwnProperty("timeLimit"))
+				{
+						_webcamlimit = 	Number(_wizardModel.mediaProviders.activeMediaProvider.customData.timeLimit);
+				}
+				if(_webcamlimit > 1)
+					_webcamlimit--;
+				_webcamlimit*=1000;
 			}
 
+			private function onUpdatePlayHead(event:Event):void
+			{
+				trace( ">>>><<", recorder_control.currentState);
+				// time limit for the video recording
+				if(_webcamlimit != 0 && vr.elapsedTime >= _webcamlimit && recorder_control.currentState == "from_record_stop_state" )
+				{
+					onStopRecordPress(null);
+					var message:String = "Record limit exceeded"; //default to support the string without locale changes
+					if(resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'MAX_WEBCAM_MESSAGE'))
+						message = resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'MAX_WEBCAM_MESSAGE');
+					if (_wizardModel.flashvars.maxwebcammessage)
+						message = _wizardModel.flashvars.maxwebcammessage;
+					if (_wizardModel.flashvars.flashvars && _wizardModel.flashvars.flashvars.maxwebcammessage)
+						message = _wizardModel.flashvars.flashvars.maxwebcammessage;
+					
+					
+					Alert.show(message);
+				}
+			}
+				
 			private function comboChangeHandler():void
 			{
 				var selectedIndex:int = combo.selectedIndex;
@@ -348,8 +386,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{
 				//trace(event, Camera(event.target).activityLevel)
 			}
-
-
 			private function inStreamBufferEmptyHandler(event:RecorderEvent):void
 			{
 				_buffering = true;
@@ -359,14 +395,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			{
 				_buffering = false;
 			}
-			
+
+
+			protected function swfLoader_creationCompleteHandler(event:FlexEvent):void
+			{
+				if (_wizardModel.flashvars && _wizardModel.flashvars.webcamswf)
+				{
+					swfLoader.load(_wizardModel.flashvars.webcamswf);
+				} else if (_wizardModel.flashvars.hasOwnProperty("flashvars") && _wizardModel.flashvars["flashvars"].hasOwnProperty("webcamswf"))
+				{
+					swfLoader.load(_wizardModel.flashvars.flashvars.webcamswf);
+				}
+			}
+
 		]]>
 	</mx:Script>
 
 	<!--Visible content-->
     <mx:HBox verticalAlign="middle" width="100%" height="100%">
 
-		<mx:VBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="left">
+		<mx:VBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="left" >
+			<mx:SWFLoader id="swfLoader"  creationComplete="swfLoader_creationCompleteHandler(event)"/>
 			<mx:ComboBox id="combo"
 				dataProvider="{_names}"
 				prompt="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'SELECT_WEBCAM')}"
@@ -383,7 +432,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			    	streamName="{_webcamModel.streamName}"
 			    	width="100%" height="100%"/>
 			    	
-			    <spinner:Spinner visible="{_publishing || _buffering}" x="{vr.contentMouseX}" y="{vr.contentMouseY}" />
+			    <spinner:Spinner visible="{_publishing}" x="{vr.contentMouseX}" y="{vr.contentMouseY}" />
 			</mx:Canvas>
 
 			<view:RecorderEditorControl id="recorder_control" width="100%" verticalAlign="middle"
