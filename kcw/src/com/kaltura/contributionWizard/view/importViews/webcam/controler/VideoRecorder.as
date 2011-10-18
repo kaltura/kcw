@@ -676,6 +676,10 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 			_viewTimer.reset();
 			_viewTimer.removeEventListener(TimerEvent.TIMER , onTimer);
 		}
+		
+		private function pauseViewTimer():void{
+			_viewTimer.stop();
+		}
 
 		private function startViewTimer():void
 		{
