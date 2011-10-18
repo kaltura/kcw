@@ -432,7 +432,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			    	streamName="{_webcamModel.streamName}"
 			    	width="100%" height="100%"/>
 			    	
-			    <spinner:Spinner visible="{_publishing}" x="{vr.contentMouseX}" y="{vr.contentMouseY}" />
+				<spinner:Spinner visible="{_publishing || _buffering}" x="{vr.contentMouseX}" y="{vr.contentMouseY}" />
 			</mx:Canvas>
 
 			<view:RecorderEditorControl id="recorder_control" width="100%" verticalAlign="middle"
