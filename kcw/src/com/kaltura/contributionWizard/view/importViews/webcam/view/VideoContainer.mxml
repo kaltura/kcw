@@ -104,7 +104,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			private function thisEnterFrameHandler(evtEnterFrame:Event):void
 			{
-				var elapsedTime:uint = viewTimer.currentCount * 1000 || 100;
+				elapsedTime = viewTimer.currentCount * 1000 || 100;
 				if (! date){
 					var date:Date = new Date(0,0,0,0,0,0,elapsedTime);
 				} else {
