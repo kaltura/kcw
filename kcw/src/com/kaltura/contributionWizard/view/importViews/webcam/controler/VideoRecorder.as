@@ -636,7 +636,7 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 
 		private function updateViewOnPlayStart():void
 		{
-			startViewTimer();
+//			startViewTimer();
 			_videoContainer.videoStatus = VideoContainer.PLAYING;
 			//startSampleTime(in_stream);
 		}
