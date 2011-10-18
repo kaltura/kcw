@@ -36,8 +36,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			[Bindable]
 			public var viewTimer:Timer;
-			
+			public var elapsedTime:uint;
+
 			private var _date:Date;
+
 
 			public static const PLAYING:String 		= "playing";
 			public static const RECORDING:String 	= "recording";
