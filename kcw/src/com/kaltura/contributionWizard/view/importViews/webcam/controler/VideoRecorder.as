@@ -58,6 +58,8 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
         public const MAX_BUFFER_LENGTH:int = 40;
 
         public const MEDIA_READY:String = "mediaReady";
+        public static const UPDATE_PLAYHEAD_WEBCAM:String = "updatePlayheadWebcam";
+        public var playhead:Number;
         ///////////////////////////////////////////////
 
         //private vars
@@ -90,7 +92,8 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 		private var numMics:int;
 
 		private var _videoContainer:VideoContainer = new VideoContainer();
-
+		public var elapsedTime:uint = 0;
+		
 		[Bindable]
 		private var _viewTimer:Timer = new Timer(1000);
 		//private var _elapsedViewTime:uint = 0;
@@ -138,6 +141,7 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 		private function addVideoChild():void
 		{
 			_videoContainer.viewTimer = _viewTimer;
+			
 			//_videoContainer.setStyle("backgroundColor", 0x000000);
 			_videoContainer.verticalScrollPolicy = ScrollPolicy.OFF;
 			_videoContainer.horizontalScrollPolicy = ScrollPolicy.OFF;
@@ -632,6 +636,7 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 
 		private function updateViewOnPlayStart():void
 		{
+			startViewTimer();
 			_videoContainer.videoStatus = VideoContainer.PLAYING;
 			//startSampleTime(in_stream);
 		}
@@ -669,15 +674,18 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 		private function stopViewTimer():void
 		{
 			_viewTimer.reset();
-		}
-		
-		private function pauseViewTimer():void{
-			_viewTimer.stop();
+			_viewTimer.removeEventListener(TimerEvent.TIMER , onTimer);
 		}
 
 		private function startViewTimer():void
 		{
 			_viewTimer.start();
+			_viewTimer.addEventListener(TimerEvent.TIMER , onTimer);
+		}
+		private function onTimer(event:TimerEvent):void
+		{
+			elapsedTime = _videoContainer.elapsedTime;
+			dispatchEvent(new Event(UPDATE_PLAYHEAD_WEBCAM));	
 		}
 	}
 }
