@@ -85,7 +85,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				if (_importItemVo) {
 					_metaDataVo = _importItemVo.metaData;
 				}
-				super.data = value;		
+				super.data = value;
+				
+				if(_model.flashvars && _model.flashvars.disableTags == 'true')
+					tagsInput.enabled = false;
+				
+				if(_model.flashvars && _model.flashvars.enforceTags )
+				{
+					
+					tagsInput.text = _model.flashvars.enforceTags;
+					dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
+				}
+				
+				//if there is a flashvar called disableCategories with true - disable the categories combo
+				if(_model.flashvars && _model.flashvars.disableCategories == 'true')
+					categoryCB.enabled = false;
+				
+				if(_model.flashvars && _model.flashvars.enforceCategory)
+					_initialCategory = _model.flashvars.enforceCategory;
 			}
 			
 			/**
@@ -102,12 +119,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				//setting the dataprovider 
 				BindingUtils.bindSetter( loadedCategories , _model , "categoriesFromRoot");
 					
-				//if there is a flashvar called disableCategories with true - disable the categories combo
-				if(_model.flashvars && _model.flashvars.disableCategories == 'true')
-					categoryCB.enabled = false;
+
 				
-				if(_model.flashvars && _model.flashvars.enforceCategory)
-					_initialCategory = _model.flashvars.enforceCategory;
 				
 				categoryCB.selectedIndex = -1;
 				categoryCB.prompt = resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_NO_CATEGORY');
@@ -218,7 +231,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 							return;
 						}
 					}
-					
 				}
 			}
 			
