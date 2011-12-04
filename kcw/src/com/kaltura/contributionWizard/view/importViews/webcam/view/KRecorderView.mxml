@@ -56,6 +56,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			import com.kaltura.preloaders.KmcPreloader;
 			import com.kaltura.vo.importees.ImportFileVO;
 			
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
 			import mx.controls.Alert;
 			import mx.controls.Spacer;
 			import mx.core.Application;
@@ -79,6 +81,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			
 			[Bindable]
 			private var _buffering:Boolean = false;
+			
+			private var _entriesAdditionWatcher:ChangeWatcher;
 
     		public function init():void
     		{
@@ -100,7 +104,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 vr.init(); 
                 tips.init();
                 recorder_control.init();
-
+				
+				
+				_entriesAdditionWatcher = BindingUtils.bindSetter(onEntriesAddedChanged, _wizardModel, "wereEntriesAdded");
                 //vr.videoWidth = 200;
                 //vr.videoHeight = 200;
 				//vidContainer.addChild(vr);
@@ -128,6 +134,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     		public function deactivate():void
     		{
+				if (_entriesAdditionWatcher != null){
+					_entriesAdditionWatcher.unwatch();
+				}
     			vr.dispose();
     		}
 
@@ -408,6 +417,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				}
 			}
 
+			private function onEntriesAddedChanged(wereAdded:Boolean):void
+			{
+				if (wereAdded){
+					vr.releaseWebcam();
+				}
+			}
+			
 		]]>
 	</mx:Script>
 

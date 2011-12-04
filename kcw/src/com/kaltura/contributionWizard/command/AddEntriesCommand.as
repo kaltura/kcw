@@ -101,6 +101,9 @@ package com.kaltura.contributionWizard.command
 			{
 				notifyAddEntriesComplete(addEntriesResult.entriesInfoList);
 			}
+			
+			_model.wereEntriesAdded = true;
+			_model.wereEntriesAdded = false;
 			executeNextCommand();
 		}
 

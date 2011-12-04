@@ -691,5 +691,10 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 			elapsedTime = _videoContainer.elapsedTime;
 			dispatchEvent(new Event(UPDATE_PLAYHEAD_WEBCAM));	
 		}
+		
+		public function releaseWebcam():void
+		{
+			video.attachCamera(null);
+		}
 	}
 }

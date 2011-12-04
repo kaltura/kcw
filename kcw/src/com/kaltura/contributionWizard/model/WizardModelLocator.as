@@ -90,6 +90,8 @@ package com.kaltura.contributionWizard.model
 		public var additionalField:String = "";
 		//indicates whether the "list categories" action was sent to server at least once already
 		public var categoriesUploaded:Boolean = false;
+		
+		public var wereEntriesAdded:Boolean = false;
 		/**
 		 * Whether to load thumbnails with KS or not 
 		 */		
