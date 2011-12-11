@@ -22,8 +22,8 @@ package com.kaltura.delegates {
 	
 	public class WebDelegateBase extends EventDispatcher implements IKalturaCallDelegate {
 		
-		private static const CONNECT_TIME : int = 60000; //60 secs
-		private static const LOAD_TIME : int = 60000; //60 secs
+		private static const CONNECT_TIME : int = 120000; //60 secs
+		private static const LOAD_TIME : int = 120000; //60 secs
 		protected var connectTimer:Timer;
 		protected var loadTimer:Timer;
 		
