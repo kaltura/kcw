@@ -122,6 +122,8 @@ package com.kaltura.contributionWizard.business.factories.serialization.importUr
 			}
 			
 			
+			if(wizardModleLocator.flashvars.enforceCategory)
+				urlVars[index + ":mediaEntry:categories"] = wizardModleLocator.flashvars.enforceCategory;
 		}
 		
 		private function getConversionProfile():Number
