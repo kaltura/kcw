@@ -93,8 +93,8 @@ package com.kaltura.contributionWizard.business.factories
 			if (xmlSearchResult.searchSource.toString() != "")
 				importUrlVo.mediaProviderCode = xmlSearchResult.searchSource;
 
- 			if (xmlSearchResult.flash_playback_type.toString() != "")
-				importUrlVo.flashPlaybackType = xmlSearchResult.flashPlaybackType;
+ 			if (xmlSearchResult.flashPlaybackType.toString() != "")
+				importUrlVo.flashPlaybackType = String(xmlSearchResult.flashPlaybackType).toLowerCase();
 
 			return importUrlVo;
 		}

@@ -40,14 +40,14 @@ package com.kaltura.media
 
 	public class SoundPlayer extends EventDispatcher
 	{
-		private var _sound:Sound;
+//		private var _sound:Sound;
 
 		private var _ns:NetStream;
 		private var _nc:NetConnection;
 
-		private var _soundChannel:SoundChannel;
+//		private var _soundChannel:SoundChannel;
 
-		private var _playerType:String = FlashPlaybackType.AUDIO;
+//		private var _playerType:String = FlashPlaybackType.AUDIO;
 
 		private var _url:String;
 
@@ -66,7 +66,7 @@ package com.kaltura.media
 		public function SoundPlayer(url:String = null, context:SoundLoaderContext = null)
 		{
 			_url = url;
-			if (url) setPlayerType(url);
+//			if (url) setPlayerType(url);
 			createNetStream();
 		}
 
@@ -74,32 +74,31 @@ package com.kaltura.media
 		{
 			if (_isPlaying) stop();
 
-			setPlayerType(_url, flashPlaybackType);
-			switch (_playerType)
-			{
-				case FlashPlaybackType.VIDEO:
-					playFlv();
-				break;
-
-				case FlashPlaybackType.AUDIO:
-					playSound();
-				break;
-			}
+//			setPlayerType(_url, flashPlaybackType);
+//			switch (_playerType)
+//			{
+//				case FlashPlaybackType.VIDEO:
+//				case FlashPlaybackType.AUDIO:
+			playFlv();
+//				break;
+//					playSound();
+//				break;
+//			}
 			_isPlaying = true;
 		}
 
 		public function stop():void
 		{
-			switch (_playerType)
-			{
-				case FlashPlaybackType.VIDEO:
-					stopFlv();
-				break;
+//			switch (_playerType)
+//			{
+//				case FlashPlaybackType.VIDEO:
+			stopFlv();
+//				break;
 
-				case FlashPlaybackType.AUDIO:
-					stopSound();
-				break;
-			}
+//				case FlashPlaybackType.AUDIO:
+//					stopSound();
+//				break;
+//			}
 			_isPlaying = false;
 
 		}
@@ -111,13 +110,13 @@ package com.kaltura.media
 		}
 
 
-		private function playSound():void
-		{
-			_sound = new Sound(new URLRequest(_url));
-			_soundChannel = _sound.play();
-			_soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
-			_sound.addEventListener(IOErrorEvent.IO_ERROR, soundIoErrorHandler);
-		}
+//		private function playSound():void
+//		{
+//			_sound = new Sound(new URLRequest(_url));
+//			_soundChannel = _sound.play();
+//			_soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
+//			_sound.addEventListener(IOErrorEvent.IO_ERROR, soundIoErrorHandler);
+//		}
 
 		private function createNetStream():void
 		{
@@ -137,43 +136,43 @@ package com.kaltura.media
 			_ns.removeEventListener(NetStatusEvent.NET_STATUS, netStreamStatusHandler);
 		}
 
-		private function stopSound():void
-		{
-			_soundChannel.stop();
-			//check if there is a pending sound that is still being loaded
-			if (_sound.isBuffering || _sound.bytesLoaded < _sound.bytesTotal)
-			{
-				try
-				{
-					_sound.close();
-				}
-				catch(e:Error)
-				{
-					//the sound throws error "Error #2029: This URLStream object does not have a stream opened."
-				}
-			}
-			_soundChannel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
-		}
+//		private function stopSound():void
+//		{
+//			_soundChannel.stop();
+//			//check if there is a pending sound that is still being loaded
+//			if (_sound.isBuffering || _sound.bytesLoaded < _sound.bytesTotal)
+//			{
+//				try
+//				{
+//					_sound.close();
+//				}
+//				catch(e:Error)
+//				{
+//					//the sound throws error "Error #2029: This URLStream object does not have a stream opened."
+//				}
+//			}
+//			_soundChannel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
+//		}
 
-		private function setPlayerType(url:String, flashPlaybackType:String = null):void
-		{
-			var fileType:String; //flc, mov, mp3, etc.
-			if (flashPlaybackType == null)
-				flashPlaybackType = getPlayerTypeByUrl(url);
+//		private function setPlayerType(url:String, flashPlaybackType:String = null):void
+//		{
+//			var fileType:String; //flc, mov, mp3, etc.
+//			if (flashPlaybackType == null)
+//				flashPlaybackType = getPlayerTypeByUrl(url);
+//
+//			_playerType = flashPlaybackType ||  FlashPlaybackType.AUDIO;
+//		}
 
-			_playerType = flashPlaybackType ||  FlashPlaybackType.AUDIO;
-		}
-
-		private function getPlayerTypeByUrl(url:String):String
-		{
-			if (!url) return null;
-			var last3Chars:String = url.substr(url.lastIndexOf('.')+1);
-			var playerType:String = last3Chars == "flv" || last3Chars == "mp4" || url.indexOf("extservices/youtubeRedirect?") > -1 ? 
-						 			FlashPlaybackType.VIDEO :
-						 			FlashPlaybackType.AUDIO;
-
-			return playerType;
-		}
+//		private function getPlayerTypeByUrl(url:String):String
+//		{
+//			if (!url) return null;
+//			var last3Chars:String = url.substr(url.lastIndexOf('.')+1);
+//			var playerType:String = last3Chars == "flv" || last3Chars == "mp4" || url.indexOf("extservices/youtubeRedirect?") > -1 ? 
+//						 			FlashPlaybackType.VIDEO :
+//						 			FlashPlaybackType.AUDIO;
+//
+//			return playerType;
+//		}
 		private function netStreamStatusHandler(netStatusEvent:NetStatusEvent):void
 		{
 			switch (netStatusEvent.info.code)
@@ -195,7 +194,7 @@ package com.kaltura.media
 
 		private function soundCompleteHandler(evtSoundComplete:Event):void
 		{
-			soundComplete();
+//			soundComplete();
 		}
 
 		private function soundComplete():void
