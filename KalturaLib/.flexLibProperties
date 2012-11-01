@@ -2,6 +2,7 @@
 <flexLibProperties includeAllClasses="false" version="1">
   <includeClasses>
     <classEntry path="com.hires.utils.Stats"/>
+    <classEntry path="com.kaltura.analytics.GoogleAnalyticsConstants"/>
     <classEntry path="com.kaltura.analytics.GoogleAnalyticsConsts"/>
     <classEntry path="com.kaltura.analytics.GoogleAnalyticsTracker"/>
     <classEntry path="com.kaltura.analytics.KAnalyticsTracker"/>
@@ -107,9 +108,10 @@
     <classEntry path="com.kaltura.wrapper.IFlexWrapper"/>
   </includeClasses>
   <includeResources>
-    <resourceEntry destPath="locale/en_US_kaltura/countries.properties" sourcePath="locale/en_US_kaltura/countries.properties"/>
-    <resourceEntry destPath="locale/en_US_kaltura/windows.properties" sourcePath="locale/en_US_kaltura/windows.properties"/>
-    <resourceEntry destPath="locale/en_US_kaltura/charts.properties" sourcePath="locale/en_US_kaltura/charts.properties"/>
+    <resourceEntry destPath="charts.properties" sourcePath="charts.properties"/>
+    <resourceEntry destPath="countries.properties" sourcePath="countries.properties"/>
+    <resourceEntry destPath="languages.properties" sourcePath="languages.properties"/>
+    <resourceEntry destPath="windows.properties" sourcePath="windows.properties"/>
   </includeResources>
   <namespaceManifests/>
 </flexLibProperties>

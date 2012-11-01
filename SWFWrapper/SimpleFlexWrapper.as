@@ -1,13 +1,9 @@
 package
 {
-	import com.kaltura.base.types.TimelineTypes;
 	import com.kaltura.events.WrapperEvent;
 	import com.kaltura.wrapper.IFlexWrapper;
 	
-	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
 	import flash.display.Loader;
-	import flash.display.LoaderInfo;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -15,15 +11,12 @@ package
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.net.URLRequest;
-	import flash.sampler.NewObjectSample;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
 	import flash.system.Security;
 	import flash.system.SecurityDomain;
 	import flash.utils.Timer;
-	import flash.utils.setTimeout;
 	
-	import mx.core.Application;
 	import mx.events.FlexEvent;
 
 	public class SimpleFlexWrapper extends Sprite implements IFlexWrapper

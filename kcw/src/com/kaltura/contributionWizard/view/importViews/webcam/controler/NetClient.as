@@ -132,8 +132,20 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 	    	}
 	    }
 	    
-	    public function onBWDone():void {
-			//trace("onBWDone: ");
+		/**
+		 * triggered by server when BandWidth check is done 
+		 */
+	    public function onBWDone(... rest):Object {
+			// sample rest[0] {deltaDown:2462.624, deltaTime:154214, kbitDown:16, latency:1000, length:0}	
+			return rest[0];
+		}
+		
+		/**
+		 * triggered by server when BW check is running 
+		 */
+		public function onBWCheck(... rest):Object {
+			// sample rest[0]: {count:0, cumLatency:1, latency:0, length:0, payload:"", sent:0, timePassed:0} 
+			return rest[0];
 		}
 		
 		public function streamInfo(info:Object):void {

@@ -41,11 +41,6 @@ package com.kaltura.contributionWizard.model
    [Bindable]
 	public class WizardModelLocator implements IModelLocator
 	{
-		/* public static const PRELOADING:int		= 0;
-		public static const INTRO_SCREEN:int 	= 1;
-		public static const IMPORT_MEDIA:int 	= 2;
-		public static const TAGGING:int			= 3;
-		//public static const FINISH_SCREEN:int	= 4; */
 
 		public var workflowState:String = KCWWorkflowState.PRELOADING;
 
@@ -88,7 +83,10 @@ package com.kaltura.contributionWizard.model
 		public var loadingFlag : Boolean = false;
 		public var flashvars : Object;
 		public var additionalField:String = "";
-		//indicates whether the "list categories" action was sent to server at least once already
+		
+		/**
+		 * indicates whether the "list categories" action was sent to server at least once already 
+		 */
 		public var categoriesUploaded:Boolean = false;
 		
 		public var wereEntriesAdded:Boolean = false;
@@ -97,7 +95,6 @@ package com.kaltura.contributionWizard.model
 		 */		
 		public var loadThumbsWithKS:Boolean = false;
 		
-		//public var importSteps:Array;
 		//-----------------------------Singleton implementation----------------------------- //
 		private static var _modelLocator : WizardModelLocator;
 
@@ -124,17 +121,8 @@ package com.kaltura.contributionWizard.model
 			uiConfigVo = new UIConfigVO();
 			importTypesConfiguration = new ImportTypesConfig();
 			limitationsVo = WizardConfigurationFactory.getLimitationVoFromElement(limitationXML);
-			/*
-			var introScreen:WorkflowState = new WorkflowState(KCWWorkflowState.INTRO_SCREEN, new WorkflowEvent(WorkflowEvent.CHANGE_WORKFLOW, KCWWorkflowState.INTRO_SCREEN));
-			var importMedia:WorkflowState = new WorkflowState(KCWWorkflowState.IMPORT_MEDIA, new WorkflowEvent(WorkflowEvent.CHANGE_WORKFLOW, KCWWorkflowState.IMPORT_MEDIA));
-			var taggingScreen:WorkflowState = new WorkflowState(KCWWorkflowState.TAGGING, new WorkflowEvent(WorkflowEvent.CHANGE_WORKFLOW, KCWWorkflowState.TAGGING));
-			var addEntriesAndFinishEvent:ChainEvent = EventChainFactory.chainEvents([new AddEntriesEvent(AddEntriesEvent.ADD_ENTRIES), new WorkflowEvent(WorkflowEvent.CHANGE_WORKFLOW, KCWWorkflowState.FINISH_SCREEN)]);
-			var addEntriesAndFinish:WorkflowState = new WorkflowState(KCWWorkflowState.ADD_ENTRIES, addEntriesAndFinishEvent);
-
-			importSteps = [introScreen, importMedia, taggingScreen, addEntriesAndFinish]; */
 		}
 
-		//public var importStepsNames:Array = [KCWWorkflowState.PRELOADING, KCWWorkflowState.INTRO_SCREEN, KCWWorkflowState.IMPORT_MEDIA, KCWWorkflowState.TAGGING, KCWWorkflowState.ADD_ENTRIES /*, finish screen*/];
 		
 		private function get limitationXML():XML
 		{

@@ -19,7 +19,10 @@ package com.kaltura.contributionWizard.command
 	{
 
 		private var _model:WizardModelLocator = WizardModelLocator.getInstance();
-		//parameter object, either from flashvars or loading swf injection
+		
+		/**
+		 * parameter object, either from flashvars or loading swf injection
+		 */
 		private var _parameters:Object;
 
 		override public function execute(event:CairngormEvent):void
@@ -29,16 +32,6 @@ package com.kaltura.contributionWizard.command
 			trace(ObjectUtil.toString(evtGetContext.parameters))
 			_parameters =  ObjectHelpers.lowerNoUnderscore(evtGetContext.parameters);
 
-			/*if (_parameters.sessionid || _parameters.ks)
-			{
-				trace("SaveInjectedDataCommand has sessionId");
-				setContext();
-			}
-			else
-			{
-				//if the parameters object is empty
-				trace("SaveInjectedDataCommand doesn't have sessionId");
-			}*/
 			
 			setContext();
 			
@@ -51,7 +44,6 @@ package com.kaltura.contributionWizard.command
 			_model.context.isAnonymous	= _parameters["isanonymous"] == "true";
 			_model.context.partnerId	= parseInt( _parameters["partnerid"] ); // if null it'll become 0, needed for the preloader
 			_model.context.hasPartnerId = Boolean(_parameters["partnerid"]);
-			//_model.context.subPartnerId	= parseInt( _parameters["subpartnerid"] ) ||  parseInt( _parameters["subpid"] );//the latter is for backward compatibility
 			_model.context.sessionId	= _parameters["ks"] || _parameters["sessionid"] || "";//the latter is for backward compatibility
 			_model.context.kshowId		= String(_parameters["kshowid"]);
 			var hostCode:String 		= _parameters["host"];
@@ -77,7 +69,6 @@ package com.kaltura.contributionWizard.command
 			_model.context.uiConfigId 								= _parameters["uiconfid"] || _model.context.uiConfigId;
 			setUploadUrl();
 
-			//_model.startupDefaults.showCloseButton = KConfigUtil.getDefaultValue2(_parameters["showclosebutton"], _model.startupDefaults, "showCloseButton")
 			
 			if (_parameters["showclosebutton"])
 			{

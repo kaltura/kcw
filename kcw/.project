@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ContributionWizard</name>
+	<name>kcw</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -15,11 +15,4 @@
 		<nature>com.adobe.flexbuilder.project.flexnature</nature>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>[source path] {locale}</name>
-			<type>2</type>
-			<locationURI>DOCUMENTS/Locales_Kaltura_ContributionWizard/locale/%7blocale%7d</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

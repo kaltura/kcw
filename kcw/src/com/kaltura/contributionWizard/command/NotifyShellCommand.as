@@ -46,10 +46,14 @@ package com.kaltura.contributionWizard.command
 
 		public override function execute(event:CairngormEvent):void
 		{
-			/*We use the model SystemManager reference because of hack that we use:The contribution wizard is being loaded into a swf ApplicationDomain.currentDomain instead of child or
-			In that case, the  SystemManager.getSWFRoot(this) returns a random SystemManager (either the expected SystemManager which ius the root of the contribution wizard or the loading swf SystemManager object)
-			*/
-			_systemManager = _model.systemManager;//SystemManager.getSWFRoot(this) as SystemManager;
+			/** 
+			 * We use the model SystemManager reference because of hack that we use:
+			 * The contribution wizard is being loaded into a swf ApplicationDomain.currentDomain instead 
+			 * of child or In that case, the SystemManager.getSWFRoot(this) returns a random SystemManager 
+			 * (either the expected SystemManager which is the root of the contribution wizard or the 
+			 * loading swf SystemManager object) 
+			 * */
+			_systemManager = _model.systemManager; //SystemManager.getSWFRoot(this) as SystemManager;
 			var notifyShellEvent:NotifyShellEvent = event as NotifyShellEvent;
 			_entryIdList = notifyShellEvent.entryIdList;
 

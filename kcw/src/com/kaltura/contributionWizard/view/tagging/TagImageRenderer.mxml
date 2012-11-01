@@ -6,8 +6,8 @@
 			import com.kaltura.types.KalturaSourceType;
 			import com.kaltura.vo.importees.BaseImportVO;
 					
-			[Embed(source="/assets/webcamthumb.png")]  [Bindable]  private var _imgWebcam:Class;
-			[Embed(source="/assets/audioThumbnail.png")]  [Bindable]  private var _imgAudio:Class;
+			[Embed(source="../assets/webcamthumb.png")]  [Bindable]  private var _imgWebcam:Class;
+			[Embed(source="../assets/audioThumbnail.png")]  [Bindable]  private var _imgAudio:Class;
 			
 			[Bindable]
 			public var selectable:Boolean = true;

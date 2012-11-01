@@ -33,17 +33,28 @@ package com.kaltura.contributionWizard.model
     
     public var kcwSessionId : String = UIDUtil.createUID(); 
     public var userId:String;
+	
+	/**
+	 * is this a known user or an anonymous one
+	 */
     public var isAnonymous:Boolean;
+	
     /**
      * Indicates if the contributions are auto added to the roughcut.
      * true by default
      */
     public var addToRoughCut:String;
+	
     public var partnerId:int;
     public var hasPartnerId:Boolean;
     public var subPartnerId:int;
     public var sessionId:String;
+	
+	/**
+	 * depracated as of v2.X
+	 */
     public var kshowId:String;
+	
     public var uiConfigId:String = DEFAULT_UI_CONFIG_ID;
 	public var fileSystemMode:Boolean = false;
 	/**
@@ -89,7 +100,8 @@ package com.kaltura.contributionWizard.model
     public var permissions:int = -1;
 
     /**
-     * A parameter that's being injected through flashvars and passed with the addentry call [currently, it's not used in the kcw except for passing it]
+     * A parameter that's being injected through flashvars and passed with the addentry call
+	 * (groupId to set to created entry) 
      */
     public var groupId:String;
 

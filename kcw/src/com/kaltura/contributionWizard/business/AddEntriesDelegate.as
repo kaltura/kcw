@@ -85,8 +85,6 @@ package com.kaltura.contributionWizard.business
 		{
 			_entriesToAdd = entriesToAdd;
 	   	 	var entriesURLVars:URLVariables = getEntriesURLVariables( entriesToAdd, context, creditsVo );
-	   		/*if (context.addToRoughCut)
-	   			entriesURLVars["quick_edit"] = context.addToRoughCut;*/
 		
 			var call : AsyncToken = service.send( entriesURLVars );
 			call.addResponder( this );

@@ -300,7 +300,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		</mx:FormItem>
 		
 		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField)}" width="100%" 
-			visible="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}" includeInLayout="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}">
+			visible="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}" 
+			includeInLayout="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}">
 			<mx:TextInput id="additionalInput"
 				errorString=""
 				focusIn="dataChangedHandler()"

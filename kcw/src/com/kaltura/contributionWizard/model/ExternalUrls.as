@@ -26,7 +26,12 @@ package com.kaltura.contributionWizard.model
 	public class ExternalUrls
 	{
 		public var servicesUrl:String;
+		
+		/**
+		 * url of terms of use document
+		 */
 		public var termsOfUseUrl:String = "http://corp.kaltura.com/tandc";
+		
 		public var startupPreloaderUrl:String;
 
 		public var uploadUrl:String;

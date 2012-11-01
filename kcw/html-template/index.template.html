@@ -8,7 +8,7 @@ This application was built using Adobe Flex, an open source framework
 for building rich Internet applications that get delivered via the
 Flash Player or to desktops via Adobe AIR.
 
-Learn more about Flex at http://flex.org
+Learn more about Flex at http:// flex.org
 // -->
 
 <head>
@@ -55,7 +55,7 @@ function addentry(entries)
 
 function onWizardReady()
 {
-	//alert("Wizard is ready");
+	// alert("Wizard is ready");
 }
 // -->
 </script>
@@ -117,7 +117,8 @@ function changePData()
 	var flashObj = document.getElementById("kcw");
 	flashObj.setPartnerData(pData);
 }
-// Version check for the Flash Player that has the ability to start Player Product Install (6.0r65)
+// Version check for the Flash Player that has the ability to start Player
+// Product Install (6.0r65)
 var hasProductInstall = DetectFlashVer(6, 0, 65);
 
 // Version check based upon the values defined in globals
@@ -125,7 +126,8 @@ var hasRequestedVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVers
 
 if ( hasProductInstall && !hasRequestedVersion ) {
 	// DO NOT MODIFY THE FOLLOWING FOUR LINES
-	// Location visited after installation is complete if installation is required
+	// Location visited after installation is complete if installation is
+	// required
 	var MMPlayerType = (isIE == true) ? "ActiveX" : "PlugIn";
 	var MMredirectURL = window.location;
     document.title = document.title.slice(0, 47) + " - Flash Player Installation";
@@ -155,51 +157,64 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 			"align", "middle",
 			"id", "kcw",
 			"quality", "high",
-			"Flashvars",
-						//'defaultMediaType=video' +
-						//'&defaultMediaProviderName=2' +
-						'&partnerId=495779' +
-						'&uiConfId=3548170' +
-						//'&uiConfId=1010391' +
-						'&userId=michal_rad@mailinator.com' +
-						'&isAnonymous=false' +
-						//'&categories=112'+
-						'&sessionId=YTY1YjBlOThkOTU4NTFlNTU4NWY0MDBiYWMxZmEyYzU1NmU5NDFiNHw0OTU3Nzk7NDk1Nzc5OzEzMTE1ODQ0MDk7MjsxMzExNDk4MDA5LjA2MzU7bWljaGFsX3JhZEBtYWlsaW5hdG9yLmNvbTs7Ow==' +
+			"flashvars",
+						// 'defaultMediaType=video' + // default media type screen to show at startup (image/video/audio)
+						// '&defaultMediaProviderName=2' + // default selected media provider, e.g "kaltura"
+			
+//						onprem falcon
+// ======================================================			
+			'&host=onprem-falcon1.kaltura.dev' +
+			// '&cdnHost=' +
+			'&partnerId=181' +
+			'&ks=MDdjNThlMjRkNjZjOTA2MDUzMjIxY2YxNjUyMTMyMGYxN2I3OGYzNHwxODE7MTgxOzEzNTE4NTQ3NzM7MjsxMzUxNzY4MzczLjg0Mjk7YXZpeWEubXVhbGVtQGthbHR1cmEuY29tOyosZGlzYWJsZWVudGl0bGVtZW50Ozs=' + // KS
+			//'&uiConfId=8703171' + // webcam
+			'&uiConfId=8703181' +	// import
+	
+			
+//						DEVTESTS
+// ======================================================			
+//						'&host=devtests.kaltura.co.cc' +
+//						// '&cdnHost=kaltura.com' +
+//						'&partnerId=346151' +
+//						'&ks=NGY1ZmQyZTBhNWFmODE3YmM1MDljOGViZTMxNjIxZjQ4MGNmNzA5NnwzNDYxNTE7MzQ2MTUxOzEzNTE4NTUzMzg7MjsxMzUxNzY4OTM4LjY4Mjg7X19BRE1JTl9fMzQ1NjIxO2Rpc2FibGVlbnRpdGxlbWVudDs7' + // KS
+//						'&uiConfId=3548170' +
+						
 						'&fileSystemMode=true'+
-						'&additionalField=METADATA_TITLE'+
-						//Deprecated -> '&subPartnerId=100' + 
-						//'&kshow_id=faa852m6f0' +
-						'&kshow_id=-2' + //sandbox kshow id
-						//'&protocol=http' + 
-						'&host=devtests.kaltura.co.cc' +
-						//'&host=localhost:85' +
-						//'&terms_of_use=index.php/terms' +
+						
+						'&isAnonymous=false' +	// "term of use" show different texts for anonymous/known users.
+						// '&protocol=http' + // http / https
+						
+						'&additionalField=METADATA_TITLE' +		// allows adding data to
+																// metadata fields (?)
+						// '&terms_of_use=index.php/terms' + // link to "terms of use" page
+						
+						// callbacks:
 						'&afterAddentry=addentry'+
 						'&close=wizardCloseCallback' +
 						'&wizardReadyHandler=onWizardReady' +
-						'&quick_edit=1' +
-						//'&uploadUrl=http://www.kaltura.com/index.php/partnerservices2/upload' +
-						//'&uploadUrl=http://localhost/upload' +
-						//'&showCloseButton=true'+
-						//'&groupId=SomeGroupName' +
-						//'&partnerData=partnerDataData' +
-						'&permissions=public' + //permissions==privacy
+						
+						'&quick_edit=1' + // if false, entries are automatically added to the roughcut end,
+										  // otherwise, entries will not be automatically added to the roughcut
+						// '&uploadUrl=http://www.kaltura.com/index.php/partnerservices2/upload' + // the url to which files will be uploaded, 
+																								   // deafults to Kaltura's API v3 service
+						// '&showCloseButton=true'+	// show "close" butto on the main view
+						// '&partnerData=partnerDataData' +
+						'&permissions=public' + // permissions==privacy
 						'&credits_screen_name=1001' +
 						'&credits_site_url=1001' +
 						'&permission=5' +
-						'&groupId=kaltura' +
+						'&groupId=kaltura' +	// groupId to set to created entry
 						'&screenName=Almog' +
 						'&siteUrl=' +
 						'&load_thumbnail_with_ks=false' +
-						//'&cdnHost=kaltura.com' +
-						//'&limitations.upload.singleFileSize.min=-1' +
-						//'&limitations.upload.singleFileSize.max=-1' +
-						//'&limitations.upload.totalFileSize.min=14000000' +
-						//'&limitations.upload.totalFileSize.max=-1' +
-						//'&limitations.upload.numFiles.min=-1' +
-						//'&limitations.upload.numFiles.max=-1' +
-						//'&limitations.search.numFiles.min=-1' +
-						//'&limitations.search.numFiles.max=-1' +
+						// '&limitations.upload.singleFileSize.min=-1' +
+						// '&limitations.upload.singleFileSize.max=-1' +
+						// '&limitations.upload.totalFileSize.min=14000000' +
+						// '&limitations.upload.totalFileSize.max=-1' +
+						// '&limitations.upload.numFiles.min=-1' +
+						// '&limitations.upload.numFiles.max=-1' +
+						// '&limitations.search.numFiles.min=-1' +
+						// '&limitations.search.numFiles.max=-1' +
 						''
 						,
 
