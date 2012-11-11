@@ -7,9 +7,11 @@ package com.kaltura.contributionWizard.command
 	import com.kaltura.contributionWizard.events.PartnerNotificationsEvent;
 	import com.kaltura.contributionWizard.model.WizardModelLocator;
 	import com.kaltura.contributionWizard.vo.PartnerNotificationVO;
-
+	
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
@@ -48,6 +50,7 @@ package com.kaltura.contributionWizard.command
 			request.method = URLRequestMethod.POST;
 			urlLoader.addEventListener(Event.COMPLETE, 			loaderCompleteHandler);
 			urlLoader.addEventListener(IOErrorEvent.IO_ERROR,	ioErrorHandler);
+			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	ioErrorHandler);
 			urlLoader.load(request);
 		}
 
@@ -57,9 +60,13 @@ package com.kaltura.contributionWizard.command
 		}
 
 
-		private function ioErrorHandler(ioErrorEvent:Event):void
+		private function ioErrorHandler(errorEvent:Event):void
 		{
-			trace("send notifications io error");
+			var s:String = "send notifications failed: " + errorEvent.type;
+			if (errorEvent is ErrorEvent) {
+				s += " : " + (errorEvent as ErrorEvent).text; 
+			}
+			trace(s);
 			notificationSent();	
 		}
 
