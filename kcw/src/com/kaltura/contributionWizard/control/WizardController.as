@@ -128,7 +128,6 @@ package com.kaltura.contributionWizard.control
       addCommand(PartnerNotificationsEvent.SEND_NOTIFICATIONS,			SendPartnerNotificationsCommand);
 
 	  // Categories Event
-	  trace(1);
 	  addCommand(CategoryEvent.LIST_CATEGORIES, 						ListCategoriesCommand );
       addCommand(GotoNextImportStepEvent.GOTO_NEXT_IMPORT_STEP,			GotoNextImportStepCommand);
       addCommand(ValidateLimitationsEvent.VALIDATE,						ValidateLimitationsCommand);
