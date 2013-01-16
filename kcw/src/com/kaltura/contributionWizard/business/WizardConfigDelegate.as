@@ -101,12 +101,12 @@ package com.kaltura.contributionWizard.business
 				return;
 			}
 			
-			var mediaProviders:MediaProviders 				= WizardConfigurationFactory.createMediaProviders	(xmlServicesConfiguration);//getMediaProviders(servicesList);
-			var wizardUiConfig:UIConfigVO 					= WizardConfigurationFactory.getWizardUiConfig		(xmlServicesConfiguration, _model.context.fileName);
-			var startupDefaults:StartupDefaultsVO			= WizardConfigurationFactory.getStartupDefaults		(xmlServicesConfiguration);
-			var importTypesConfig:ImportTypesConfig			= WizardConfigurationFactory.getImportTypesConfig	(xmlServicesConfiguration);
-			var limitations:LimitationsVO				 	= WizardConfigurationFactory.getLimitationsVo	  	(xmlServicesConfiguration);
-			var webcamParametersVO:WebcamParametersVO  		= WizardConfigurationFactory.getWebcamParameters	(xmlServicesConfiguration);
+			var mediaProviders:MediaProviders 				= WizardConfigurationFactory.createMediaProviders (xmlServicesConfiguration);//getMediaProviders(servicesList);
+			var wizardUiConfig:UIConfigVO 					= WizardConfigurationFactory.getWizardUiConfig (xmlServicesConfiguration, _model.context.fileName);
+			var startupDefaults:StartupDefaultsVO			= WizardConfigurationFactory.getStartupDefaults (xmlServicesConfiguration);
+			var importTypesConfig:ImportTypesConfig			= WizardConfigurationFactory.getImportTypesConfig (xmlServicesConfiguration);
+			var limitations:LimitationsVO				 	= WizardConfigurationFactory.getLimitationsVo (xmlServicesConfiguration);
+			var webcamParametersVO:WebcamParametersVO  		= WizardConfigurationFactory.getWebcamParameters (xmlServicesConfiguration);
 			//TODO: this definitely doesn't belong here
 			_model.context.permissions = startupDefaults.defaultPermissionLevel;
 
