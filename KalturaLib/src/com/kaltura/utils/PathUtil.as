@@ -171,8 +171,18 @@ package com.kaltura.utils
 		 */
 		private static function getUrlPath(url:String):String
 		{
-			var serverName:String = URLUtil.getServerName(url);
-			var idx:int = url.indexOf(serverName) + serverName.length + 1;
+			var idx:int;
+			var port:uint = URLUtil.getPort(url);
+			if(port > 0)
+			{
+				var portStr:String = port.toString();
+				idx = url.indexOf(portStr) + portStr.length + 1;
+			}
+			else
+			{
+				var serverName:String = URLUtil.getServerName(url);
+				idx = url.indexOf(serverName) + serverName.length + 1;
+			}
 			return url.substr(idx);
 		}
 
