@@ -78,7 +78,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			[Bindable]
 			private var _mediaType:String;
-			//the previous item that was selected from thumbsList
+			
+			/**
+			 * the previous item that was selected from thumbsList
+			 * */
 			private var previousSelected:TagImageRenderer;
 
 			public function set isMetaDataValid(value:Boolean):void

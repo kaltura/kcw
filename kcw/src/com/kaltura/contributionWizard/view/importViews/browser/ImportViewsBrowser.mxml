@@ -370,7 +370,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 		includeInLayout="{_model.startupDefaults.showConfirmButtons}" styleName="confirmButtons"
 		visible="{_model.startupDefaults.showConfirmButtons}" >
 		<mx:VBox>
-		<mx:Canvas styleName="logoImage" width="32" height="21" visible="{_model.startupDefaults.showLogoImage}" includeInLayout="{_model.startupDefaults.showLogoImage}" />
+			<mx:Canvas styleName="logoImage" width="32" height="21" visible="{_model.startupDefaults.showLogoImage}" includeInLayout="{_model.startupDefaults.showLogoImage}" />
 		</mx:VBox>
 		<mx:VBox styleName="confirmMessageVBox">
 		<mx:Text id="confirmMessage" selectable="true"

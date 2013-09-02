@@ -116,7 +116,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			private function closeWizardHandler(closeEvent:KCWViewEvent = null):void
 			{
-				//TODO: it's better to crreate a FinishWizardCommand rather then letting the view know such things
+				//TODO: it's better to create a FinishWizardCommand rather then letting the view know such things
 				var event:CloseWizardEvent = new CloseWizardEvent(CloseWizardEvent.CLOSE_WIZARD);
 				event.dispatch();
 			}
