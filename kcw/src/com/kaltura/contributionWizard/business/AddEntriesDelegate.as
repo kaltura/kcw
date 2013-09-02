@@ -111,6 +111,9 @@ package com.kaltura.contributionWizard.business
 		   		{
 		   			//trace(item.mediaType[0].toString());
 		   			var item:XML = entriesXmlList[i] as XML;
+					if (item.error.length() > 0) {
+						throw new Error(item.error.message[0].text(), item.error.code[0].text());
+					}
 					var uploadedFile:ImportFileVO;
 					if (_entriesToAdd.getItemAt(i) is ImportFileVO)
 						uploadedFile = _entriesToAdd.getItemAt(i) as ImportFileVO;

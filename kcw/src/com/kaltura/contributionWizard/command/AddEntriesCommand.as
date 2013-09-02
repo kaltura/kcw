@@ -49,7 +49,7 @@ package com.kaltura.contributionWizard.command
 			var addSearch:Boolean = _model.mediaProviders.activeMediaProvider.addSearchResult;
 	     	var importList:ArrayCollection;
 	     	
-	     	nextEvent = ChainEvent(event).nextChainedEvent;
+	     	nextEvent = (event as ChainEvent).nextChainedEvent;
 
 	     	if(addSearch)
 	     	{
