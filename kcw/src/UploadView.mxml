@@ -284,7 +284,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			private function getDataProvider(dataProvider:ArrayCollection):ArrayCollection
 			{
-				trace("UploadView.getDataProvider() _active=" + _active);
 				if (_active)
 					return dataProvider;
 				else

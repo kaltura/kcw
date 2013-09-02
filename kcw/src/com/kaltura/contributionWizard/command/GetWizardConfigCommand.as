@@ -44,7 +44,6 @@ package com.kaltura.contributionWizard.command
 		private var _webcamModel:WebcamModelLocator = WebcamModelLocator.getInstance();
 		public override function execute( event : CairngormEvent ): void
 		{
-			trace("GetWizardConfigCommand()");
 			nextEvent = (event as ChainEvent).nextChainedEvent;
 			var delegate : WizardConfigDelegate = new WizardConfigDelegate( this );
 			var uiConfigId:String = _model.context.uiConfigId;

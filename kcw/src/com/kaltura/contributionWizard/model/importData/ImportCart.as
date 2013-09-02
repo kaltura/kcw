@@ -113,7 +113,6 @@ package com.kaltura.contributionWizard.model.importData
 					addImportItem(lastItem);
 				}
 			}
-			trace("importItemsArray.length: " + importItemsArray.length);
 		}
 		
 		

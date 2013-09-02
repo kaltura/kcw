@@ -78,7 +78,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 				break
 			}
 
-			trace(currentText, _stateNum);
+			//trace(currentText, _stateNum);
 
 			if(_isQBarShown && _stateNum != 4)
 			{

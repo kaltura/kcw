@@ -36,6 +36,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			[Bindable]
 			public var viewTimer:Timer;
+			
+			/**
+			 * time (ms) since viewTimer started ticking
+			 * (read: since actual recording started)
+			 * */
 			public var elapsedTime:uint;
 
 

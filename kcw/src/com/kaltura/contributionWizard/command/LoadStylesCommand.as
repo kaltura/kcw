@@ -30,7 +30,6 @@ package com.kaltura.contributionWizard.command
 			var appDomain:ApplicationDomain = new ApplicationDomain(ApplicationDomain.currentDomain);
 			if (uiConfigVo && uiConfigVo.styleUrl)
 			{
-				trace("loadStyleCommand");
 				var styleUrl : String = uiConfigVo.styleUrl;
 				
 				//if we want to test the kcw in file system mode

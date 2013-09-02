@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <core:KApplication backgroundColor="0x000000" preloader="com.kaltura.preloaders.KPreloader" layout="absolute"
 				   width="100%" height="100%" horizontalAlign="center" verticalAlign="middle" frameRate="40"
 				   implements="com.kaltura.contributionWizard.IContributionWizard"
-				   creationComplete="onCreationComplete()" click="onClick(event)"
+				   creationComplete="onCreationComplete()" 
 				   xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:core="com.kaltura.core.*"
 				   xmlns:control="com.kaltura.contributionWizard.control.*"
 				   xmlns:business="com.kaltura.contributionWizard.business.*"
@@ -288,16 +288,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			public function dispose():void {
 				view.dispose();
-			}
-
-
-			private function onClick(event:MouseEvent):void {
-				trace("Click target: ", event.target);
-			}
-
-
-			private static function myDispatchEventHook(event:Event, uic:UIComponent):Boolean {
-				return true;
 			}
 
 

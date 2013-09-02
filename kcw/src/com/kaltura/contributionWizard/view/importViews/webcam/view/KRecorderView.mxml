@@ -43,29 +43,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
 			import com.arc90.modular.CairngormEventDispatcherFactory;
 			import com.grakl.spinner.Spinner;
-			import com.kaltura.contributionWizard.command.webcam.PickStreamNameCommand;
 			import com.kaltura.contributionWizard.events.ImportEvent;
 			import com.kaltura.contributionWizard.events.webcam.WebcamEvent;
 			import com.kaltura.contributionWizard.model.WebcamModelLocator;
 			import com.kaltura.contributionWizard.model.WizardModelLocator;
-			import com.kaltura.contributionWizard.view.events.ImportViewCompleteEvent;
 			import com.kaltura.contributionWizard.view.importViews.webcam.controler.VideoRecorder;
 			import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderControlEvent;
 			import com.kaltura.contributionWizard.view.importViews.webcam.events.RecorderEvent;
 			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
-			import com.kaltura.preloaders.KmcPreloader;
 			import com.kaltura.vo.importees.ImportFileVO;
 			
 			import mx.binding.utils.BindingUtils;
 			import mx.binding.utils.ChangeWatcher;
 			import mx.controls.Alert;
-			import mx.controls.Spacer;
-			import mx.core.Application;
 			import mx.events.FlexEvent;
-			import mx.events.ListEvent;
-			import mx.managers.PopUpManager;
 			import mx.rpc.events.ResultEvent;
-			import mx.utils.UIDUtil;
 
 			private static const WEB_CAM_NAME:String = "webCamName";
 
@@ -86,10 +78,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     		public function init():void
     		{
-				//GlobalData.setLoader(true,this);
-				//var red5Path:String = "rtmp://kaldev.kaltura.com/oflaDemo";//"rtmp://" + GlobalData.stripDomain + GlobalData.RED5_APP_PATH;
-				//vr = new VideoRecorder(red5Path, "100");
-
 				vr.addEventListener(RecorderEvent.RECORD_START,						startRecordHandler);
 				vr.addEventListener(RecorderEvent.PLAYBACK_START,					startPlayPlayback);
 				vr.addEventListener(RecorderEvent.PLAYBACK_STOP,					stopPlayHandler);
@@ -105,11 +93,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 tips.init();
                 recorder_control.init();
 				
-				
 				_entriesAdditionWatcher = BindingUtils.bindSetter(onEntriesAddedChanged, _wizardModel, "wereEntriesAdded");
-                //vr.videoWidth = 200;
-                //vr.videoHeight = 200;
-				//vidContainer.addChild(vr);
     		}
 
     		public function addEntry(fromTime:Number,toTime:Number):void
