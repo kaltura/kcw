@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="KMC Compiler" basedir="./.." default="build">
+	
+	<!-- path to Flex SDK -->
+    <property name="FLEX_HOME" value="C:/Program Files (x86)/Adobe/Adobe Flash Builder 4.5/sdks/3.5.0"/>
+	
+	<!-- directory for the compiled swf -->
+    <property name="DEPLOY_DIR" value="${basedir}/bin-release"/>
+    <property name="STYLE_DEPLOY_DIR" value="${basedir}/../kcwStyleProject/bin-release"/>
+	
+	<property name="KCW_VERSION" value="v2.2.3"/>
+	
+    <property name="PACK_DEPLOY_DIR" value="${basedir}/../${KCW_VERSION}"/>
+	
+	<!-- include flex tasks -->
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+	
+	<!--  -->
+	<target name="build" description="general build" depends="clean, init, compile_locales, compile, pack">
+		<length property="length" mode="each">
+		    <fileset dir="${basedir}/../${KCW_VERSION}" >
+				<!--exclude name="**/locale/**"/-->
+				<include name="**/*.swf"/>
+			</fileset>
+		</length>
+		<echo>${length}</echo>
+
+		<echo>WOOHOO! KCW is ready!</echo>
+	</target>
+	
+	<target name="compile_locales" description="compile locale files" >
+		<ant antfile="ant/compileLocale.xml" target="build">
+			<property name="LANGUAGE" value="en_US"/>
+		</ant> 
+	</target>
+	
+	<target name="compile" description="compile release build of kcw and kcwStyleProject">
+		<fb.exportReleaseBuild project="kcw" destDir="${DEPLOY_DIR}" /> 
+		<echo>kcw release build created</echo>
+		<fb.exportReleaseBuild project="kcwStyleProject" destDir="${STYLE_DEPLOY_DIR}" /> 
+		<echo>kcwStyleProject release build created</echo>
+	</target>
+			
+	<target name="pack" description="copy all version files to version folder">
+		<copy todir="${PACK_DEPLOY_DIR}">
+			<fileset dir="${DEPLOY_DIR}" includes="*.swf" excludes="history.swf,playerProductInstall.swf" />
+		</copy>
+		
+		<copy todir="${PACK_DEPLOY_DIR}/locale" flatten="true">
+			<fileset dir="${basedir}/html-template/locale" includes="**/*.swf"/>
+		</copy>
+		
+		<copy todir="${PACK_DEPLOY_DIR}/style">
+			<fileset dir="${STYLE_DEPLOY_DIR}/css" includes="**/*.swf"/>
+		</copy>
+	</target>
+	
+	
+	<target name="clean" description="delete old files">
+        <delete failonerror="false">
+            <fileset dir="${DEPLOY_DIR}" includes="**/*"/>
+            <fileset dir="${STYLE_DEPLOY_DIR}" includes="**/*"/>
+            <fileset dir="${PACK_DEPLOY_DIR}" includes="**/*"/>
+        </delete>
+    </target>
+	
+	
+	<target name="init">
+		<mkdir dir="${DEPLOY_DIR}" description="Make sure there is a bin directory"/>
+		<mkdir dir="${STYLE_DEPLOY_DIR}" description="Make sure there is a directory for skins"/>
+		<mkdir dir="${PACK_DEPLOY_DIR}/style" description="Make sure there is a version directory for skins"/>
+		<mkdir dir="${PACK_DEPLOY_DIR}/locale" description="Make sure there is a version directory for locale"/>
+	</target>
+	
+</project>
+

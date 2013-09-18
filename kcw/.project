@@ -3,6 +3,9 @@
 	<name>kcw</name>
 	<comment></comment>
 	<projects>
+		<project>as3FlexClient</project>
+		<project>Common</project>
+		<project>KalturaLib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

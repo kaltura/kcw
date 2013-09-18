@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties mainApplicationPath="kcwStyleProject.mxml" projectUUID="d01f1f3e-1dd7-4e40-b0c6-71f2deba8abd" version="6">
-  <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="false" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+<actionScriptProperties analytics="false" mainApplicationPath="kcwStyleProject.mxml" projectUUID="d01f1f3e-1dd7-4e40-b0c6-71f2deba8abd" version="10">
+  <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="false" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="bin-debug" removeUnusedRSL="true" sourceFolderPath="src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
       <libraryPathEntry kind="4" path="">
@@ -19,5 +19,7 @@
   <modules/>
   <buildCSSFiles>
     <buildCSSFileEntry destPath="bin-debug" sourcePath="src/css/styles.css"/>
+    <buildCSSFileEntry destPath="bin-debug" sourcePath="src/css/tabless_style_no_finish_buttons.css"/>
   </buildCSSFiles>
+  <flashCatalyst validateFlashCatalystCompatibility="false"/>
 </actionScriptProperties>

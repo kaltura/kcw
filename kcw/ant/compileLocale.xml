@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="Locale Compiler" basedir="./.." default="build">
+	
+	<!-- the language for which we compile locale -->
+    <property name="LANGUAGE" value="en_US"/>
+	
+	<!-- path to Flex SDK -->
+    <property name="FLEX_HOME" value="C:/Program Files (x86)/Adobe/Adobe Flash Builder 4.5/sdks/3.5.0"/>
+	
+	<!-- directory for the compiled locale swf -->
+	<property name="LOCALE_DEPLOY_DIR" value="../html-template/locale/${LANGUAGE}"/>
+	
+	<!-- include flex tasks -->
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+    
+
+	
+	<target name="compile" description="compile all locales">
+        <echo>Compiling kcw locales..</echo>
+		<mxmlc output="${LOCALE_DEPLOY_DIR}/${LANGUAGE}_ContributionWizard.swf" locale="${LANGUAGE}">
+					
+            <!-- Get default compiler options. -->
+            <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml"/>
+
+            <!-- List of path elements that form the roots of ActionScript class hierarchies. -->
+            <source-path path-element="${basedir}/locale/{locale}"/>
+
+			<!-- List of resource bundles to compile in the resourceModule -->
+			<!-- content -->
+			<include-resource-bundles>CairngormMessages</include-resource-bundles>
+			<include-resource-bundles>Errors</include-resource-bundles>
+			<include-resource-bundles>FinishScreen</include-resource-bundles>
+			<include-resource-bundles>ImportBrowser</include-resource-bundles>
+			<include-resource-bundles>ImportModuleLoader</include-resource-bundles>
+			<include-resource-bundles>IntroScreen</include-resource-bundles>
+			<include-resource-bundles>MediaProviders</include-resource-bundles>
+			<include-resource-bundles>MediaTypes</include-resource-bundles>
+			<include-resource-bundles>MicView</include-resource-bundles>
+			<include-resource-bundles>PendingMessages</include-resource-bundles>
+			<include-resource-bundles>PermissionLevels</include-resource-bundles>
+			<include-resource-bundles>SearchAuthenticationScreen</include-resource-bundles>
+			<include-resource-bundles>SoundRecorderView</include-resource-bundles>
+			<include-resource-bundles>Tagging</include-resource-bundles>
+			<include-resource-bundles>TermsOfUseScreen</include-resource-bundles>
+			<include-resource-bundles>UploadImportView</include-resource-bundles>
+			<include-resource-bundles>WebcamView</include-resource-bundles>
+			<include-resource-bundles>collections</include-resource-bundles>
+			<include-resource-bundles>containers</include-resource-bundles>
+			<include-resource-bundles>controls</include-resource-bundles>
+			<include-resource-bundles>core</include-resource-bundles>
+			<include-resource-bundles>effects</include-resource-bundles>
+			<include-resource-bundles>logging</include-resource-bundles>
+			<include-resource-bundles>messaging</include-resource-bundles>
+			<include-resource-bundles>rpc</include-resource-bundles>
+			<include-resource-bundles>skins</include-resource-bundles>
+			<include-resource-bundles>states</include-resource-bundles>
+			<include-resource-bundles>styles</include-resource-bundles>
+			<include-resource-bundles>SharedResources</include-resource-bundles>
+
+        </mxmlc>
+		<echo>${LANGUAGE}_ContributionWizard.swf compiled.</echo>
+    </target>
+	
+	
+	<target name="build" depends="clean, init, compile">
+		<echo>Locale files for ${LANGUAGE} compiled successfully</echo>
+	</target>
+	
+	
+	<target name="clean" description="delete old file">
+		<echo>Deleting compiled files for locale ${LANGUAGE}</echo>
+        <delete failonerror="false">
+            <fileset dir="${LOCALE_DEPLOY_DIR}" includes="${LANGUAGE}_ContributionWizard.swf" />
+        </delete>
+    </target>
+	
+	
+	<target name="init">
+		<echo>Creating directory ${LOCALE_DEPLOY_DIR}</echo>
+		<mkdir dir="${LOCALE_DEPLOY_DIR}" description="Make sure there is a directory for locale"/>
+	</target>
+</project>
+
+
+<!-- sample commandline locale compilation -->
+<!-- 
+	 mxmlc -locale=en_US 
+     -source-path=locale/{locale}
+     -include-resource-bundles=RegistrationForm,collections,containers,controls,core,effects,skins,styles 
+     -output en_US_ResourceModule.swf
+-->
