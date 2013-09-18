@@ -50,7 +50,7 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler
 	 */
 	[Event(name="onLastSecond", type="flash.events.Event")]
 	
-	public class NetClient extends EventDispatcher
+	public dynamic class NetClient extends EventDispatcher
 	{
 		public static var ON_METADATA_BUFFER_SIZES:String = "OnMetaData.bufferSizes";
 		public static var ON_STREAM_END:String = "Stream.End";
