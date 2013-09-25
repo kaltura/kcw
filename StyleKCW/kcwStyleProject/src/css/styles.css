@@ -1,9 +1,30 @@
 /* CSS file */
+@font-face {
+	src: url("../assets/fonts/TAHOMA.TTF");
+	fontFamily: "TahomaEmbedded";
+	unicode-range:
+		U+0020-U+0040,  /*Punctuation, Numbers and Symbols */
+		U+0041-U+005A,  /*Upper-Case A-Z */
+		U+005B-U+0060,  /*Punctuation and Symbols */
+		U+0061-U+007A,  /*Lower-Case a-z */
+		U+007B-U+007E  /*Punctuation and Symbols */
+}
 
+@font-face {
+	src: url("../assets/fonts/tahomabd.TTF");
+	fontFamily: "TahomaEmbedded";
+	font-weight:bold;
+	unicode-range:
+		U+0020-U+0040,  /*Punctuation, Numbers and Symbols */
+		U+0041-U+005A,  /*Upper-Case A-Z */
+		U+005B-U+0060,  /*Punctuation and Symbols */
+		U+0061-U+007A,  /*Lower-Case a-z */
+		U+007B-U+007E  /*Punctuation and Symbols */
+}
 
 Application
 {
-	font-family: ArialEmbedded; 
+	font-family: TahomaEmbedded; 
 	color: #333333;
 }
 
@@ -12,7 +33,7 @@ Application
 
 VBox.mainView /* window background */
 {
-	fontFamily: ArialEmbedded;
+	fontFamily: TahomaEmbedded;
 	border-color:#c0c0c0;
 	border-thickness:1;
 	border-style:solid;
@@ -22,33 +43,27 @@ VBox.mainView /* window background */
 
 
 Button.backCancel{
-   color: #009acc;
-   textRollOverColor: #009acc;
-   textSelectedColor: #009acc;
-   disabled-color:#99ccdc;
-   fontFamily: Arial;
-   fontSize: 11;
-   fontWeight: normal;
-   textDecoration: underline;
-   skin: ClassReference(null);
+	color: #009acc;
+	textRollOverColor: #009acc;
+	textSelectedColor: #009acc;
+	disabled-color:#99ccdc;
+	fontFamily: Arial;
+	fontSize: 11;
+	fontWeight: normal;
+	textDecoration: underline;
+	skin: ClassReference(null);
 }
 
 
 LinkButton.link {
-	
-   color: #009acc;
-   textRollOverColor: #009acc;
-   textSelectedColor: #009acc;
-   fontFamily: Arial;
-   fontSize: 11;
-   fontWeight: normal;
-   textDecoration: underline;
-	skin: ClassReference(null);
-/* 	selectionColor: #FFFFFF;
-	textRollOverColor: #C6C6C6;
-	fontWeight: bold;
+	color: #009acc;
+	textRollOverColor: #009acc;
+	textSelectedColor: #009acc;
+	fontFamily: Arial;
+	fontSize: 11;
+	fontWeight: normal;
 	textDecoration: underline;
-	font-size: 12; */
+	skin: ClassReference(null);
 }
 
 LinkButton.closeLink {
@@ -61,7 +76,6 @@ LinkButton.closeLink {
 
 TabBar.roundTabBar 
 {
-	/*tab-height:60;*/ 
 	selectedTabTextStyleName: "mySelectedTabStyle";
 	horizontal-gap: 4;
 	text-selected-color: #afafaf;
@@ -70,12 +84,7 @@ TabBar.roundTabBar
 	lastTabStyleName: 	"roundTabBarTab";
 }
 
-TabBar.shaysen 
-{
-	tab-height: 60;
-}
-
-.roundTabBarTab
+	.roundTabBarTab
 	{
 		font-size: 16;
 		color: #333333;
@@ -85,7 +94,6 @@ TabBar.shaysen
 	}
 
 TabBar
-
 {
 	selectedTabTextStyleName: "mySelectedTabStyle";
 	vertical-gap: 2;
@@ -106,38 +114,31 @@ TabBar
 		text-roll-over-color: #000000;
 		textAlign: left;
 		padding-left:8;
-       headerColors: #ffffff, #f0f0f0;
-       borderColor: #939393;		
+		headerColors: #ffffff, #f0f0f0;
+		borderColor: #939393;		
 
 	}
 
-
-.mySelectedTabStyle
-{
-    color: #333333;
-    textRollOverColor: #000000;
-}
+	.mySelectedTabStyle
+	{
+		color: #333333;
+		textRollOverColor: #000000;
+	}
 /* End of Tabs styles */
 
 /*Search panel*/
 
-.searchFieldsTitleLabelsBox{
-	horizontal-gap: 4;
-}
-
-
 HRule {
-   strokeColor: #ededed;
-   strokeWidth: 1;
-}
-VRule{
 	strokeColor: #ededed;
 	strokeWidth: 1;
 }
 
+VRule {
+	strokeColor: #ededed;
+	strokeWidth: 1;
+}
 
-Button{
-	
+Button {
 	paddingTop: 4;
 	paddingBottom: 1;
 	paddingLeft: 2;
@@ -147,14 +148,13 @@ Button{
 	text-roll-over-color: #000000;
 	disabled-color: #ffffff;
 	textSelectedColor: #333333;
-    fontSize: 11;
-    color: #333333;
-    font-style:normal;	
+	fontSize: 11;
+	color: #333333;
+	font-style:normal;	
 }
 
 
 Button.greenButton {
-	
 	color: #333333;
 	font-size:11;
 	disabled-color: #ffffff;
@@ -175,18 +175,18 @@ Button.greenButtonThinPadding
 
 
 CheckBox {
-   highlightAlphas: 0, 0;
-   fillAlphas: 0, 0, 0, 0;
-   fillColors: #ffffff, #ffffff, #ffffff, #eeeeee;
-   borderColor: #bfbfbf;
-   iconColor: #e23a38;
-   disabledIconColor: #bfbfbf;
-   color: #333333;
-   textSelectedColor: #333333;
-   textRollOverColor: #333333;
-   themeColor: #bfbfbf;
-   fontFamily: Arial;
-   fontSize: 11;
+	highlightAlphas: 0, 0;
+	fillAlphas: 0, 0, 0, 0;
+	fillColors: #ffffff, #ffffff, #ffffff, #eeeeee;
+	borderColor: #bfbfbf;
+	iconColor: #e23a38;
+	disabledIconColor: #bfbfbf;
+	color: #333333;
+	textSelectedColor: #333333;
+	textRollOverColor: #333333;
+	themeColor: #bfbfbf;
+	fontFamily: Arial;
+	fontSize: 11;
 }
 /*Upload view*/
 
@@ -203,35 +203,15 @@ CheckBox {
 	font-size: 24;
 }
 
-.importStepScreen{/* content outer Frame */
+.importStepScreen {/* content outer Frame */
 	padding-left: 10;
 	padding-top: 10;
 	padding-bottom: 10;
 	padding-right: 10;
 }
 
-/*
-Tagging view:
-*/
 
-.taggingScreen{
-   padding-left:20;
-   padding-top:20;
-   padding-right:20;
-   padding-bottom:20;
-	border-color:#939393;
-	border-style:solid;
-	border-thickness:1;
-	background-color: #fdfdfd;
-}
-
-.taggingDescribeMediaLabel{
-	font-size: 12;
-	font-weight: normal;
-	color:#333333;
-}
-
-/*The outer frame*/
+/* The outer frame */
 Box.tabsAndViewsContainerBlock
 {
 	border-style:solid;
@@ -243,7 +223,7 @@ Box.tabsAndViewsContainerBlock
 	paddingTop: 4;
 }
 
-/*The inner frame*/
+/* The inner frame */
 
 .importViewsBlock /*The outer contentframe*/
 {
@@ -252,12 +232,11 @@ Box.tabsAndViewsContainerBlock
 	top:50;
 }
 
-.importView{ /*The inner content background*/
-   
-    padding-left:20;
-    padding-top:20;
-    padding-right:20;
-    padding-bottom:20;
+.importView { /*The inner content background*/
+	padding-left:20;
+	padding-top:20;
+	padding-right:20;
+	padding-bottom:20;
 	border-color:#939393;
 	border-style:solid;
 	border-thickness:1;
@@ -266,16 +245,10 @@ Box.tabsAndViewsContainerBlock
 
 
 
-Canvas.introScreenMainView{
-	
+VBox.introScreenMainView {
 	border-color: #ededed;
 	border-style:solid;
 	background-color: #ededed;
-}
-
-.logosTile {
-	border-style: solid;
-	
 }
 
 .mediaTypeSelection
@@ -284,17 +257,14 @@ Canvas.introScreenMainView{
   	padding-top: 26; 
 }
 
-.mediaProvidersTabs{
+.mediaProvidersTabs
+{
 	top: 60;
 	left: 28;
 }
 
-.addMediaTypeLabel{
-	font-size: 24;
-	padding-left: 10;
-}
-
-.imageBox{ 
+.imageBox
+{ 
 	horizontal-align: center;	
 	vertical-align: middle;
 	padding-left: 0;
@@ -302,66 +272,32 @@ Canvas.introScreenMainView{
 }
 
 .thumbsList
-
 {
 	padding-left:3;
 	padding-top:3;
 	padding-Bottom:3;
 	padding-right:3;	
 	selection-color: #666666;
-    background-color:#e6e6e6;
-    cornerRadius: 6;
-    border-color:#e6e6e6;
-    borderThickness: 3;
-   
-	
+	background-color:#e6e6e6;
+	cornerRadius: 6;
+	border-color:#e6e6e6;
+	borderThickness: 3;
 }
 
-
-.invalidTextInput{
-   borderStyle: solid;
-   borderColor: #ff0000;
-   color: #333333;
-   paddingLeft: 4;
-   paddingRight: 4;
-   paddingTop: 2;
-   paddingBottom: 2;
-   fontFamily: Arial;
-   fontSize: 11;
-}
 
 /* Finish screen*/
 
-.finishScreen
-{
-   background-color:#ff0000;
-	border-color:#ff0000;
-	border-style:solid;
-	border-thickness:6;
-}
-
 .finishScreenButtons
 {
-     horizontal-align:left;
+	horizontal-align:left;
 }
 
-.finishScreen{
-   padding-left:20;
-   padding-top:20;
-   padding-right:20;
-   padding-bottom:20;
-	border-color:#939393;
-	border-style:solid;
-	border-thickness:1;
-	background-color: #fdfdfd;
-}
-
-.finishScreenDoneLabel{
+.finishScreenDoneLabel {
 	font-size: 40;
 	color:#333333;
 }
 
-.finishScreenHeadline{
+.finishScreenHeadline {
 	font-size: 11;
 }
 
@@ -369,7 +305,6 @@ Canvas.introScreenMainView{
 /*
 BottomButtons
 */
-
 
 Button.nextButtonWithIcon
 {
@@ -383,18 +318,16 @@ Button.nextButtonWithIcon
 
 .confirmButtons
 {
-    padding-right:36;
-    padding-left:60;   
-    padding-bottom:28;
-  
- }
+	padding-right:36;
+	padding-left:60;	
+	padding-bottom:28;
+}
 
 /*
 ImportViewBrowser
 */
 
 .mainSearchViewNotFoundText{
-	
 	font-weight:normal;
 	font-size: 12;
 }
@@ -410,11 +343,9 @@ Certification screen
 
 
 
-bottomCertificationMessage
+.bottomCertificationMessage
 {
-	    horizontal-align:right;
-
-        
+	horizontal-align:right;
 }
 
 
@@ -422,15 +353,12 @@ bottomCertificationMessage
 {
 	font-size: 12;
 	font-weight: bold;
-
-
 }
 
 .certificationCreditsFields
 {
 	fontSize: 11;
 	text-indent:22;
-
 }
 
 
@@ -443,8 +371,6 @@ bottomCertificationMessage
 {
 	background-color: #000000;
 	background-alpha: 0.5;
-
-
 }
 
 .videoPreviewTitle
@@ -460,27 +386,14 @@ bottomCertificationMessage
 .videoPreview
 {
 	border-alpha: 0.95;
-	
 }
 
 
-/*.bannerHomeMovieDepot
-{
-	skin: Embed("../assets/banner_home_movie_depot.png");
-}*/
-
-/*.logo
-{
-	skin: Embed("../assets/logo.png");
-}*/
-
 .logoImage
 {
-
 	background-image: Embed("../assets/logo.png");
-	    horizontal-align:right;
-        padding-left:100;
-	/*source: ClassReference("Image_Logo");*/
+	horizontal-align:right;
+	padding-left:100;
 }
 
 .searchRendererFrameUp
@@ -500,32 +413,10 @@ bottomCertificationMessage
 
 .htmlTextLink
 {
-    font-size:11;
+	font-size:11;
 	color: #009acc;
 }
 
-@font-face {
-            src: url("../assets/fonts/TAHOMA.TTF");
-            fontFamily: "ArialEmbedded";
-            unicode-range:
-               	U+0020-U+0040,  /*Punctuation, Numbers and Symbols */
-                U+0041-U+005A,  /*Upper-Case A-Z */
-                U+005B-U+0060,  /*Punctuation and Symbols */
-                U+0061-U+007A,  /*Lower-Case a-z */
-                U+007B-U+007E  /*Punctuation and Symbols */
-        }
-
-@font-face {
-            src: url("../assets/fonts/tahomabd.TTF");
-            fontFamily: "ArialEmbedded";
-            font-weight:bold;
-            unicode-range:
-               	U+0020-U+0040,  /*Punctuation, Numbers and Symbols */
-                U+0041-U+005A,  /*Upper-Case A-Z */
-                U+005B-U+0060,  /*Punctuation and Symbols */
-                U+0061-U+007A,  /*Lower-Case a-z */
-                U+007B-U+007E  /*Punctuation and Symbols */
-        }
 
 /* Webcam styles */
 
@@ -536,12 +427,12 @@ bottomCertificationMessage
 	color: #FFFFFF;
 }
 
-.webcamPlayButton
+Button.webcamPlayButton
 {
 	 icon: Embed(skinClass="Button_webcamPlayButton_icon");
 }
 
-.webcamPauseButton
+Button.webcamPauseButton
 {
 	 icon: Embed(skinClass="Button_webcamPauseButton_icon");
 }
@@ -551,7 +442,7 @@ Button.webcamRecordButton
 	 icon: Embed(skinClass="Button_webcamRecordButton_icon");
 }
 
-.webcamStopButton
+Button.webcamStopButton
 {
 	 icon: Embed(skinClass="Button_webcamStopButton_icon");
 }
@@ -575,10 +466,8 @@ Button.webcamRecordButton
 }
 
 Canvas.videoRecorderCanvas
-
 {
-padding-bottom:0;
-
+	padding-bottom:0;
 }
 
 /*Wizard FLA skins*/
@@ -640,22 +529,22 @@ Button.searchResultsThumbsPlayButton
 
 
 ComboBox {
-   cornerRadius: 0;
-   color: #333333;
-   borderColor: #bbbbbb;
-   iconColor: #333333;
-   textRollOverColor: #000000;
-   fontWeight: normal;  
-   themeColor: #009acc;
-   openDuration: 213;
-   fillAlphas: 0.09, 0, 0.75, 0.65;
-   dropdownStyleName: "myComboBoxDropDowns";
+	cornerRadius: 0;
+	color: #333333;
+	borderColor: #bbbbbb;
+	iconColor: #333333;
+	textRollOverColor: #000000;
+	fontWeight: normal;  
+	themeColor: #009acc;
+	openDuration: 213;
+	fillAlphas: 0.09, 0, 0.75, 0.65;
+	dropdownStyleName: "myComboBoxDropDowns";
 }
 
 .myComboBoxDropDowns {
-   fontWeight: normal;
-   fontStyle: normal;
-   textDecoration: none;
+	fontWeight: normal;
+	fontStyle: normal;
+	textDecoration: none;
 }
 
 
@@ -665,44 +554,30 @@ CursorManager
 }
 
 DataGrid {
-   /*backgroundColor: #ededed;
-   alternatingItemColors: #ededed, #ededed;
-   headerColors: #ffffff, #ffffff;
-   horizontalGridLines: true;
-   horizontalGridLineColor: #bbbbbb;
-   verticalGridLineColor: #bbbbbb;
-   rollOverColor: #ffffff;
-   textRollOverColor: #0b333c;
-   selectionColor: #ffffff;
-   color: #333333;
-   textSelectedColor: #000000;
-   fontFamily: Arial;
-  
-   headerStyleName: "mydataGridHeaderStyle";*/
-    fontSize: 11;
-   }
-
-
-.mydataGridHeaderStyle {
-   fontSize: 11;
-   color: #333333;
-   textAlign: left;
-   text-indent:10;
+	fontSize: 11;
 }
 
 
 .mydataGridHeaderStyle {
-   fontWeight: bold;
-   fontSize:12;
-   fontStyle: normal;
-   textDecoration: none;
+	fontSize: 11;
+	color: #333333;
+	textAlign: left;
+	text-indent:10;
+}
+
+
+.mydataGridHeaderStyle {
+	fontWeight: bold;
+	fontSize:12;
+	fontStyle: normal;
+	textDecoration: none;
 }
 
 ProgressBar {
-   barColor: #55a3f1;
-   trackColors: #e6eeee, #e6eeee;
-   color: #333333;
-   fontFamily: Arial;
+	barColor: #55a3f1;
+	trackColors: #e6eeee, #e6eeee;
+	color: #333333;
+	fontFamily: Arial;
 }
 
 
@@ -711,81 +586,67 @@ FormItem
 {
 	font-size: 11;
 	font-weight:bold;
-	fontFamily: ArialEmbedded;
+	/*fontFamily: TahomaEmbedded;*/
 	indicatorSkin: Embed(skinClass="FormItem_indicatorSkin");
 }
 
 HScrollBar
 {
-	/*downArrowSkin: Embed(skinClass="HScrollBar_downArrowSkin");
-	thumbIcon: Embed(skinClass="HScrollBar_thumbIcon");
-	thumbSkin: Embed(skinClass="HScrollBar_thumbSkin");
-	trackSkin: Embed(skinClass="HScrollBar_trackSkin");
-	upArrowSkin: Embed(skinClass="HScrollBar_upArrowSkin");*/
-   themeColor: #009acc;	
+	themeColor: #009acc;	
 }
 
 
 Panel {
-   borderStyle: solid;
-   borderColor: #e4e4e4;
-   borderAlpha: 1;
-   roundedBottomCorners: true;
-   headerHeight: 50;
-   cornerRadius: 6;
-   footerColors: #f3f3f3, #f3f3f3;
-   backgroundColor: #f3f3f3;
-   dropShadowEnabled: true;
-   titleStyleName: "mypanelTitle";
-}
-
-.mypanelTitle {
-   color: #333333;
-   fontSize: 11;
-   fontWeight: bold;
+	borderStyle: solid;
+	borderColor: #e4e4e4;
+	borderAlpha: 1;
+	roundedBottomCorners: true;
+	headerHeight: 50;
+	cornerRadius: 6;
+	footerColors: #f3f3f3, #f3f3f3;
+	backgroundColor: #f3f3f3;
+	dropShadowEnabled: true;
+	titleStyleName: "mypanelTitle";
 }
 
 
 TitleWindow
 {
-   borderColor: #c0c0c0;
-   borderAlpha: 1;
-   borderThickness: 1;
-   roundedBottomCorners: true;
-   headerHeight: 30;
-   backgroundAlpha: 1;
-   headerColors: #e7e7e7, #d9d9d9;
-   backgroundColor: #ffffff;
-   titleStyleName: "mypanelTitle";
-   color:#333333;
-   font-size:12;
-   close-button-skin: Embed(skinClass="Button_closeWizardButton_icon");
-   
+	borderColor: #c0c0c0;
+	borderAlpha: 1;
+	borderThickness: 1;
+	roundedBottomCorners: true;
+	headerHeight: 30;
+	backgroundAlpha: 1;
+	headerColors: #e7e7e7, #d9d9d9;
+	backgroundColor: #ffffff;
+	titleStyleName: "mypanelTitle";
+	color:#333333;
+	font-size:12;
+	close-button-skin: Embed(skinClass="Button_closeWizardButton_icon");
 }
 
 
 Alert
 {
-   borderColor: #c0c0c0;
-   borderAlpha: 1;
-   borderThickness: 1;
-   roundedBottomCorners: true;
-   headerHeight: 30;
-   backgroundAlpha: 1;
-   headerColors: #e7e7e7, #d9d9d9;
-   backgroundColor: #ffffff;
-   titleStyleName: "mypanelTitle";
-   color:#333333;
-   font-size:12;
+	borderColor: #c0c0c0;
+	borderAlpha: 1;
+	borderThickness: 1;
+	roundedBottomCorners: true;
+	headerHeight: 30;
+	backgroundAlpha: 1;
+	headerColors: #e7e7e7, #d9d9d9;
+	backgroundColor: #ffffff;
+	titleStyleName: "mypanelTitle";
+	color:#333333;
+	font-size:12;
 }
 
-.mypanelTitle {
-   color: #333333;
-   fontSize: 14;
-   fontWeight: bold;
-}
-
-
+	.mypanelTitle {
+		color: #333333;
+		fontSize: 14;
+		fontWeight: bold;
+	}
 
 
 .searchFieldsSearchMediaTypeTitle{
@@ -819,13 +680,13 @@ TextInput.errorTip
 	padding-bottom:4;
 	padding-left:4;
 	font-size:11;
-    
+	 
 }
 
 RadioButton
 {
-   borderColor: #bbbbbb;
-   themeColor: #009acc;
+	borderColor: #bbbbbb;
+	themeColor: #009acc;
 }
 
 SWFLoader
@@ -833,32 +694,30 @@ SWFLoader
 	brokenImageSkin: Embed(skinClass="SWFLoader_brokenImageSkin");
 }
 
-TextInput{
-   borderStyle: solid;
-   borderColor: #bbbbbb;
-   color: #333333;
-   paddingLeft: 4;
-   paddingRight: 4;
-   paddingTop: 2;
-   paddingBottom: 2;
-   fontFamily: Arial;
-   fontSize: 11;
-   font-weight:normal;
-   focus-alpha: 0; 
-   font-style:normal;
-   /*borderSkin: Embed(skinClass="TextInput_borderSkin");
-   focusSkin: Embed(skinClass="TextInput_focusSkin");*/
+TextInput {
+	focus-alpha: 0; 
+	font-size: 11;
+	font-weight:normal;
+	color: #333333;
+	padding-left: 4;
+	padding-right: 4;
+	font-style: normal;
+	fontFamily: Arial;
+	borderStyle: solid;
+	borderColor: #bbbbbb;
+	paddingTop: 2;
+	paddingBottom: 2;
 }
 
 TextArea {
- focus-alpha: 0; 
- fontSize: 11;
- font-weight:normal;
- color: #333333;
- padding-left:6;
- padding-right:6;
- font-style:normal;
- fontFamily: Arial;
+	focus-alpha: 0; 
+	font-size: 11;
+	font-weight:normal;
+	color: #333333;
+	padding-left:6;
+	padding-right:6;
+	font-style:normal;
+	fontFamily: Arial;
 }
 
 
@@ -873,10 +732,5 @@ ToolTip
 
 VScrollBar
 {
-	   themeColor: #009acc;
-	/*downArrowSkin: Embed(skinClass="VScrollBar_downArrowSkin");
-	thumbIcon: Embed(skinClass="VScrollBar_thumbIcon");
-	thumbSkin: Embed(skinClass="VScrollBar_thumbSkin");
-	trackSkin: Embed(skinClass="VScrollBar_trackSkin");
-	upArrowSkin: Embed(skinClass="VScrollBar_upArrowSkin");*/
+	themeColor: #009acc;
 }
