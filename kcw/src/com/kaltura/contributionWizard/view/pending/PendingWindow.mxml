@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	<mx:Script>
 		<![CDATA[
-			import com.kaltura.contributionWizard.model.PendingActions;
 			import com.kaltura.contributionWizard.model.WizardModelLocator;
 			import com.kaltura.contributionWizard.view.events.CancelPendingActionViewEvent;
 			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
@@ -88,7 +87,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	<mx:VBox id="container" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
 		<mx:Spacer height="10" />
-
 		<mx:ProgressBar
 			indeterminate="true"
 			label="{ getPendingMessage(_model.pendingActions.pendingAction) }" />

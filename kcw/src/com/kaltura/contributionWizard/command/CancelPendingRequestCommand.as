@@ -22,10 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 package com.kaltura.contributionWizard.command
 {
-	import com.adobe_cw.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe_cw.adobe.cairngorm.commands.ICommand;
+	import com.adobe_cw.adobe.cairngorm.control.CairngormEvent;
 	import com.kaltura.contributionWizard.model.WizardModelLocator;
-	import com.kaltura.contributionWizard.model.PendingActions;
 
 	public class CancelPendingRequestCommand implements ICommand
 	{

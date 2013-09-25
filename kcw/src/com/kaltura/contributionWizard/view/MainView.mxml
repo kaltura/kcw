@@ -40,25 +40,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	<mx:Script>
 		<![CDATA[
-			import com.kaltura.contributionWizard.vo.limitations.LimitationError;
 			import com.kaltura.contributionWizard.enums.KCWWorkflowState;
-			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
-			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
-			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
-			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
-			import com.kaltura.contributionWizard.events.WorkflowEvent;
 			import com.kaltura.contributionWizard.events.CloseWizardEvent;
-			import com.kaltura.contributionWizard.command.CloseWizardCommand;
-			import com.kaltura.utils.IDisposable;
-			import mx.resources.ResourceBundle;
+			import com.kaltura.contributionWizard.events.WorkflowEvent;
+			import com.kaltura.contributionWizard.model.WizardModelLocator;
+			import com.kaltura.contributionWizard.view.events.KCWViewEvent;
 			import com.kaltura.contributionWizard.view.resources.ResourceBundleNames;
+			import com.kaltura.utils.IDisposable;
+			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
-			import com.adobe_cw.adobe.cairngorm.control.CairngormEventDispatcher;
-			import com.kaltura.contributionWizard.model.WizardModelLocator;
-			import com.kaltura.contributionWizard.model.PendingActions;
-			import mx.utils.URLUtil;
-			import mx.resources.ResourceBundle;
 
 			private static const PRELOADING:String 		= "preloading";
 			private static const LOADED_BASE:String 	= "loadedBase";
