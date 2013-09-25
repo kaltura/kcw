@@ -114,7 +114,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 					<mx:VBox verticalGap="0">
 						<mx:HBox verticalAlign="bottom" horizontalGap="0">
-							<mx:Label styleName="certificationCreditsNotes" fontWeight="bold"
+							<mx:Label styleName="certificationCreditsNotes"
 								text="{resourceManager.getString(ResourceBundleNames.TERMS_OF_USE_SCREEN, 'CREDIT_URL_LABEL')}" />
 							<mx:Label text="{resourceManager.getString(ResourceBundleNames.TERMS_OF_USE_SCREEN, 'CREDIT_URL_NOTE')}" />
 						</mx:HBox>
