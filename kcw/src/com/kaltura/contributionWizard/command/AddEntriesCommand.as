@@ -27,6 +27,7 @@ package com.kaltura.contributionWizard.command
 	import com.bjorn.event.ChainEvent;
 	import com.kaltura.contributionWizard.business.AddEntriesDelegate;
 	import com.kaltura.contributionWizard.business.AddEntriesResult;
+	import com.kaltura.contributionWizard.business.ServiceCanceller;
 	import com.kaltura.contributionWizard.events.CloseWizardEvent;
 	import com.kaltura.contributionWizard.events.EntriesAddedEvent;
 	import com.kaltura.contributionWizard.events.PartnerNotificationsEvent;
@@ -72,17 +73,17 @@ package com.kaltura.contributionWizard.command
 	     	}
 	     	else
 	     	{
-				_model.pendingActions.setPendingAction(PendingActions.ADDING_ENTRIES);
 				var delegate:AddEntriesDelegate = new AddEntriesDelegate(this);
 				importList = _model.importData.importCart.importItemsArray;
 	
-				_model.pendingActions.setPendingAction(PendingActions.ADDING_ENTRIES, null);
-				delegate.addEntries(importList, _model.context, _model.importData.creditsVo);
+				var serviceCanceller:ServiceCanceller = delegate.addEntries(importList, _model.context, _model.importData.creditsVo);
+				_model.pendingActions.setPendingAction(PendingActions.ADDING_ENTRIES, serviceCanceller);
 	     	}
 		}
 
 		public function result(data:Object):void
 		{
+			//_model.pendingActions.isPending = false;  // if we remove the popup it look like we can do more things with the wizard, and apparently this is a lie. (missing end screen?)
 			var addEntriesResult:AddEntriesResult = data as AddEntriesResult;
 
 			setNewKshowId(addEntriesResult.entriesInfoList[0].kshowId);
@@ -109,6 +110,7 @@ package com.kaltura.contributionWizard.command
 
 		public function fault(info:Object):void
 		{
+			_model.pendingActions.isPending = false;
 			//TODO: move it to the view (localized string already exist)
 			trace("Add entry call failed");
 			var msg:String = ResourceManager.getInstance().getString(ResourceBundleNames.ERRORS, "ADD_ENTRIES_FAILED");
