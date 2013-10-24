@@ -36,14 +36,13 @@ package com.kaltura.vo
 	public class MediaMetaDataVO implements IValueObject, IUID
 	{
 
-		public function MediaMetaDataVO (title:String = null, tags:String = null, category:String = null,description:String = null, partnerData:String = null, categoryIndex:int = -1):void
+		public function MediaMetaDataVO (title:String = null, tags:String = null, category:String = null,description:String = null, partnerData:String = null):void
 		{
 			this.title = title;
 			this.tags = tags;
 			this.description = description;
 			this.category = category;
 			this.uid = UIDUtil.createUID();
-			this.categoryIndex = categoryIndex;
 		}
 		
 		public var title:String;
@@ -55,7 +54,6 @@ package com.kaltura.vo
 		public var description:String;
 		
 		public var category:String;
-		public var categoryIndex:int = -1;
 
 		public var partnerData:String;
 		
