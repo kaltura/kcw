@@ -93,7 +93,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			import mx.utils.ObjectUtil;
 			import mx.utils.URLUtil;
 
-			public static var myVersion:String = "2.2.3";
+			public static var myVersion:String = "2.2.4";
 			public static var CLIENT_TAG:String = "kcw:" + myVersion;
 			public static const DEFAULT_PROTOCOL:String = "http";
 
