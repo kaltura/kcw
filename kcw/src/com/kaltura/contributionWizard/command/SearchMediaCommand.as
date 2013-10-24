@@ -51,9 +51,15 @@ package com.kaltura.contributionWizard.command
 	public class SearchMediaCommand extends ModuleSequenceCommand implements ICommand, IResponder
 	{
 		private var _model:WizardModelLocator = WizardModelLocator.getInstance();
-		//Saves the active media provider ID so that when the search results are retrieved, this can be injected to each of them.
+		
+		/**
+		 * Saves the active media provider ID so that when the search results are retrieved, this can be injected to each of them.
+		 * */
 		private var _mediaProviderCode:String;
-		//Saves the active media type so that when the search results are retrieved, this can be injected to each of them.
+		
+		/**
+		 * Saves the active media type so that when the search results are retrieved, this can be injected to each of them.
+		 * */
 		private var _mediaTypeCode:int;
 
 		private var _requestedLocalPage:int;

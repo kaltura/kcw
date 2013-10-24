@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<importViews:ImportModule styleName="searchView"
-	width="100%" height="100%"
-	xmlns="com.kaltura.contributionWizard.view.importViews.search.*"
-	xmlns:mx="http://www.adobe.com/2006/mxml"
-	xmlns:importViews="com.kaltura.contributionWizard.view.importViews.*"
-	xmlns:searchResultsView="com.kaltura.contributionWizard.view.importViews.search.searchResultsView.*"
-	xmlns:controller="com.kaltura.contributionWizard.view.controller.*"
-	xmlns:controls="com.kaltura.contributionWizard.view.importViews.search.controls.*"
-	xmlns:utils="adobe.utils.*"
-	xmlns:control="com.kaltura.contributionWizard.control.*" xmlns:browser="com.kaltura.contributionWizard.view.importViews.browser.*" xmlns:ac="com.adobe.ac.*">
+<importViews:ImportModule styleName="searchView" width="100%" height="100%"
+						  xmlns="com.kaltura.contributionWizard.view.importViews.search.*"
+						  xmlns:mx="http://www.adobe.com/2006/mxml"
+						  xmlns:importViews="com.kaltura.contributionWizard.view.importViews.*"
+						  xmlns:searchResultsView="com.kaltura.contributionWizard.view.importViews.search.searchResultsView.*"
+						  xmlns:controller="com.kaltura.contributionWizard.view.controller.*"
+						  xmlns:controls="com.kaltura.contributionWizard.view.importViews.search.controls.*"
+						  xmlns:utils="adobe.utils.*" xmlns:control="com.kaltura.contributionWizard.control.*"
+						  xmlns:browser="com.kaltura.contributionWizard.view.importViews.browser.*"
+						  xmlns:ac="com.adobe.ac.*">
 
 	<mx:Script>
 		<![CDATA[
@@ -45,186 +45,148 @@
 			[Bindable]
 			private var _mediaProvider:MediaProviderVO;
 
+
 			//-----------------------------interface methods------------------------------------------
-			override public function goNextStep():void
-			{
-				if (!model.importData.importCart.isCartEmpty)
-				{
+			override public function goNextStep():void {
+				if (!model.importData.importCart.isCartEmpty) {
 					deactivateSearchResultsView()
 					dispatchGetMediaInfo();
 				}
 			}
 
-			override public function mediaProviderChange(mediaProviderVo:MediaProviderVO):void
-			{
+
+			override public function mediaProviderChange(mediaProviderVo:MediaProviderVO):void {
 				_mediaProvider = mediaProviderVo;
 				var focusComp:IFocusManagerComponent = focusManager.getNextFocusManagerComponent();
-				var setFocusFunc:Function = function():void{searchControls.searchFields.searchTerms.setFocus()};
+				var setFocusFunc:Function = function():void {
+					searchControls.searchFields.searchTerms.setFocus()
+				};
 				callLater(setFocusFunc);
 			}
 
-			//----------------------------- end interface methods------------------------------------------
-			private  function mediaInfoCompleteHandler():void
-			{
-				dispatchImportViewComplete();
+			//----------------------------- end interface methods ------------------------------------------
+			
+			
+			private function mediaInfoCompleteHandler():void {
+				dispatchEvent(new ImportViewCompleteEvent(ImportViewCompleteEvent.IMPORT_VIEW_COMPLETE));
 			}
 
-			private function dispatchGetMediaInfo():void
-			{
+
+			private function dispatchGetMediaInfo():void {
 				var evtGetMediaInfo:MediaInfoEvent = new MediaInfoEvent(MediaInfoEvent.GET_MEDIA_INFO, model.importData.importCart.importItemsArray, this);
 				CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(evtGetMediaInfo);
 			}
 
-			private function mediaInfoErrorHandler(errorCode:String):void
-			{
+
+			private function mediaInfoErrorHandler(errorCode:String):void {
 				var message:String = resourceManager.getString(ResourceBundleNames.ERRORS, errorCode);
 				Alert.show(message);
 			}
 
-			override public function activate():void
-			{
+
+			override public function activate():void {
 				trace("Search activate()");
 			}
-			override public function get navigationButtonsMode():NavigationButtonsMode
-			{
+
+
+			override public function get navigationButtonsMode():NavigationButtonsMode {
 				return navButtonsMode;
 			}
-			//End MediaInfoViewController handlers
+
+			//----------------------------- End MediaInfoViewController handlers ------------------------------------------
 
 
+//TODO Atar: not used?
+//			private function authenticatedSearchHandler(evtPrivateSearch:AuthenticatedSearchViewEvent):void {
+//				showLoginScreen();
+//			}
 
-			private function authenticatedSearchHandler(evtPrivateSearch:AuthenticatedSearchViewEvent):void
-			{
-				showLoginScreen();
-			}
 
-			private function dispatchToggleAuthMethod():void
-			{
-				var event:AuthMethodEvent = new AuthMethodEvent(AuthMethodEvent.TOGGLE_AUTH_METHOD, this);
-				CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(event);
-			}
+//			private function dispatchToggleAuthMethod():void {
+//				var event:AuthMethodEvent = new AuthMethodEvent(AuthMethodEvent.TOGGLE_AUTH_METHOD, this);
+//				CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(event);
+//			}
 
-			private function showLoginScreen():void
-			{
+
+			/**
+			 * show the login screen
+			 * */
+			private function showLoginScreen():void {
 				_authenticationScreen.owner = this;
 				_authenticationScreen.addEventListener(AuthenticatedSearchViewEvent.LOGIN_SUCCESS, loginSuccessHandler);
 				PopUpManager.addPopUp(_authenticationScreen, Application.application as DisplayObject, true);
 				PopUpManager.centerPopUp(_authenticationScreen);
-
-				//PopUpManager.createPopUp(this, PrivateAuthenticationScreen, true);
 			}
 
-			private function loginSuccessHandler(evtLoginSuccess:AuthenticatedSearchViewEvent):void
-			{
-				CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent( new SearchMediaEvent(SearchMediaEvent.SET_SEARCH_TERMS, 0, "", this) );
-				dispatchCairngormSearchRequest(PageSearchDirection.FIRST_PAGE)
+
+			/**
+			 * 
+			 * */
+			private function loginSuccessHandler(evtLoginSuccess:AuthenticatedSearchViewEvent):void {
+				CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(new SearchMediaEvent(SearchMediaEvent.SET_SEARCH_TERMS, 0, "", this));
+				dispatchCairngormSearchRequest(PageSearchDirection.FIRST_PAGE);
 			}
 
-			private function dispatchImportViewComplete():void
-			{
-				dispatchEvent(new ImportViewCompleteEvent(ImportViewCompleteEvent.IMPORT_VIEW_COMPLETE));
-			}
 
-			private function dispatchCairngormSearchRequest(pageDirection:int):void
-			{
-				if (pageDirection == PageSearchDirection.FIRST_PAGE) deactivateSearchResultsView();
-				var evtSearchMedia:SearchMediaEvent = new SearchMediaEvent(SearchMediaEvent.SEARCH_MEDIA, pageDirection, null, this);
+
+			private function dispatchCairngormSearchRequest(pageDirection:int):void {
 				if (pageDirection == PageSearchDirection.FIRST_PAGE)
-				{
+					deactivateSearchResultsView();
+				
+				var evtSearchMedia:SearchMediaEvent = new SearchMediaEvent(SearchMediaEvent.SEARCH_MEDIA, pageDirection, null, this);
+				if (pageDirection == PageSearchDirection.FIRST_PAGE) {
 					var moderateSearchTermsEvent:SearchMediaEvent = new SearchMediaEvent(SearchMediaEvent.MODERATE_SEARCH_TERMS);
 					var sequence:ChainEvent = EventChainFactory.chainEvents([moderateSearchTermsEvent, evtSearchMedia]);
 					CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(sequence);
 				}
-				else
-				{
+				else {
 					CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(evtSearchMedia);
 				}
 			}
 
-			private function toggleAuthMethodHandler():void
-			{
+
+			private function toggleAuthMethodHandler():void {
 				var evtToggleAuthMethod:AuthMethodEvent = new AuthMethodEvent(AuthMethodEvent.TOGGLE_AUTH_METHOD, this);
 				CairngormEventDispatcherFactory.getDispatcher(this).dispatchEvent(evtToggleAuthMethod);
 			}
 
-			private function deactivateSearchResultsView():void
-			{
+
+			private function deactivateSearchResultsView():void {
 				searchResults.deactivate();
 			}
-			
-			/*override public function get navigationButtonsMode():NavigationButtonsMode
-			{
-				return navButtonsMode;
-			}*/
-			
-			private function limitationError():void{
+
+
+			private function limitationError():void {
 				var error:LimitationError = model.limitationError;
 				Alert.show(error ? error.message : "error");
-				//Alert.show(_model.limitationError.message);
 			}
-			
 		]]>
 	</mx:Script>
-	
-	<ac:ObserveValue source="{model.limitationIsValid}" value="{false}" handler="limitationError" />
 
-	<browser:NavigationButtonsMode id="navButtonsMode"
-		nextExists="true"
-		nextEnabled="{importItems.length > 0}"
-		nextText="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'NEXT')}"
-		prevEnabled="false"
-		prevExists="true"
-		prevText="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'BACK')}"
-		/>
+	<ac:ObserveValue source="{model.limitationIsValid}" value="{false}" handler="limitationError"/>
+
+	<browser:NavigationButtonsMode id="navButtonsMode" nextExists="true" nextEnabled="{importItems.length > 0}"
+								   nextText="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'NEXT')}"
+								   prevEnabled="false" prevExists="true"
+								   prevText="{resourceManager.getString(ResourceBundleNames.IMPORT_BROWSER, 'BACK')}"/>
 
 	<!--Cairngorm controller-->
-	<control:SimpleSearchController />
+	<control:SimpleSearchController/>
+	
 	<!--view-->
-	<searchResultsView:Header activeMediaProvider="{model.mediaProviders.activeMediaProvider}" />
+	<searchResultsView:Header activeMediaProvider="{model.mediaProviders.activeMediaProvider}"/>
 
-	<controller:MediaInfoViewController
-		token="{this}"
-		mediaInfoComplete="mediaInfoCompleteHandler()"
-		mediaInfoError="mediaInfoErrorHandler(event.errorCode)"
-		/>
+	<controller:MediaInfoViewController token="{this}" mediaInfoComplete="mediaInfoCompleteHandler()"
+										mediaInfoError="mediaInfoErrorHandler(event.errorCode)"/>
 
-	<controller:ToggleAuthMethodViewController
-		token="{this}"
-		showAuthenticationScreen="showLoginScreen()"
-		/>
+	<controller:ToggleAuthMethodViewController token="{this}" showAuthenticationScreen="showLoginScreen()"/>
 
-	<controls:SearchControls
-		id="searchControls"
-		width="100%"
-		toggleAuthMethod="toggleAuthMethodHandler()"
-		search="dispatchCairngormSearchRequest(PageSearchDirection.FIRST_PAGE)"
-		goNextPage="dispatchCairngormSearchRequest(PageSearchDirection.NEXT_PAGE)"
-		goPreviousPage="dispatchCairngormSearchRequest(PageSearchDirection.PREVIOUS_PAGE)" />
+	<controls:SearchControls id="searchControls" width="100%" toggleAuthMethod="toggleAuthMethodHandler()"
+							 search="dispatchCairngormSearchRequest(PageSearchDirection.FIRST_PAGE)"
+							 goNextPage="dispatchCairngormSearchRequest(PageSearchDirection.NEXT_PAGE)"
+							 goPreviousPage="dispatchCairngormSearchRequest(PageSearchDirection.PREVIOUS_PAGE)"/>
 
-	<searchResultsView:SearchResultsView id="searchResults"
-		width="100%" height="100%"
-		dataProvider="{model.searchData.searchResults.pager.visiblePageData}" />
+	<searchResultsView:SearchResultsView id="searchResults" width="100%" height="100%"
+										 dataProvider="{model.searchData.searchResults.pager.visiblePageData}"/>
 
-	<!--Visible components -->
-
-
-	<!--<controls:PrivateSearchOptionButton
-		visible="{_model.mediaProviders.activeMediaProvider.authMethodList.numMethods > 1}"
-		includeInLayout="{_model.mediaProviders.activeMediaProvider.authMethodList.numMethods > 1}"
-		isPublicSearch="{_model.mediaProviders.activeMediaProvider.authMethodList.activeMethod.isPublic}" />-->
-	<!--<subComponents>
-		<mx:Label text="Hello, world!" fontSize="30" />
-	</subComponents>-->
-
-	<!--<controls:SearchControls
-		width="100%"
-		toggleAuthMethod="toggleAuthMethodHandler()"
-		search="dispatchCairngormSearchRequest(PageSearchDirections.FIRST_PAGE)"
-		goNextPage="dispatchCairngormSearchRequest(PageSearchDirections.NEXT_PAGE)"
-		goPreviousPage="dispatchCairngormSearchRequest(PageSearchDirections.PREVIOUS_PAGE)"
-	/>
-
-	<searchResultsView:SearchResultsView
-		width="100%" height="100%"
-		dataProvider="{_model.searchData.searchResults.pager.currentPageData}" />-->
 </importViews:ImportModule>
