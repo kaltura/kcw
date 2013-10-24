@@ -125,7 +125,7 @@ package com.kaltura.contributionWizard.business.factories.serialization.importUr
 			if(wizardModleLocator.flashvars.enforceCategory)
 				urlVars[index + ":mediaEntry:categories"] = wizardModleLocator.flashvars.enforceCategory;
 			else if (wizardModleLocator.categoriesPrefix != "" && importFileVO.metaData.category == null){
-				urlVars[index + ":mediaEntry:categories"] = wizardModleLocator.categoriesPrefix.substr(0, wizardModleLocator.categoriesPrefix.length - 1);
+				urlVars[index + ":mediaEntry:categories"] = wizardModleLocator.categoriesPrefix;
 			}
 		}
 		

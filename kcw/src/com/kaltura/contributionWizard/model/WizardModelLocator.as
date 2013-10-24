@@ -63,23 +63,35 @@ package com.kaltura.contributionWizard.model
 		public var startupDefaults:StartupDefaultsVO 			= new StartupDefaultsVO();
 
 		public var importTypesConfiguration:ImportTypesConfig;
-		public var userCertified:Boolean 						= false;
+		public var userCertified:Boolean = false;
 
 		public var workflowStatesList:WorkflowStatesList;
 		public var limitationsVo:LimitationsVO;
-		public var limitationIsValid:Boolean					= true;
-		public var limitationMinimumIsValid:Boolean				= true;
+		public var limitationIsValid:Boolean = true;
+		public var limitationMinimumIsValid:Boolean = true;
 		
 		public var limitationError:LimitationError;
 		public var limitationFLashVars:Dictionary;
 		private var _limitationXML:XML;
 		
-		public var categories : Object = null;
+		/**
+		 * categories displayed in tagging renderer for the user to select 
+		 */
 		public var categoriesFromRoot : ArrayCollection = new ArrayCollection;
-		public var categoriesMap : HashMap = new HashMap();
-		public var categoriesFullNameList : ArrayCollection  = new ArrayCollection();
+		
+		/**
+		 * if categoriesRootId is set, every ingested entry should be added to a category
+		 * under the given root category. 
+		 * if category selection is visible, only categories under this category are shown.
+		 * otherwise, the media is added directly to this category.
+		 */
 		public var categoriesRootId : int = 0;
+		
+		/**
+		 * full name of the category to which media is assigned 
+		 */
 		public var categoriesPrefix:String = "";
+		
 		public var loadingFlag : Boolean = false;
 		public var flashvars : Object;
 		public var additionalField:String = "";
@@ -90,6 +102,7 @@ package com.kaltura.contributionWizard.model
 		public var categoriesUploaded:Boolean = false;
 		
 		public var wereEntriesAdded:Boolean = false;
+		
 		/**
 		 * Whether to load thumbnails with KS or not 
 		 */		

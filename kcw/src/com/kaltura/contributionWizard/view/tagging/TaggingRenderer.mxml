@@ -22,11 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @ignore
 */
 -->
-<mx:HBox
-	verticalAlign="middle"
-	verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	xmlns:mx="http://www.adobe.com/2006/mxml" show="onShow(event)"
-	xmlns:vo="com.kaltura.vo.*" creationComplete="setCategory()">
+<mx:HBox verticalAlign="middle" verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		 xmlns:mx="http://www.adobe.com/2006/mxml" show="onShow(event)" xmlns:vo="com.kaltura.vo.*"
+		 creationComplete="setCategory()">
 	<mx:Metadata>
 	</mx:Metadata>
 
@@ -53,16 +51,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
-			
+
 			[Bindable]
 			public var taggingConfig:TaggingConfig;
-			
+
 			private var _comboIndex:Number = 0;
 			[Bindable]
 			private var _model:WizardModelLocator = WizardModelLocator.getInstance();
 			[Bindable]
 			private var _categories:ArrayCollection;
+			
+			/**
+			 * if initial category is provided, it will be selected in the categories dropdown by default
+			 * (via flashvars.enforceCategory)
+			 * */
 			private var _initialCategory:String = '';
+			
 			private var _categoryIndex:Number;
 
 			[Bindable]
@@ -70,249 +74,192 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 			[Bindable]
 			private var _importItemVo:BaseImportVO;
-			
+
+
 			[Bindable]
-			public var _categoriesList:ArrayCollection;		
-			
-			//string represantation for the category, initialized with a prefix that describes location in tree
-			[Bindable]
+			/**
+			 * full name of the category to which media will be assigned
+			 * */
 			private var _categoryName:String;
-		
- 			public override function set data(value:Object):void
-			{
+
+
+			public override function set data(value:Object):void {
 				_comboIndex = 0;
 				_importItemVo = BaseImportVO(value);
 				if (_importItemVo) {
 					_metaDataVo = _importItemVo.metaData;
 				}
 				super.data = value;
-				
-				if(_model.flashvars && _model.flashvars.disableTags == 'true')
+
+				if (_model.flashvars && _model.flashvars.disableTags == 'true')
 					tagsInput.enabled = false;
-				
-				if(_model.flashvars && _model.flashvars.enforceTags )
-				{
-					
+
+				if (_model.flashvars && _model.flashvars.enforceTags) {
+
 					tagsInput.text = _model.flashvars.enforceTags;
 					dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
 				}
-				
+
 				//if there is a flashvar called disableCategories with true - disable the categories combo
-				if(_model.flashvars && _model.flashvars.disableCategories == 'true')
+				if (_model.flashvars && _model.flashvars.disableCategories == 'true')
 					categoryCB.enabled = false;
-				
-				if(_model.flashvars && _model.flashvars.enforceCategory)
+
+				if (_model.flashvars && _model.flashvars.enforceCategory)
 					_initialCategory = _model.flashvars.enforceCategory;
 			}
-			
+
+
 			/**
 			 * if user provided categoriesRootId then the category of every content should be set to be
 			 * under the given root Id. even if no categories were selected.
 			 * */
-			private function setCategory():void 
-			{
-				if( _model.categoriesPrefix) 
-					_categoryName = _model.categoriesPrefix.substr(0, _model.categoriesPrefix.length-1);
-				else
-					BindingUtils.bindSetter( getCategoriesPrefix , _model , "categoriesPrefix");
-				
-				//setting the dataprovider 
-				BindingUtils.bindSetter( loadedCategories , _model , "categoriesFromRoot");
-					
+			private function setCategory():void {
+				if (_model.categoriesPrefix) {
+					_categoryName = _model.categoriesPrefix;
+				}
+				else {
+					BindingUtils.bindSetter(getCategoriesPrefix, _model, "categoriesPrefix");
+				}
 
-				
-				
+				//setting the dataprovider 
+				BindingUtils.bindSetter(loadedCategories, _model, "categoriesFromRoot");
+
 				categoryCB.selectedIndex = -1;
 				categoryCB.prompt = resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_NO_CATEGORY');
-			
-				
+
+
 			}
-			private function loadedCategories( ac : ArrayCollection) : void
-			{
+
+
+			private function loadedCategories(ac:ArrayCollection):void {
 				_categories = ac;
 			}
-			
-			private function getCategoriesPrefix( categoriesPrefix : String) : void
-			{
-				if (categoriesPrefix)
-				{
-					//removes last ">" from string
-					_categoryName = categoriesPrefix.substr(0, _model.categoriesPrefix.length-1);
-					dispatchEvent(new TaggingViewEvent(TaggingViewEvent.CATEGORY_CHANGED , _metaDataVo, inputMetaData));
+
+
+			private function getCategoriesPrefix(categoriesPrefix:String):void {
+				if (categoriesPrefix) {
+					_categoryName = categoriesPrefix;
+					dispatchEvent(new TaggingViewEvent(TaggingViewEvent.CATEGORY_CHANGED, _metaDataVo, inputMetaData));
 				}
 			}
-/*
-			private function titleChangeHandler():void
-			{
-				//dispatchEvent(new TaggingViewEvent(TaggingViewEvent.TITLE_CHANGED, _metaDataVo, inputMetaData));
+
+
+			private function categoryChangeHandler():void {
+				_categoryName = (categoryCB.selectedItem as KalturaCategory).fullName;
 				dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
 			}
 
-			private function tagsChangeHandler():void
-			{
-				dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
-				//dispatchEvent(new TaggingViewEvent(TaggingViewEvent.TAGS_CHANGED, _metaDataVo, inputMetaData));
-			}
-	
-			private function descriptionChangeHandler():void
-			{
-				dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
-				//dispatchEvent(new TaggingViewEvent(TaggingViewEvent.DESCRIPTION_CHANGED , _metaDataVo, inputMetaData));
-			}
-			private function additionalChangeHandler():void
-			{
-				dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
-				//dispatchEvent(new TaggingViewEvent(TaggingViewEvent.ADDITIONAL_CHANGED , _metaDataVo, inputMetaData));
-			}
-			*/
-			private function categoryChangeHandler():void
-			{
-				_categoryName = _model.categoriesPrefix +  KalturaCategory(_model.categoriesFromRoot.getItemAt(categoryCB.selectedIndex)).name;	
-				_metaDataVo.categoryIndex = categoryCB.selectedIndex;
-				dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
-				//dispatchEvent(new TaggingViewEvent(TaggingViewEvent.CATEGORY_CHANGED , _metaDataVo, inputMetaData));
-			}
-			
-			private function dataChangedHandler() :void {
-				if(_categoryIndex)
-				{
-					_metaDataVo.categoryIndex = _categoryIndex; 
-					inputMetaData.categoryIndex = _categoryIndex;
+
+			private function dataChangedHandler():void {
+				// if a category is selected, apply:
+				if (_categoryIndex) {
 					inputMetaData.category = _metaDataVo.category;
-					
 				}
 				dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
 			}
-			
-			private function dispatchSetMediaMetaData(newMetaData:MediaMetaDataVO, oldMetaData:MediaMetaDataVO):void
-			{
+
+
+			private function dispatchSetMediaMetaData(newMetaData:MediaMetaDataVO, oldMetaData:MediaMetaDataVO):void {
 				var evtTagging:TaggingEvent = new TaggingEvent(TaggingEvent.SET_MEDIA_META_DATA, newMetaData, oldMetaData);
 				CairngormEventDispatcher.getInstance().dispatchEvent(evtTagging);
 			}
-			public function validateMetaData():void
-			{
+
+
+			public function validateMetaData():void {
 				var validateAllEvent:ValidateAllMetaDataEvent = new ValidateAllMetaDataEvent(ValidateAllMetaDataEvent.VALIDATE_ALL_META_DATA, titleValidator, tagsValidator);
 				validateAllEvent.dispatch();
 			}
 
-			
-			private function setSelectedToCombo():void
-			{
-				_comboIndex ++;
-				if (_initialCategory=='')
+
+			private function setSelectedToCombo():void {
+				_comboIndex++;
+				if (_initialCategory == '')
 					return;
-				if(_model.flashvars && _model.flashvars.enforceCategory)
-				{
-					
-					var sDataValueCur:String;
-					var arr:Array = (categoryCB.dataProvider as ArrayCollection).source;
-					if(arr.length<1)
+				
+				
+				
+				/* see if any of the categories in the dropdown is the intiial one, 
+				 * if so
+				 * set combo.selected index
+				 * set _categoryName
+				 * set _categoryIndex
+				 * */
+				
+				var ac:ArrayCollection = categoryCB.dataProvider as ArrayCollection;
+				var kCat:KalturaCategory;
+				for (var i:int = 0; i<ac.length; i++) {
+					kCat = ac.getItemAt(i) as KalturaCategory;
+					if (kCat && kCat.fullName == _initialCategory) {
+						_comboIndex = 200; // got no idea what this is
+						categoryCB.selectedItem = kCat; //set the seletedItem of the combo box
+						_categoryName = kCat.fullName; // set the category name
+						_categoryIndex = i;
+						dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
 						return;
-					for ( var i:Number=0; i< arr.length; i++ )  
-					{  
-						if(!arr[i] || !arr[i].hasOwnProperty("name"))
-							{
-								break;
-								continue;
-							} 
-						var sss:Object = (categoryCB.dataProvider as ArrayCollection).getItemAt(i);
-						sDataValueCur = '';
-						
-						if(sss.hasOwnProperty("name"))
-							sDataValueCur = sss.name;  //get the current item value
-						if ( sDataValueCur == _initialCategory )  
-						{  
-							_comboIndex = 200;
-							categoryCB.selectedIndex = i;  //set the seletedIndex of the combo box
-							_categoryName = _model.categoriesPrefix +  sDataValueCur;	
-							_metaDataVo.categoryIndex = categoryCB.selectedIndex;
-							_categoryIndex = i;
-							dispatchSetMediaMetaData(inputMetaData, _metaDataVo);
-							return;
-						}
 					}
 				}
 			}
-			
-			protected function onUpdateComplete(event:FlexEvent):void
-			{
- 				if(_comboIndex<200)
-					callLater(setSelectedToCombo); 
+
+
+			protected function onUpdateComplete(event:FlexEvent):void {
+				if (_comboIndex < 200)
+					callLater(setSelectedToCombo);
 			}
-			
-			protected function onShow(event:FlexEvent):void
-			{
-				// TODO Auto-generated method stub
+
+
+			protected function onShow(event:FlexEvent):void {
 				setSelectedToCombo();
 			}
-			
 		]]>
 	</mx:Script>
 
-	<vo:MediaMetaDataVO id="inputMetaData" title="{titleInput.text}" tags="{tagsInput.text}" 
-		description="{descriptionInput.text}" category="{_categoryName}" partnerData="{additionalInput.text}"/>
-	
+	<!--- values entered by user -->
+	<vo:MediaMetaDataVO id="inputMetaData" title="{titleInput.text}" tags="{tagsInput.text}"
+						description="{descriptionInput.text}" category="{_categoryName}"
+						partnerData="{additionalInput.text}"/>
+
 
 	<mx:Form width="100%">
 		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_TITLE')}" width="100%">
-			<mx:TextInput id="titleInput"
-				change="dataChangedHandler()"
-				errorString="{_metaDataVo.titleErrorString}"
-				focusIn="dataChangedHandler()"
-				focusOut="dataChangedHandler()"
-				text="{_metaDataVo.title}"
-				width="100%"/>
+			<mx:TextInput id="titleInput" change="dataChangedHandler()" errorString="{_metaDataVo.titleErrorString}"
+						  focusIn="dataChangedHandler()" focusOut="dataChangedHandler()" text="{_metaDataVo.title}"
+						  width="100%"/>
 		</mx:FormItem>
 
 		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_TAGS')}" width="100%"
-			visible="{_model.startupDefaults.showTags}" includeInLayout="{_model.startupDefaults.showTags}">
-			<mx:TextInput id="tagsInput"
-				errorString="{_metaDataVo.tagsErrorString}"
-				focusIn="dataChangedHandler()"
-				focusOut="dataChangedHandler()"
-				change="dataChangedHandler()"
-				text="{_metaDataVo.tags}"			
-				width="100%"
-				/> 
+					 visible="{_model.startupDefaults.showTags}" includeInLayout="{_model.startupDefaults.showTags}">
+			<mx:TextInput id="tagsInput" errorString="{_metaDataVo.tagsErrorString}" focusIn="dataChangedHandler()"
+						  focusOut="dataChangedHandler()" change="dataChangedHandler()" text="{_metaDataVo.tags}"
+						  width="100%"/>
 		</mx:FormItem>
-		
+
 		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_CATEGORY')}" width="100%"
-			visible="{_model.startupDefaults.showCategories}" includeInLayout="{_model.startupDefaults.showCategories}">
-			<mx:ComboBox id="categoryCB"
-				dataProvider="{_categories}"
-				labelField="name"
-				updateComplete="onUpdateComplete(event)"
-				change="categoryChangeHandler()"
-				width="100%"
-				/>
+					 visible="{_model.startupDefaults.showCategories}"
+					 includeInLayout="{_model.startupDefaults.showCategories}">
+			<mx:ComboBox id="categoryCB" dataProvider="{_categories}" labelField="name"
+						 updateComplete="onUpdateComplete(event)" change="categoryChangeHandler()" width="100%"/>
 		</mx:FormItem>
-		
-		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_DESCRIPTION')}" width="100%"
-			visible="{_model.startupDefaults.showDescription}" includeInLayout="{_model.startupDefaults.showDescription}">
-			<mx:TextArea height="{titleInput.height*2}" id="descriptionInput"
-				errorString=""
-				focusIn="dataChangedHandler()"
-				focusOut="dataChangedHandler()"
-				change="dataChangedHandler()"
-				text="{_metaDataVo.description}"
-				width="100%"
-				/>
+
+		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, 'METADATA_DESCRIPTION')}"
+					 width="100%" visible="{_model.startupDefaults.showDescription}"
+					 includeInLayout="{_model.startupDefaults.showDescription}">
+			<mx:TextArea height="{titleInput.height*2}" id="descriptionInput" errorString=""
+						 focusIn="dataChangedHandler()" focusOut="dataChangedHandler()" change="dataChangedHandler()"
+						 text="{_metaDataVo.description}" width="100%"/>
 		</mx:FormItem>
-		
-		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField)}" width="100%" 
-			visible="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}" 
-			includeInLayout="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}">
-			<mx:TextInput id="additionalInput"
-				errorString=""
-				focusIn="dataChangedHandler()"
-				focusOut="dataChangedHandler()"
-				change="dataChangedHandler()"
-				text="{_metaDataVo.partnerData}"
-				width="100%"
-				/>
+
+		<mx:FormItem label="{resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField)}"
+					 width="100%"
+					 visible="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}"
+					 includeInLayout="{(_model.additionalField)&amp;&amp;(resourceManager.getString(ResourceBundleNames.TAGGING, _model.additionalField))}">
+			<mx:TextInput id="additionalInput" errorString="" focusIn="dataChangedHandler()"
+						  focusOut="dataChangedHandler()" change="dataChangedHandler()" text="{_metaDataVo.partnerData}"
+						  width="100%"/>
 		</mx:FormItem>
 	</mx:Form>
-	
-	<mx:StringValidator id="titleValidator" minLength="{taggingConfig.minTitleLen}" maxLength="{taggingConfig.maxTitleLen}" required="{taggingConfig.minTitleLen > 0}"/>
-	<mx:StringValidator id="tagsValidator" minLength="{taggingConfig.minTagsLen}" 	maxLength="{taggingConfig.maxTagsLen}" 	required="{taggingConfig.minTagsLen > 0}" />
+
+	<mx:StringValidator id="titleValidator" minLength="{taggingConfig.minTitleLen}"
+						maxLength="{taggingConfig.maxTitleLen}" required="{taggingConfig.minTitleLen > 0}"/>
+	<mx:StringValidator id="tagsValidator" minLength="{taggingConfig.minTagsLen}" maxLength="{taggingConfig.maxTagsLen}"
+						required="{taggingConfig.minTagsLen > 0}"/>
 </mx:HBox>
