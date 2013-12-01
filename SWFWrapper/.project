@@ -18,7 +18,7 @@
 		<link>
 			<name>bin-debug</name>
 			<type>2</type>
-			<location>C:/xampp/htdocs/wrapper/bin-debug</location>
+			<location>C:/workspaces/kcw/SWFWrapper/bin-debug</location>
 		</link>
 	</linkedResources>
 </projectDescription>

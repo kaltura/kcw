@@ -42,9 +42,9 @@ var requiredRevision = ${version_revision};
 
 function wizardCloseCallback(modified)
 {
-	alert(modified);
 	var modifiedText = modified ? "yes" : "no"
-	alert("Wizard is closing. modified = " + modified + " | is it a real boolean ? " + modifiedText);
+	//alert("Wizard is closing. modified = " + modified + " | is it a real boolean ? " + modifiedText);
+	alert("Wizard is closing.");
 }
 
 function addentry(entries)
@@ -53,7 +53,7 @@ function addentry(entries)
 	alert("One or more entries were added");
 }
 
-function onWizardReady()
+function onWizardReady() 
 {
 	// alert("Wizard is ready");
 }
@@ -65,6 +65,7 @@ function onWizardReady()
 <script language="JavaScript" type="text/javascript">
 <!--
 
+// user clicked "next" button on page
 function next()
 {
 	console.log("next");
@@ -73,6 +74,7 @@ function next()
 
 }
 
+//user clicked "prev" button on page
 function prev()
 {
 	console.log("prev");
@@ -111,12 +113,14 @@ function kcwPendingChangeHandler(pending)
 	    false;
 }
 
+// set new value to partner data according to input text (on page) value 
 function changePData()
 {
 	var pData = document.getElementById("partnerData").value;
 	var flashObj = document.getElementById("kcw");
 	flashObj.setPartnerData(pData);
 }
+
 // Version check for the Flash Player that has the ability to start Player
 // Product Install (6.0r65)
 var hasProductInstall = DetectFlashVer(6, 0, 65);
@@ -152,8 +156,8 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	// embed the Flash Content SWF when all tests are passed
 	AC_FL_RunContent(
 			"src", "${swf}",
-			"width", "680",
-			"height", "400",
+			"width", "720", 
+			"height", "420",
 			"align", "middle",
 			"id", "kcw",
 			"quality", "high",
@@ -161,15 +165,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 						// 'defaultMediaType=video' + // default media type screen to show at startup (image/video/audio)
 						// '&defaultMediaProviderName=2' + // default selected media provider, e.g "kaltura"
 			
-//						onprem falcon
-// ======================================================			
-			'&host=onprem-falcon1.kaltura.dev' +
-			// '&cdnHost=' +
-			'&partnerId=181' +
-			'&ks=MDdjNThlMjRkNjZjOTA2MDUzMjIxY2YxNjUyMTMyMGYxN2I3OGYzNHwxODE7MTgxOzEzNTE4NTQ3NzM7MjsxMzUxNzY4MzczLjg0Mjk7YXZpeWEubXVhbGVtQGthbHR1cmEuY29tOyosZGlzYWJsZWVudGl0bGVtZW50Ozs=' + // KS
-			//'&uiConfId=8703171' + // webcam
-			'&uiConfId=8703181' +	// import
-	
 			
 //						DEVTESTS
 // ======================================================			
@@ -178,15 +173,27 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 //						'&partnerId=346151' +
 //						'&ks=NGY1ZmQyZTBhNWFmODE3YmM1MDljOGViZTMxNjIxZjQ4MGNmNzA5NnwzNDYxNTE7MzQ2MTUxOzEzNTE4NTUzMzg7MjsxMzUxNzY4OTM4LjY4Mjg7X19BRE1JTl9fMzQ1NjIxO2Rpc2FibGVlbnRpdGxlbWVudDs7' + // KS
 //						'&uiConfId=3548170' +
+
+//						Production
+// ======================================================			
+						'&host=www.kaltura.com' +
+						// '&cdnHost=kaltura.com' +
+						'&partnerId=xxxxxx' +
+						'&ks=xxxxxx' + 
+						'&uiConfId=xxxxxx' + 
 						
 						'&fileSystemMode=true'+
+						'&localStyle=./../../kcwStyleProject/bin-debug/css/styles.swf' + 
 						
 						'&isAnonymous=false' +	// "term of use" show different texts for anonymous/known users.
 						// '&protocol=http' + // http / https
 						
-						'&additionalField=METADATA_TITLE' +		// allows adding data to
+						//'&additionalField=METADATA_TITLE' +		// allows adding data to
 																// metadata fields (?)
 						// '&terms_of_use=index.php/terms' + // link to "terms of use" page
+						//'&categoriesRootId=xxx' +	// only show categories under this category
+						//'&enforceCategory=xx>xx' +	// initially select this category in the dropdown
+						
 						
 						// callbacks:
 						'&afterAddentry=addentry'+
@@ -262,7 +269,6 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 	<input id="partnerData" />
 	<input id="nextButton" type="button" value="set partner data" onClick="changePData()">
 </form>
-
 
 </body>
 </html>

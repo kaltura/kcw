@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties mainApplicationPath="SimpleFlexWrapper.as" projectUUID="5cd052cb-c2c6-4eb0-8cc3-2442ef8ed857" version="6">
-  <compiler additionalCompilerArguments="" autoRSLOrdering="false" copyDependentFiles="false" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="C:/xampp/htdocs/wrapper/bin-debug" outputFolderPath="bin-debug" rootURL="http://localhost/wrapper/bin-debug" strict="true" targetPlayerVersion="10.0.1" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+<actionScriptProperties analytics="false" mainApplicationPath="SimpleFlexWrapper.as" projectUUID="5cd052cb-c2c6-4eb0-8cc3-2442ef8ed857" version="10">
+  <compiler additionalCompilerArguments="" autoRSLOrdering="false" copyDependentFiles="false" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderLocation="C:/workspaces/kcw/SWFWrapper/bin-debug" outputFolderPath="bin-debug" removeUnusedRSL="true" strict="true" targetPlayerVersion="10.0.1" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="1">
       <libraryPathEntry kind="4" path="">
@@ -28,4 +28,5 @@
   </applications>
   <modules/>
   <buildCSSFiles/>
+  <flashCatalyst validateFlashCatalystCompatibility="false"/>
 </actionScriptProperties>
