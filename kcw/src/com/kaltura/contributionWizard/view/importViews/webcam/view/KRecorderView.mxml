@@ -415,8 +415,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <mx:HBox verticalAlign="middle" width="100%" height="100%">
 
 		<mx:VBox width="100%" height="100%" verticalAlign="middle" horizontalAlign="left" >
-			<mx:SWFLoader id="swfLoader"  creationComplete="swfLoader_creationCompleteHandler(event)"/>
-			<mx:ComboBox id="combo"
+			<mx:SWFLoader id="swfLoader" creationComplete="swfLoader_creationCompleteHandler(event)"/>
+			<mx:ComboBox id="combo" maxWidth="180"
 				dataProvider="{_names}"
 				prompt="{resourceManager.getString(ResourceBundleNames.WEBCAM_VIEW, 'SELECT_WEBCAM')}"
 				change="comboChangeHandler()" />
