@@ -35,7 +35,7 @@ package com.kaltura.contributionWizard.business.factories
 	import com.kaltura.contributionWizard.vo.providers.AuthenticationMethodList;
 	import com.kaltura.contributionWizard.vo.providers.MediaInfo;
 	import com.kaltura.contributionWizard.vo.providers.MediaProviderVO;
-	import com.kaltura.utils.PathUtil;1
+	import com.kaltura.utils.PathUtil;
 
 	import flash.net.FileFilter;
 	import flash.utils.Dictionary;
