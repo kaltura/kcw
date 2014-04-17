@@ -1,0 +1,256 @@
+<kcw>
+  <UIConfigList>
+    <UIConfig>
+      <target>ContributionWizard.swf</target>
+      <cssUrl id="partnerCss" name="Current Skin">/content/uiconf/kcweditor/styles/light/spanish.swf?R=15208.8296402366</cssUrl>
+      <localeUrl id="partnerLocale" name="Current Locale">/content/uiconf/kcweditor/locales/de_DE/de_DE_locales.swf?R=15208.8296402366</localeUrl>
+    </UIConfig>
+  </UIConfigList>
+  <ImportTypesConfig>
+    <taggingConfig>
+      <minTitleLen>1</minTitleLen>
+      <maxTitleLen>2000</maxTitleLen>
+      <minTagsLen>0</minTagsLen>
+      <maxTagsLen>2000</maxTagsLen>
+    </taggingConfig>
+  </ImportTypesConfig>
+  <webcamParams>
+  	<!-- camera quality params -->
+    <keyFrameInterval/>
+    <width/>
+    <height/>
+    <framerate/>
+    <favorArea/>
+    <bandwidth/>
+    <quality/>
+    <!-- buffer time for recording stream, in seconds -->
+    <bufferTime/>
+    
+    <!-- microphone params -->
+    <setUseEchoSuppression/>
+	<gain/>
+	<rate/>
+	<silenceLevel/>
+	<silenceLevelTimeout/> 
+  </webcamParams>
+  <mediaTypes defaultConversionProfileId="999999">
+    <media type="video">
+      <provider id="thissite" name="thissite" code="27" conversionProfileId="99999">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <tokens>
+          <token>
+            <name>extra_data</name>
+            <value>$partner_id</value>
+          </token>
+        </tokens>
+      </provider>
+      <provider id="upload" name="upload" code="1">
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <moduleUrl>UploadView.swf</moduleUrl>
+        <fileFilters>
+          <filter type="video">
+            <allowedTypes>flv,asf,qt,mov,mpg,avi,wmv,mp4,3gp</allowedTypes>
+          </filter>
+        </fileFilters>
+      </provider>
+      <provider id="youtube" name="youtube" code="4" addsearch="false">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="2" searchable="false"/>
+        </authMethodList>
+      </provider>
+      <provider id="mySpace" name="mySpace" code="7">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="3" searchable="false"/>
+        </authMethodList>
+      </provider>
+      <provider id="kaltura" name="kaltura" code="20">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="3" searchable="false"/>
+        </authMethodList>
+      </provider>
+      <provider id="webcam" name="webcam" code="2">
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <moduleUrl>WebcamView.swf</moduleUrl>
+        <customData>
+		  <timeLimit>25</timeLimit>
+          <serverUrl>rtmp://{HOST_NAME}/oflaDemo</serverUrl>
+        </customData>
+      </provider>
+      <provider id="photobucket" name="photobucket" code="4">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="2" searchable="false"/>
+        </authMethodList>
+      </provider>
+      <provider id="metacafe" name="metacafe" code="24">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+      </provider>
+      <provider id="anywebpage" name="anywebpage" code="5">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+      </provider>
+    </media>
+    <media type="audio">
+      <provider id="ccmixter" name="ccmixter" code="10">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="3"/>
+        </authMethodList>
+      </provider>
+      <provider id="thissite" name="thissite" code="23">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <tokens>
+          <token>
+            <name>extra_data</name>
+            <value>$partner_id</value>
+          </token>
+        </tokens>
+      </provider>
+      <provider id="jamendo" name="jamendo" code="9">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="3"/>
+        </authMethodList>
+      </provider>
+      <provider id="upload" name="upload" code="1">
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <moduleUrl>UploadView.swf</moduleUrl>
+        <fileFilters>
+          <filter type="audio">
+            <allowedTypes>flv,asf,wmv,qt,mov,mpg,avi,mp3,wav</allowedTypes>
+          </filter>
+        </fileFilters>
+      </provider>
+      <provider id="youtube" name="youtube" code="4">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="2" searchable="false"/>
+        </authMethodList>
+      </provider>
+      <provider id="kaltura" name="kaltura" code="20">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="3" searchable="false"/>
+        </authMethodList>
+      </provider>
+    </media>
+    <media type="image">
+      <provider id="kaltura" name="kaltura" code="20">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="3" searchable="false"/>
+        </authMethodList>
+      </provider>
+      <provider id="thissite" name="thissite" code="23">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <tokens>
+          <token>
+            <name>extra_data</name>
+            <value>$partner_id</value>
+          </token>
+        </tokens>
+      </provider>
+      <provider id="flickr" name="flickr" code="3">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+          <authMethod type="4" searchable="false"/>
+        </authMethodList>
+      </provider>
+      <provider id="upload" name="upload" code="1">
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <moduleUrl>UploadView.swf</moduleUrl>
+        <fileFilters>
+          <filter type="image">
+            <allowedTypes>jpg,bmp,png,gif,tiff</allowedTypes>
+          </filter>
+        </fileFilters>
+      </provider>
+      <provider id="nypl" name="nypl" code="11">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+      </provider>
+      <provider id="anywebpage" name="anywebpage" code="5">
+        <moduleUrl>SearchView.swf</moduleUrl>
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+      </provider>
+    </media>
+    <media type="swf">
+      <provider id="upload" name="upload" code="1">
+        <authMethodList>
+          <authMethod type="1"/>
+        </authMethodList>
+        <moduleUrl>UploadView.swf</moduleUrl>
+        <fileFilters>
+          <filter type="swf">
+            <allowedTypes>swf</allowedTypes>
+          </filter>
+        </fileFilters>
+      </provider>
+    </media>
+  </mediaTypes>
+  <limitations>
+    <upload>
+      <singleFileSize min="-1" max="-1"/>
+      <numFiles min="-1" max="-1"/>
+      <totalFileSize min="-1" max="-1"/>
+    </upload>
+    <search>
+      <numFiles min="-1" max="-1"/>
+    </search>
+  </limitations>
+  <StartupDefaults>
+    <SingleContribution>true</SingleContribution>
+    <autoTOUConfirmation>true</autoTOUConfirmation>
+    <showLogoImage>true</showLogoImage>
+    <alwaysShowPermission>true</alwaysShowPermission>
+    <NavigationProperties>
+      <showConfirmButtons>true</showConfirmButtons>
+      <showCloseButton>true</showCloseButton>
+      <enableIntroScreen>false</enableIntroScreen>
+      <enableTagging>true</enableTagging>
+    </NavigationProperties>
+    <gotoScreen>
+      <mediaType>video</mediaType>
+      <mediaProviderName>upload</mediaProviderName>
+    </gotoScreen>
+  </StartupDefaults>
+</kcw>
