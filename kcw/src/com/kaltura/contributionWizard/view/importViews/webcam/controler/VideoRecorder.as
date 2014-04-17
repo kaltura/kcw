@@ -216,7 +216,14 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler {
 			//create the broadcasting stream
 			_outStream = new NetStream(_connection);
 			_outStream.client = new NetClient();
-			_outStream.bufferTime = MAX_BUFFER_LENGTH;
+			
+			var webcamModel:WebcamModelLocator = WebcamModelLocator.getInstance();
+			if (webcamModel.webcamParameters.bufferTime) {
+				_outStream.bufferTime = webcamModel.webcamParameters.bufferTime;
+			}
+			else {
+				_outStream.bufferTime = MAX_BUFFER_LENGTH;
+			}
 
 			//add broadcasting stream event listeners
 			_outStream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, AsyncErrorHandler);
@@ -459,6 +466,7 @@ package com.kaltura.contributionWizard.view.importViews.webcam.controler {
 
 
 		public function outStatusHandler(event:NetStatusEvent):void {
+			trace("outStatusHandler: " + event.info.code);
 			switch (event.info.code) {
 				case "NetStream.Unpublish.Success":
 					dispatchEvent(new RecorderEvent(RecorderEvent.RECORD_FINISH, _recordTime, true));

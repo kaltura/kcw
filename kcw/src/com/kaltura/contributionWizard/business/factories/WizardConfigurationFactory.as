@@ -29,23 +29,21 @@ package com.kaltura.contributionWizard.business.factories
 	import com.kaltura.contributionWizard.model.importTypesConfiguration.search.ModerationFilter;
 	import com.kaltura.contributionWizard.model.importTypesConfiguration.search.SearchConfig;
 	import com.kaltura.contributionWizard.model.importTypesConfiguration.tagging.TaggingConfig;
+	import com.kaltura.contributionWizard.model.importTypesConfiguration.upload.UploadConfig;
 	import com.kaltura.contributionWizard.vo.ImportScreenVO;
 	import com.kaltura.contributionWizard.vo.UIConfigVO;
+	import com.kaltura.contributionWizard.vo.limitations.*;
 	import com.kaltura.contributionWizard.vo.providers.AuthenticationMethod;
 	import com.kaltura.contributionWizard.vo.providers.AuthenticationMethodList;
 	import com.kaltura.contributionWizard.vo.providers.MediaInfo;
 	import com.kaltura.contributionWizard.vo.providers.MediaProviderVO;
+	import com.kaltura.contributionWizard.vo.providers.WebcamParametersVO;
 	import com.kaltura.utils.PathUtil;
-
+	
 	import flash.net.FileFilter;
 	import flash.utils.Dictionary;
-
+	
 	import mx.collections.XMLListCollection;
-	import flash.system.Capabilities;
-	import com.kaltura.contributionWizard.model.importTypesConfiguration.upload.UploadConfig;
-	import com.kaltura.contributionWizard.vo.limitations.*;
-	import flexlib.scheduling.Timeline;
-	import com.kaltura.contributionWizard.vo.providers.WebcamParametersVO;
 
 	/**
 	 * This class is used for translating given XML's to proper VO's 
@@ -77,7 +75,9 @@ package com.kaltura.contributionWizard.business.factories
 				tempVO.keyFrameInterval = parseInt(webcamParams.keyFrameInterval);
 				tempVO.quality = parseInt(webcamParams.quality);
 				
-				//BOAZ
+				if (webcamParams.bufferTime) tempVO.bufferTime = parseInt(webcamParams.bufferTime);
+				
+				//audio
 				/////////////////////////////////////////
 				if(webcamParams.setUseEchoSuppression) tempVO.setUseEchoSuppression = webcamParams.setUseEchoSuppression != "false"; //the defualt is true
 				if(webcamParams.gain) tempVO.gain = Number(webcamParams.gain);
